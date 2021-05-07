@@ -1,13 +1,15 @@
 /*
  * @Author: luoqi 
- * @Date: 2021-04-29 13:51:33 
- * @Last Modified by: luoqi
- * @Last Modified time: 2021-04-29 16:51:34
+ * @Date: 2021-05-07 21:18:06 
+ * @Last Modified by:   luoqi 
+ * @Last Modified time: 2021-05-07 21:18:06 
  */
 
 #ifndef _LIST_H
 #define _LIST_H
 
+#define offset_of(type, member)             (size_t) &((type*)0)->member
+#define container_of(ptr, type, member)     ((type *)((char *)(ptr) - offset_of(type, member)))
 
 typedef struct list_structure
 {
@@ -15,9 +17,8 @@ typedef struct list_structure
     struct list_structure* prev;
 } ListObj;
 
-#define LIST_CREAT(name) ListObj name = {&(name), &(name)}
-#define container_of(ptr, type, member)     \
-    ((type *)((char *)(ptr) - (unsigned long)(&((type *)0)->member)))
+#define LIST_HEAD_INIT(name)    {&(name), &(name)}
+#define LIST_HEAD(name)         ListObj name = LIST_HEAD_INIT(name)
 
 void list_init(ListObj* list);
 void list_insert_after(ListObj* list, ListObj* node);
@@ -48,5 +49,3 @@ unsigned int list_length(const ListObj* list);
          pos = n, n = rt_list_entry(n->member.next, typeof(*n), member))
 
 #endif
-
-
