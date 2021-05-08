@@ -43,7 +43,7 @@ int list_isempty(const ListObj* list)
     return list->next == list;
 }
 
-unsigned int list_length(const ListObj* list)
+unsigned int list_len(const ListObj* list)
 {
     unsigned int len = 0;
     const ListObj* p = list;
