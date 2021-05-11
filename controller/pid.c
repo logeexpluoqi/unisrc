@@ -7,7 +7,11 @@
 
 #include "./pid.h"
 
-void pid_init(PidObj* obj)
+void pid_init(PidObj* obj,
+              float kp, float ki, float kd,
+              float kp_min, float kp_max,
+              float ki_min, float ki_max,
+              float kd_min, float kd_max)
 {
     obj->delta_u_k  = 0.0f;
     obj->err_k2     = 0.0f;
@@ -15,15 +19,15 @@ void pid_init(PidObj* obj)
     obj->err_k      = 0.0f;
     obj->u_k1       = 0.0f;
     obj->u_k        = 0.0f;
-    obj->kp         = 1.0f;
-    obj->ki         = 0.0f;
-    obj->kd         = 0.0f;
-    obj->kp_min     = 0.0f;
-    obj->kp_max     = 5000.0f;
-    obj->ki_min     = 0.0f;
-    obj->ki_max     = 1000.0f;
-    obj->kd_min     = 0.0f;
-    obj->kd_max     = 2000.0f;
+    obj->kp         = kp;
+    obj->ki         = ki;
+    obj->kd         = kd;
+    obj->kp_min     = kp_min;
+    obj->kp_max     = kp_max;
+    obj->ki_min     = ki_min;
+    obj->ki_max     = ki_max;
+    obj->kd_min     = kd_min;
+    obj->kd_max     = kd_max;
 }
 
 void pid_set_param(PidObj *obj, float kp, float ki, float kd)
