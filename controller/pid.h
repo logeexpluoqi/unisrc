@@ -24,6 +24,12 @@ typedef enum {
     KD
 } PidParam;
 
+void pid_init(PidObj* obj,
+              float kp, float ki, float kd,
+              float kp_min, float kp_max,
+              float ki_min, float ki_max,
+              float kd_min, float kd_max);
+
 void pid_set_param(PidObj* obj, float kp, float ki, float kd);
 void pid_get_param(PidObj* obj, float* kp, float* ki, float* kd);
 void pid_set_param_limit(PidObj* obj, PidParam param, float min, float max);
