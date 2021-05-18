@@ -5,7 +5,7 @@
  * @Last Modified time: 2021-04-28 19:17:22
  */
 
-#include "./pid.h"
+#include "pid.h"
 
 void pid_init(PidObj* obj,
               float kp, float ki, float kd,

@@ -5,9 +5,10 @@
  * @Last Modified time: 2021-04-29 19:27:43
  */
 
-#include "./timeslice.h"
+#include "timeslice.h"
 
 static LIST_HEAD(timeslice_task_list);
+static unsigned int timeslice_task_id = 0;
 
 void timeslice_exec()
 {
@@ -51,9 +52,10 @@ unsigned int timeslice_get_task_num()
     return list_len(&timeslice_task_list);
 }
 
-void timeslice_task_init(TimesilceTaskObj* obj, void (*task_hdl)(void), unsigned int id, unsigned int timeslice_len)
+void timeslice_task_init(TimesilceTaskObj* obj, void (*task_hdl)(void), unsigned int timeslice_len)
 {
-    obj->id = id;
+    timeslice_task_id ++;
+    obj->id = timeslice_task_id;
     obj->is_run = TASK_STOP;
     obj->task_hdl = task_hdl;
     obj->timer = timeslice_len;

@@ -5,7 +5,7 @@
  * @Last Modified time: 2021-05-12 18:04:00
  */
 
-#include "./cmd.h"
+#include "cmd.h"
 
 #define ASCII_SPACE 0x20
 static LIST_HEAD(cmd_list);
