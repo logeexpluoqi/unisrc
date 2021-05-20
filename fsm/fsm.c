@@ -7,11 +7,11 @@
 
 #include "fsm.h"
 
-void fsm_init(FsmObj *obj, const char* name, int curr_state, int next_state)
+void fsm_init(FsmObj *obj, const char* name, int init_state)
 {
     obj->name = name;
-    obj->curr_state = curr_state;
-    obj->next_state = next_state;
+    obj->curr_state = init_state;
+    obj->next_state = init_state;
     obj->fsm_state_id_base = 0;
     list_init(&obj->fsm_task_list);    
 }
@@ -29,8 +29,6 @@ unsigned char fsm_exec(FsmObj *obj)
         {
            return state->fsm_state_task_hdl();
         }
-        else 
-            return 0;
     }
     return 0;
 }

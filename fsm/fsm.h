@@ -26,7 +26,7 @@ typedef struct fsm_state_object {
     ListObj fsm_state_list;
 } FsmStateObj;
 
-void fsm_init(FsmObj* obj, const char* name, int curr_state, int next_state);
+void fsm_init(FsmObj* obj, const char* name, int init_state);
 void fsm_change_state(FsmObj* obj, int next_state);
 unsigned char fsm_exec(FsmObj* obj);
 void fsm_state_init(FsmStateObj* obj, int link_state, unsigned char (*fsm_state_task_hdl)(void));
