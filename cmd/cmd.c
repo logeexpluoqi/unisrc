@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 00:29:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-05-12 18:04:00
+ * @Last Modified time: 2021-05-25 15:11:31
  */
 
 #include "cmd.h"
@@ -55,11 +55,11 @@ CmdErrType cmd_exec(char* cmd_msg)
         {
             if (cmd->param_num > argc - 1)
             {
-                return PARAM_LITTLE;
+                return CMD_PARAM_LESS;
             }
             else if (cmd->param_num < argc - 1)
             {
-                return PARAM_EXCEED;
+                return CMD_PARAM_EXCEED;
             }
 
             if (cmd->cmd_hdl(argc, argv) != 0)
@@ -68,19 +68,19 @@ CmdErrType cmd_exec(char* cmd_msg)
             }
             else
             {
-                return NO_ERR;
+                return CMD_NO_ERR;
             }
         }
     }
 
-    return NO_CMD;
+    return CMD_NO_CMD;
 }
 
 void cmd_init(CmdObj* obj,
-    const char* name,
-    unsigned char param_num,
-    unsigned char(*cmd_hdl)(int, char* []),
-    const char* usage)
+              const char* name,
+              unsigned char param_num,
+              unsigned char(*cmd_hdl)(int, char* []),
+              const char* usage)
 {
     obj->name = name;
     obj->param_num = param_num;
@@ -128,11 +128,6 @@ unsigned int cmd_num()
     return list_len(&cmd_list);
 }
 
-void cmd_help()
-{
-
-}
-
 unsigned char cmd_strcmp(const char* s1, const char* s2)
 {
     unsigned int i = 0;
@@ -147,4 +142,14 @@ unsigned char cmd_strcmp(const char* s1, const char* s2)
     }
 
     return 0;
+}
+
+CmdObj* cmd_obj_get(unsigned int serial)
+{
+    ListObj* node = &cmd_list;
+
+    for(unsigned int i = serial; i > 0; i--)
+        node = node->next;
+
+    return list_entry(node, CmdObj, cmd_list);
 }
