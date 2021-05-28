@@ -40,5 +40,7 @@ unsigned int timeslice_get_task_timeslice_len(TimesilceTaskObj* obj);
 unsigned int timeslice_get_task_num(void);
 unsigned char timeslice_task_isexist(TimesilceTaskObj* obj);
 TimesilceTaskObj* timeslice_obj_get(unsigned int serial);
+unsigned int timeslice_get_del_task_num(void);
+TimesilceTaskObj* timeslice_del_obj_get(unsigned int serial);
 
 #endif

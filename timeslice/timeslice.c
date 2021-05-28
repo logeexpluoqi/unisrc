@@ -8,6 +8,7 @@
 #include "timeslice.h"
 
 static LIST_HEAD(timeslice_task_list);
+static LIST_HEAD(timeslice_task_del_list);
 static unsigned long timeslice_task_id = 0;
 
 void timeslice_exec()
@@ -115,3 +116,17 @@ TimesilceTaskObj* timeslice_obj_get(unsigned int serial)
     return list_entry(node, TimesilceTaskObj, timeslice_task_list);
 }
 
+unsigned int timeslice_get_del_task_num()
+{
+    return list_len(&timeslice_task_del_list);
+}
+
+TimesilceTaskObj* timeslice_del_obj_get(unsigned int serial)
+{
+    ListObj* node = &timeslice_task_del_list;
+
+    for(unsigned int i = serial; i > 0; i--)
+        node = node->next;
+
+    return list_entry(node, TimesilceTaskObj, timeslice_task_list);
+}
