@@ -70,7 +70,7 @@ void timeslice_task_init(TimesilceTaskObj* obj,
 
 void timeslice_task_add(TimesilceTaskObj* obj)
 {
-    list_remove(&obj->timeslice_task_list);
+    list_remove(&timeslice_task_del_list);
     list_insert_before(&timeslice_task_list, &obj->timeslice_task_list);
 }
 
