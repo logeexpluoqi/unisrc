@@ -71,10 +71,12 @@ CmdErrType cmd_exec(char* cmd_msg)
                 return CMD_NO_ERR;
             }
         }
-        if(cmd->id == 0xff)
+        if(cmd->param_num == 0xff)
         {
             if(cmd->cmd_hdl(argc, argv) != 0)
                 return CMD_EXEC_ERR;
+            else
+                return CMD_NO_ERR;
         }
     }
 
