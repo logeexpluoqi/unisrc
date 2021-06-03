@@ -51,7 +51,7 @@ CmdErrType cmd_exec(char* cmd_msg)
     list_for_each(node, &cmd_list)
     {
         cmd = list_entry(node, CmdObj, cmd_list);
-        if (cmd_strcmp(cmd->name, argv[0]) == 0)
+        if (cmd_strcmp(cmd->name, argv[0]) == 0 && cmd->param_num != 0xff)
         {
             if (cmd->param_num > argc - 1)
             {
@@ -70,6 +70,11 @@ CmdErrType cmd_exec(char* cmd_msg)
             {
                 return CMD_NO_ERR;
             }
+        }
+        if(cmd->id == 0xff)
+        {
+            if(cmd->cmd_hdl(argc, argv) != 0)
+                return CMD_EXEC_ERR;
         }
     }
 

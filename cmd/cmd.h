@@ -38,7 +38,7 @@ typedef struct cmd_object
 CmdErrType cmd_exec(char* cmd_msg);
 void cmd_init(CmdObj* obj,
               const char* name,
-              unsigned char param_num,
+              unsigned char param_num, // if this value is 0xff, means that no arg number limit
               unsigned char(*cmd_hdl)(int, char* []),
               const char* usage);
 void cmd_add(CmdObj* obj);
