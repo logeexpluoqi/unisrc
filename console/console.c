@@ -304,7 +304,7 @@ unsigned char dbg_proc_hdl(int argc, char* argv[])
     for(unsigned int i = num; i > 0; i--)
     {
         task = timeslice_del_obj_get(i);
-        if(atoi(argv[1]), task->id)
+        if(atoi(argv[1]) == task->id)
         {
             task_find = 1;
             timeslice_task_add(task);
