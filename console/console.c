@@ -19,17 +19,12 @@ static unsigned int recv_cnt = 0;
 static CmdObj cmd_ls;
 static CmdObj cmd_kill;
 static CmdObj cmd_proc;
-static CmdObj cmd_set,    cmd_get;
 static CmdObj cmd_reboot;
-static CmdObj cmd_log;
 static CmdObj cmd_help;
 static CmdObj cmd_timer;
 static CmdObj cmd_hs;
 
 static unsigned char dbg_reboot_hdl(int argc, char* argv[]);
-static unsigned char dbg_set_hdl(int argc, char* argv[]);
-static unsigned char dbg_get_hdl(int argc, char* argv[]);
-static unsigned char dbg_log_hdl(int argc, char* argv[]);
 static unsigned char dbg_help_hdl(int argc, char* argv[]);
 static unsigned char dbg_ls_hdl(int argc, char* argv[]);
 static unsigned char dbg_timer_hdl(int argc, char* argv[]);
@@ -42,9 +37,6 @@ DbgErrType dbg_task_init()
     cmd_init(&cmd_hs, "hs", 0, dbg_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, dbg_help_hdl, "list all commands");
     cmd_init(&cmd_reboot, "reboot", 0, dbg_reboot_hdl, "reboot system");
-    cmd_init(&cmd_set, "set", 2, dbg_set_hdl, "set object parameter");
-    cmd_init(&cmd_get, "get", 2, dbg_get_hdl, "get object parameter");
-    cmd_init(&cmd_log, "log", 2, dbg_log_hdl, "log object information");
     cmd_init(&cmd_ls, "ls", 1, dbg_ls_hdl, "list objects <task/fsm/dtask>");
     cmd_init(&cmd_timer, "timer", 0, dbg_timer_hdl, "show system abs timer");
     cmd_init(&cmd_kill, "kill", 1, dbg_kill_hdl, "kill timeslice task <task id>");
@@ -53,9 +45,6 @@ DbgErrType dbg_task_init()
     cmd_add(&cmd_hs);
     cmd_add(&cmd_help);
     cmd_add(&cmd_reboot);
-    cmd_add(&cmd_set);
-    cmd_add(&cmd_get);
-    cmd_add(&cmd_log);
     cmd_add(&cmd_ls);
     cmd_add(&cmd_timer);
     cmd_add(&cmd_kill);
@@ -315,22 +304,5 @@ unsigned char dbg_proc_hdl(int argc, char* argv[])
     if(task_find == 0)
         sys_printf(DBG_PORT, ">> Task not found !\r\n", task->name);
 
-    return 0;
-}
-
-unsigned char dbg_set_hdl(int argc, char* argv[])
-{
-
-    return 0;
-}
-
-unsigned char dbg_get_hdl(int argc, char* argv[])
-{
-
-    return 0;
-}
-
-unsigned char dbg_log_hdl(int argc, char* argv[])
-{
     return 0;
 }
