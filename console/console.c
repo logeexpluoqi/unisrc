@@ -23,6 +23,7 @@ static CmdObj cmd_reboot;
 static CmdObj cmd_help;
 static CmdObj cmd_timer;
 static CmdObj cmd_hs;
+static CmdObj cmd_ps;
 
 static unsigned char dbg_reboot_hdl(int argc, char* argv[]);
 static unsigned char dbg_help_hdl(int argc, char* argv[]);
@@ -31,6 +32,7 @@ static unsigned char dbg_timer_hdl(int argc, char* argv[]);
 static unsigned char dbg_kill_hdl(int argc, char* argv[]);
 static unsigned char dbg_proc_hdl(int argc, char* argv[]);
 static unsigned char dbg_hs_hdl(int argc, char* argv[]);
+static unsigned char cmd_ps_hdl(int argc, char* argv[]);
 
 DbgErrType dbg_task_init()
 {
@@ -41,6 +43,7 @@ DbgErrType dbg_task_init()
     cmd_init(&cmd_timer, "timer", 0, dbg_timer_hdl, "show system abs timer");
     cmd_init(&cmd_kill, "kill", 1, dbg_kill_hdl, "kill timeslice task <task id>");
     cmd_init(&cmd_proc, "proc", 1, dbg_proc_hdl, "recover deleted task <task id>");
+    cmd_init(&cmd_ps, "ps", 0xff, cmd_ps_hdl, "list all running tasks </-d>");
 
     cmd_add(&cmd_hs);
     cmd_add(&cmd_help);
@@ -49,6 +52,7 @@ DbgErrType dbg_task_init()
     cmd_add(&cmd_timer);
     cmd_add(&cmd_kill);
     cmd_add(&cmd_proc);
+    cmd_add(&cmd_ps);
 
     return DBG_NO_ERR;
 }
@@ -304,5 +308,38 @@ unsigned char dbg_proc_hdl(int argc, char* argv[])
     if(task_find == 0)
         sys_printf(DBG_PORT, ">> Task not found !\r\n", task->name);
 
+    return 0;
+}
+
+unsigned char cmd_ps_hdl(int argc, char* argv[])
+{
+    if(argc == 1)
+    {
+        TimesilceTaskObj* task;
+        unsigned int num = timeslice_get_task_num();
+        sys_printf(DBG_PORT, " TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        sys_printf(DBG_PORT, " [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
+        for(unsigned int i = num; i > 0; i--)
+        {
+            task = timeslice_obj_get(i);
+            sys_printf(DBG_PORT, "  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+        }
+    }
+    else if(argc == 2 && strcmp(argv[1], "-d") == 0)
+    {
+        TimesilceTaskObj* task;
+        unsigned int num = timeslice_get_del_task_num();
+        sys_printf(DBG_PORT, " DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        sys_printf(DBG_PORT, " [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
+        for(unsigned int i = num; i > 0; i--)
+        {
+            task = timeslice_del_obj_get(i);
+            sys_printf(DBG_PORT, "  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+        } 
+    }
+    else 
+    {
+        sys_printf(DBG_PORT, ">> Err: parameter not find !\r\n");
+    }
     return 0;
 }
