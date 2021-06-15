@@ -7,27 +7,27 @@
 
 #include "fsm.h"
 
-void fsm_init(FsmObj *obj, const char* name, int init_state)
+void fsm_init(FsmObj* obj, const char* name, int init_state)
 {
     obj->name = name;
     obj->curr_state = init_state;
     obj->next_state = init_state;
     obj->fsm_state_id_base = 0;
-    list_init(&obj->fsm_task_list);    
+    list_init(&obj->fsm_list_head);
 }
 
-unsigned char fsm_exec(FsmObj *obj)
+unsigned char fsm_exec(FsmObj* obj)
 {
     ListObj* node;
     FsmStateObj* state;
-    
+
     obj->curr_state = obj->next_state;
-    list_for_each(node, &obj->fsm_task_list)
+    list_for_each(node, &obj->fsm_list_head)
     {
         state = list_entry(node, FsmStateObj, fsm_state_list);
-        if(obj->curr_state == state->link_state)
+        if (state->link_state == obj->curr_state)
         {
-           return state->fsm_state_task_hdl();
+            return state->fsm_state_task_hdl();
         }
     }
     return 0;
@@ -47,13 +47,13 @@ void fsm_state_init(FsmStateObj* obj, int link_state, unsigned char (*fsm_state_
 
 void fsm_state_add(FsmObj* fsm_obj, FsmStateObj* state_obj)
 {
-    if(state_obj->id == 0)
+    if (state_obj->id == 0)
     {
-        fsm_obj->fsm_state_id_base ++;
+        fsm_obj->fsm_state_id_base++;
         state_obj->id = fsm_obj->fsm_state_id_base;
     }
     state_obj->belong_to = fsm_obj->name;
-    list_insert_before(&fsm_obj->fsm_task_list, &state_obj->fsm_state_list);
+    list_insert_before(&fsm_obj->fsm_list_head, &state_obj->fsm_state_list);
 }
 
 void fsm_state_del(FsmStateObj* obj)
@@ -66,9 +66,14 @@ int fsm_state_get(FsmObj* obj)
     return obj->curr_state;
 }
 
+int fsm_state_link(FsmStateObj* obj)
+{
+    return obj->link_state;
+}
+
 const char* fsm_state_blelong_to(FsmStateObj* obj)
 {
-    return obj->belong_to;    
+    return obj->belong_to;
 }
 
 
