@@ -35,6 +35,6 @@ void fsm_state_init(FsmStateObj* obj, int link_state, unsigned char (*fsm_state_
 void fsm_state_add(FsmObj* fsm_obj, FsmStateObj* state_obj);
 void fsm_state_del(FsmStateObj* obj);
 int fsm_state_link(FsmStateObj* obj);
-const char* fsm_state_blelong_to(FsmStateObj* obj);
+const char* fsm_state_belong_to(FsmStateObj* obj);
 
 #endif

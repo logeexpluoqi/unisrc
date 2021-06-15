@@ -71,7 +71,7 @@ int fsm_state_link(FsmStateObj* obj)
     return obj->link_state;
 }
 
-const char* fsm_state_blelong_to(FsmStateObj* obj)
+const char* fsm_state_belong_to(FsmStateObj* obj)
 {
     return obj->belong_to;
 }
