@@ -62,7 +62,7 @@ void msg_add(MsgContainer* container, MsgObj* obj);
 void msg_del(MsgObj* obj);
 void* msg_get(MsgContainer* container, const char* name);
 unsigned char msg_set(MsgContainer* container, const char* name, void* msg_data, unsigned int size);
-unsigned char msg_is_updata(MsgContainer* container, const char* name);
+unsigned char msg_is_update(MsgContainer* container, const char* name);
 unsigned char msg_mem_location_set(MsgContainer* container, const char* name, void* new_mem);
 unsigned int msg_container_num_get(void);
 unsigned int msg_num_get(MsgContainer* container);

@@ -115,7 +115,7 @@ unsigned char msg_set(MsgContainer* container, const char* name, void* msg_data,
     return 0;
 }
 
-unsigned char msg_is_updata(MsgContainer* container, const char* name)
+unsigned char msg_is_update(MsgContainer* container, const char* name)
 {
     ListObj* node;
     MsgObj* msg;
