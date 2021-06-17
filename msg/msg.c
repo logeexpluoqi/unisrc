@@ -29,6 +29,7 @@ void msg_init(MsgObj* obj,
     obj->name = name;
     obj->mem = mem;
     obj->type = type;
+    obj->is_update = 0;
     obj->msg_state = MSG_UNLOCK;
     obj->usage = usage;
 }
@@ -52,7 +53,10 @@ void* msg_get(MsgContainer* container, const char* name)
     {
         msg = list_entry(node, MsgObj, msg_list_node);
         if (msg_strcmp(name, msg->name) == 0 && msg->msg_state == MSG_UNLOCK)
+        {
+            msg->is_update = 0;
             return msg->mem;
+        }
     }
     return NULL;
 }
@@ -105,7 +109,21 @@ unsigned char msg_set(MsgContainer* container, const char* name, void* msg_data,
                 break;
             }
             msg->msg_state = MSG_UNLOCK;
+            msg->is_update = 1;
         }
+    }
+    return 0;
+}
+
+unsigned char msg_is_updata(MsgContainer* container, const char* name)
+{
+    ListObj* node;
+    MsgObj* msg;
+    list_for_each(node, &container->msg_list)
+    {
+        msg = list_entry(node, MsgObj, msg_list_node);
+        if(msg_strcmp(msg->name, name) == 0)
+           return msg->is_update; 
     }
     return 0;
 }
@@ -123,6 +141,7 @@ unsigned char msg_mem_location_set(MsgContainer* container, const char* name, vo
         {
             msg->mem = new_mem;
             msg->msg_state = MSG_UNLOCK;
+            msg->is_update = 1;
         }
     }
     return 0;
