@@ -30,7 +30,7 @@ unsigned char fsm_exec(FsmObj* obj)
             return state->fsm_state_task_hdl();
         }
     }
-    return 0;
+    return 1;
 }
 
 void fsm_change_state(FsmObj* obj, int next_state)
