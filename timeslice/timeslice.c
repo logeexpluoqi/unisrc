@@ -102,6 +102,11 @@ unsigned char timeslice_task_isexist(TimesilceTaskObj* obj)
     return isexist;
 }
 
+void timeslice_change_slice(TimesilceTaskObj* obj, unsigned int slice_len)
+{
+    obj->timeslice_len = slice_len;
+}
+
 unsigned int timeslice_get_task_timeslice_len(TimesilceTaskObj* obj)
 {
     return obj->timeslice_len;

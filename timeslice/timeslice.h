@@ -36,6 +36,7 @@ void timeslice_task_init(TimesilceTaskObj* obj,
                          const char* usage);
 void timeslice_task_add(TimesilceTaskObj* obj);
 unsigned char timeslice_task_del(TimesilceTaskObj* obj);
+void timeslice_change_slice(TimesilceTaskObj* obj, unsigned int slice_len);
 unsigned int timeslice_get_task_timeslice_len(TimesilceTaskObj* obj);
 unsigned int timeslice_get_task_num(void);
 unsigned char timeslice_task_isexist(TimesilceTaskObj* obj);
