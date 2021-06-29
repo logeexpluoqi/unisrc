@@ -62,17 +62,17 @@ void dbg_cmd_console(char recv_byte)
     if(recv_byte != '\r' && recv_byte != '\b' && recv_byte != '^' && recv_cnt  <  60)
     { // normal charactor
         cmd_buf[recv_cnt++] = recv_byte;
-        sys_printf(DBG_PORT, "%c", recv_byte);
+        kprintf("%c", recv_byte);
     }
     else if(recv_byte == '\b' && recv_cnt > 0)
     { // backspace charactor
         for(char i = 0; i < recv_cnt; i++)
         {
-            sys_printf(DBG_PORT, " "); 
+            kprintf(" "); 
         }
         cmd_buf[-- recv_cnt] = 0;
-        sys_printf(DBG_PORT, "\runicontroller$ ");
-        sys_printf(DBG_PORT, "%s", cmd_buf);
+        kprintf("\runicontroller$ ");
+        kprintf("%s", cmd_buf);
     }
     else if(recv_byte == '\r')
     { // enter key value
@@ -85,11 +85,11 @@ void dbg_cmd_console(char recv_byte)
                 if(++ hs_pos == 10)
                     hs_pos = 0;
             }
-            sys_printf(DBG_PORT, "\r\n");
+            kprintf("\r\n");
             recv_cnt = 0;
         }
         else 
-            sys_printf(DBG_PORT, "\r\nunicontroller$ ");
+            kprintf("\r\nunicontroller$ ");
     }
     else if(recv_byte == '^')
     { // history recall
@@ -99,20 +99,20 @@ void dbg_cmd_console(char recv_byte)
         recv_cnt = 0;
         while(cmd_buf[recv_cnt] != 0)
             recv_cnt ++;
-        sys_printf(DBG_PORT, "\r                                                            ");
-        sys_printf(DBG_PORT, "\runicontroller$ ");
-        sys_printf(DBG_PORT, "%s", cmd_buf);
+        kprintf("\r                                                            ");
+        kprintf("\runicontroller$ ");
+        kprintf("%s", cmd_buf);
     }
     else if(recv_byte > 60)
     {
-        sys_printf(DBG_PORT, "\r\n>> Err: Command buffer overflow !\r\nunicontroller$ ");
+        kprintf("\r\n>> Err: Command buffer overflow !\r\nunicontroller$ ");
         dbg_cmd_reset();
         recv_cnt = 0;
     }
     else 
     {
-        sys_printf(DBG_PORT, "\runicontroller$  ");
-        sys_printf(DBG_PORT, "\runicontroller$ ");
+        kprintf("\runicontroller$  ");
+        kprintf("\runicontroller$ ");
         dbg_cmd_reset();
         recv_cnt = 0; 
     }
@@ -151,39 +151,39 @@ DbgErrType dbg_task_exec()
         case CMD_NO_ERR: break;
         case CMD_LEN_OUT: 
         {
-            sys_printf(DBG_PORT, ">> Err: command length exceed !\r\n");
+            kprintf(">> Err: command length exceed !\r\n");
             break;
         }
         case CMD_NUM_OUT:
         {
-            sys_printf(DBG_PORT, ">> Err: command quantity exceed !\r\n");
+            kprintf(">> Err: command quantity exceed !\r\n");
             break;
         }
         case CMD_NO_CMD:
         {
-            sys_printf(DBG_PORT, ">> Err: command no found !\r\n");
+            kprintf(">> Err: command no found !\r\n");
             break;
         }
         case CMD_PARAM_EXCEED:
         {
-            sys_printf(DBG_PORT, ">> Err: parameter exceed !\r\n");
+            kprintf(">> Err: parameter exceed !\r\n");
             break;
         }
         case CMD_PARAM_LESS: 
         {
-            sys_printf(DBG_PORT, ">> Err: parameter short !\r\n");
+            kprintf(">> Err: parameter short !\r\n");
             break;
         }
         case CMD_EXEC_ERR:
         {
-            sys_printf(DBG_PORT, ">> Err: command execute error !\r\n");
+            kprintf(">> Err: command execute error !\r\n");
             break;
         }
         default:
             break;
         }
         recv_cnt = 0;
-        sys_printf(DBG_PORT, "unicontroller$ ");
+        kprintf("unicontroller$ ");
         memset(cmd_buf, 0, sizeof(cmd_buf));
         dbg_cmd_reset();
         cmd_recv_state = NOCMD;
@@ -195,7 +195,7 @@ unsigned char dbg_hs_hdl(int argc, char* argv[])
 {
     for(int i = 0; i < 10; i++)
     {
-        sys_printf(DBG_PORT, " [%d] %s\r\n", 9 - i, hs_buf[(hs_pos + i) % 10]);
+        kprintf(" [%d] %s\r\n", 9 - i, hs_buf[(hs_pos + i) % 10]);
     }
     return 0;
 }
@@ -208,7 +208,7 @@ unsigned char dbg_reboot_hdl(int argc, char* argv[])
 
 unsigned char dbg_timer_hdl(int argc, char* argv[])
 {
-    sys_printf(DBG_PORT, ">> System timer count[x100us] is: %lld\r\n", sys_get_abs_time());
+    kprintf(">> System timer count[x100us] is: %lld\r\n", sys_get_abs_time());
 
     return 0;
 }
@@ -218,14 +218,14 @@ unsigned char dbg_help_hdl(int argc, char* argv[])
     CmdObj* cmd;
 
     unsigned int num = cmd_num(); // except cmd_list head
-    sys_printf(DBG_PORT, " CMD NUM: %d \r\n", num);
-    sys_printf(DBG_PORT, " [Commands]           [Usage]\r\n");
+    kprintf(" CMD NUM: %d \r\n", num);
+    kprintf(" [Commands]           [Usage]\r\n");
     for(unsigned int i = num; i > 0; i--)
     {
         cmd = cmd_obj_get(i);
-        sys_printf(DBG_PORT, "  %-15s :    %s\r\n", cmd->name, cmd->usage);
+        kprintf("  %-15s :    %s\r\n", cmd->name, cmd->usage);
     }
-    sys_printf(DBG_PORT, "\r\n");
+    kprintf("\r\n");
     return 0;
 }
 
@@ -235,31 +235,31 @@ unsigned char dbg_ls_hdl(int argc, char* argv[])
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_task_num();
-        sys_printf(DBG_PORT, " TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
-        sys_printf(DBG_PORT, " [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
+        kprintf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        kprintf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
         for(unsigned int i = num; i > 0; i--)
         {
             task = timeslice_obj_get(i);
-            sys_printf(DBG_PORT, "  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+            kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
         }
     }
     else if(strcmp(argv[1], "dtask") == 0)
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_del_task_num();
-        sys_printf(DBG_PORT, " DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
-        sys_printf(DBG_PORT, " [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
+        kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        kprintf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
         for(unsigned int i = num; i > 0; i--)
         {
             task = timeslice_del_obj_get(i);
-            sys_printf(DBG_PORT, "  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+            kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
         }
     }
     else 
     {
-        sys_printf(DBG_PORT, ">> Err: parameter not find !");
+        kprintf(">> Err: parameter not find !");
     }
-    sys_printf(DBG_PORT, "\r\n");
+    kprintf("\r\n");
     return 0;
 }
 
@@ -277,12 +277,12 @@ unsigned char dbg_kill_hdl(int argc, char* argv[])
         {
             task_find = 1;
             timeslice_task_del(task);
-            sys_printf(DBG_PORT, ">> Task [%s] has deleted from system\r\n", task->name);
+            kprintf(">> Task [%s] has deleted from system\r\n", task->name);
         }
     }
 
     if(task_find == 0)
-        sys_printf(DBG_PORT, ">> Task not found !\r\n", task->name);
+        kprintf(">> Task not found !\r\n", task->name);
 
     return 0;
 }
@@ -301,12 +301,12 @@ unsigned char dbg_proc_hdl(int argc, char* argv[])
         {
             task_find = 1;
             timeslice_task_add(task);
-            sys_printf(DBG_PORT, ">> Task [%s] has add to system\r\n", task->name);
+            kprintf(">> Task [%s] has add to system\r\n", task->name);
         }
     }
 
     if(task_find == 0)
-        sys_printf(DBG_PORT, ">> Task not found !\r\n", task->name);
+        kprintf(">> Task not found !\r\n", task->name);
 
     return 0;
 }
@@ -317,29 +317,29 @@ unsigned char cmd_ps_hdl(int argc, char* argv[])
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_task_num();
-        sys_printf(DBG_PORT, " TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
-        sys_printf(DBG_PORT, " [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
+        kprintf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        kprintf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
         for(unsigned int i = num; i > 0; i--)
         {
             task = timeslice_obj_get(i);
-            sys_printf(DBG_PORT, "  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+            kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
         }
     }
     else if(argc == 2 && strcmp(argv[1], "-d") == 0)
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_del_task_num();
-        sys_printf(DBG_PORT, " DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
-        sys_printf(DBG_PORT, " [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
+        kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        kprintf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
         for(unsigned int i = num; i > 0; i--)
         {
             task = timeslice_del_obj_get(i);
-            sys_printf(DBG_PORT, "  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+            kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
         } 
     }
     else 
     {
-        sys_printf(DBG_PORT, ">> Err: parameter not find !\r\n");
+        kprintf(">> Err: parameter not find !\r\n");
     }
     return 0;
 }

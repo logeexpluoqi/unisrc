@@ -8,4 +8,11 @@
 #ifndef _COMMON_H
 #define _COMMON_H
 
+typedef char            uni_int8_t;
+typedef unsigned char   uni_uint8_t;
+typedef short           uni_int16_t;
+typedef unsigned short  uni_uint16_t;
+typedef int             uni_int32_t;
+typedef unsigned int    uni_uint32_t;
+
 #endif
