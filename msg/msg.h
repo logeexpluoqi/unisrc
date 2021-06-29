@@ -7,7 +7,7 @@
 #ifndef _MSG_H
 #define _MSG_H
 
-#include "../common/list.h"
+#include "../service/list.h"
 
 typedef enum MSG_STATE
 {

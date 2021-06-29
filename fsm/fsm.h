@@ -8,7 +8,7 @@
 #ifndef _FSM_H
 #define _FSM_H
 
-#include "../common/list.h"
+#include "../service/list.h"
 
 typedef struct fsm_object {
     const char* name;

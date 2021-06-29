@@ -8,7 +8,7 @@
 #ifndef _TIMESLICE_H
 #define _TIMESLICE_H
 
-#include "../common/list.h"
+#include "../service/list.h"
 
 typedef enum {
     TASK_STOP,
@@ -23,6 +23,7 @@ typedef struct timesilce
     IsTaskRun is_run;
     unsigned int timer;
     unsigned int timeslice_len;
+    unsigned long long run_time;
     ListObj timeslice_task_list;
     const char* usage;
 } TimesilceTaskObj;

@@ -66,6 +66,7 @@ void timeslice_task_init(TimesilceTaskObj* obj,
     obj->timer = timeslice_len;
     obj->timeslice_len = timeslice_len;
     obj->usage = usage;
+    obj->run_time = 0;
 }
 
 void timeslice_task_add(TimesilceTaskObj* obj)
