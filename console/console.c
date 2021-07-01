@@ -24,6 +24,7 @@ static CmdObj cmd_help;
 static CmdObj cmd_timer;
 static CmdObj cmd_hs;
 static CmdObj cmd_ps;
+static CmdObj cmd_clear;
 
 static unsigned char dbg_reboot_hdl(int argc, char* argv[]);
 static unsigned char dbg_help_hdl(int argc, char* argv[]);
@@ -33,6 +34,7 @@ static unsigned char dbg_kill_hdl(int argc, char* argv[]);
 static unsigned char dbg_proc_hdl(int argc, char* argv[]);
 static unsigned char dbg_hs_hdl(int argc, char* argv[]);
 static unsigned char cmd_ps_hdl(int argc, char* argv[]);
+static unsigned char cmd_clear_hdl(int argc, char* argv[]);
 
 DbgErrType dbg_task_init()
 {
@@ -44,6 +46,7 @@ DbgErrType dbg_task_init()
     cmd_init(&cmd_kill, "kill", 1, dbg_kill_hdl, "kill timeslice task <task id>");
     cmd_init(&cmd_proc, "proc", 1, dbg_proc_hdl, "recover deleted task <task id>");
     cmd_init(&cmd_ps, "ps", 0xff, cmd_ps_hdl, "list all running tasks </-d>");
+    cmd_init(&cmd_clear, "clear", 0, cmd_clear_hdl, "clear window");
 
     cmd_add(&cmd_hs);
     cmd_add(&cmd_help);
@@ -53,6 +56,7 @@ DbgErrType dbg_task_init()
     cmd_add(&cmd_kill);
     cmd_add(&cmd_proc);
     cmd_add(&cmd_ps);
+    cmd_add(&cmd_clear);
 
     return DBG_NO_ERR;
 }
@@ -203,6 +207,13 @@ unsigned char dbg_hs_hdl(int argc, char* argv[])
 unsigned char dbg_reboot_hdl(int argc, char* argv[])
 {
     SysCtl_resetDevice();
+    return 0;
+}
+
+unsigned char cmd_clear_hdl(int argc, char* argv[])
+{
+    kprintf("\033[H\033[J");
+
     return 0;
 }
 
