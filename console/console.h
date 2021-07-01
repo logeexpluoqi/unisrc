@@ -24,4 +24,6 @@ void console_cmd_recv(char data);
 DbgErrType console_task_init(void);
 DbgErrType console_task_exec(void);
 
+extern kprintf(char* fmt, ...);
+
 #endif

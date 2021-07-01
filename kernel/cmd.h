@@ -8,7 +8,7 @@
 #ifndef _CMD_H
 #define _CMD_H
 
-#include "../service/list.h"
+#include "service/list.h"
 #define CMD_MAX_LEN     60
 #define CMD_MAX_NUM     20
 

@@ -6,8 +6,8 @@
  */
 
 #include "console.h"
-#include "../cmd/cmd.h"
-#include "../timeslice/timeslice.h"
+#include "../kernel/cmd.h"
+#include "../kernel/timeslice.h"
 #include <string.h>
 
 #define CMD_USR_HEAD    ">$ "
