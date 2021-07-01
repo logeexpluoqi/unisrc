@@ -235,7 +235,7 @@ unsigned char cmd_timer_hdl(int argc, char* argv[])
 
 unsigned char cmd_clear_hdl(int argc, char* argv[])
 {
-    kprintf(DBG_PORT, "\033[H\033[J");
+    kprintf("\033[H\033[J");
 
     return 0;
 }
