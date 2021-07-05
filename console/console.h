@@ -23,6 +23,7 @@ typedef enum
 void console_cmd_recv(char data);
 DbgErrType console_task_init(void);
 DbgErrType console_task_exec(void);
+void console_print_usr_head(void);
 
 extern kprintf(char* fmt, ...);
 

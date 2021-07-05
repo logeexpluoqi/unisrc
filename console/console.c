@@ -38,10 +38,9 @@ static unsigned char cmd_hs_hdl(int argc, char* argv[]);
 static unsigned char cmd_ps_hdl(int argc, char* argv[]);
 static unsigned char cmd_clear_hdl(int argc, char* argv[]);
 
-inline void console_print_usr_head(void);
+void console_print_usr_head(void);
 inline void console_set_recv_state(CmdRecvState state);
 inline void console_cmd_reset(void);
-inline CmdRecvState console_get_recv_state(void);
 
 DbgErrType console_task_init()
 {
@@ -84,11 +83,7 @@ void console_cmd_recv(char recv_byte)
     }
     else if(recv_byte == '\b' && recv_cnt > 0)
     { // backspace charactor
-        console_print_usr_head();
-        for(char i = 0; i < recv_cnt; i++)
-        {
-            kprintf(" "); 
-        }
+        kprintf("\b ");
         cmd_buf[-- recv_cnt] = 0;
         console_print_usr_head();
         kprintf("%s", cmd_buf);
@@ -115,26 +110,29 @@ void console_cmd_recv(char recv_byte)
     { // history recall
         memcpy(cmd_buf, hs_buf[hs_pos - 1], sizeof(hs_buf[hs_pos - 1]));
         if(-- hs_pos < 0)
+        {
             hs_pos = 9;
+        }
         recv_cnt = 0;
         while(cmd_buf[recv_cnt] != 0)
+        {
             recv_cnt ++;
-        kprintf("\r                                                            ");
+        }
+        kprintf("\r\033[k");
         console_print_usr_head();
         kprintf("%s", cmd_buf);
+        console_cmd_reset();
     }
     else if(recv_byte > 60)
     {
         kprintf("\r\n>> Err: Command buffer overflow !\n");
         console_print_usr_head();
         console_cmd_reset();
-        recv_cnt = 0;
     }
     else 
     {
         console_print_usr_head();
         console_cmd_reset();
-        recv_cnt = 0; 
     }
 }
 
@@ -181,7 +179,7 @@ DbgErrType console_task_exec()
         }
         case CMD_NO_CMD:
         {
-            kprintf("\r>> Err: command no found !\r\n");
+            kprintf("\r>> Err: command not found !\r\n");
             break;
         }
         case CMD_PARAM_EXCEED:
