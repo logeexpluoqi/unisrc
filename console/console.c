@@ -93,6 +93,10 @@ void console_cmd_recv(char recv_byte)
     { // enter key value
         if(recv_cnt != 0)
         {
+            if(cmd_buf[recv_cnt - 1] == ' ')
+            {
+                cmd_buf[recv_cnt - 1] = 0;
+            }
             cmd_recv_state = FINISHED;
             if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's'))
             {
