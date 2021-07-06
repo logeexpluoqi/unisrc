@@ -20,11 +20,11 @@ typedef enum
     FINISHED
 } CmdRecvState;
 
-void dbg_cmd_console(char data);
-DbgErrType dbg_task_init(void);
-DbgErrType dbg_task_exec(void);
-void dbg_set_cmd_recv_state(CmdRecvState state);
-void dbg_cmd_reset(void);
-CmdRecvState dbg_get_cmd_recv_state(void);
+void console_cmd_recv(char data);
+DbgErrType console_task_init(void);
+DbgErrType console_task_exec(void);
+void console_print_usr_head(void);
+
+extern kprintf(char* fmt, ...);
 
 #endif

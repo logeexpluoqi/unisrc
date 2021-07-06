@@ -5,8 +5,8 @@
  * @Last Modified time: 2021-04-28 14:55:37
  */
 
-#ifndef _COMMON_H
-#define _COMMON_H
+#ifndef _KDEF_H
+#define _KDEF_H
 
 typedef char            uni_int8_t;
 typedef unsigned char   uni_uint8_t;

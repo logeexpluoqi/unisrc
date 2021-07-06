@@ -8,7 +8,7 @@
 #ifndef _TIMESLICE_H
 #define _TIMESLICE_H
 
-#include "../service/list.h"
+#include "service/list.h"
 
 typedef enum {
     TASK_STOP,
