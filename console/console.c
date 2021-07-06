@@ -11,7 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define CMD_USR_HEAD    ">$ "
+#define CMD_USR_HEAD    "luoqi>$ "
 
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[10][CMD_MAX_LEN];
@@ -93,7 +93,7 @@ void console_cmd_recv(char recv_byte)
     { // enter key value
         if(recv_cnt != 0)
         {
-            console_set_cmd_recv_state(FINISHED);
+            cmd_recv_state = FINISHED;
             if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's'))
             {
                 memcpy(hs_buf[hs_pos], cmd_buf, sizeof(cmd_buf));
@@ -221,13 +221,14 @@ unsigned char cmd_hs_hdl(int argc, char* argv[])
 
 unsigned char cmd_reboot_hdl(int argc, char* argv[])
 {
-    SysCtl_resetDevice();
+    // device software reset fucntion
+
     return 0;
 }
 
 unsigned char cmd_timer_hdl(int argc, char* argv[])
 {
-    kprintf("\r>> System timer count[x100us] is: %lld\r\n", sys_get_abs_time());
+    // kprintf("\r>> System timer count[x100us] is: %lld\r\n", sys_get_abs_time());
 
     return 0;
 }
