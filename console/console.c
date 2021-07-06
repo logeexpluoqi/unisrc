@@ -108,8 +108,10 @@ void console_cmd_recv(char recv_byte)
             recv_cnt = 0;
         }
         else 
+        {
             kprintf("\r\n");
             console_print_usr_head();
+        }
     }
     else if(recv_byte == '^')
     { // history recall
@@ -174,32 +176,32 @@ DbgErrType console_task_exec()
         case CMD_NO_ERR: break;
         case CMD_LEN_OUT: 
         {
-            kprintf("\r>> Err: command length exceed !\r\n");
+            kprintf(">> Err: command length exceed !\r\n");
             break;
         }
         case CMD_NUM_OUT:
         {
-            kprintf("\r>> Err: command quantity exceed !\r\n");
+            kprintf(">> Err: command quantity exceed !\r\n");
             break;
         }
         case CMD_NO_CMD:
         {
-            kprintf("\r>> Err: command not found !\r\n");
+            kprintf(">> Err: command not found !\r\n");
             break;
         }
         case CMD_PARAM_EXCEED:
         {
-            kprintf("\r>> Err: parameter exceed !\r\n");
+            kprintf(">> Err: parameter exceed !\r\n");
             break;
         }
         case CMD_PARAM_LESS: 
         {
-            kprintf("\r>> Err: parameter short !\r\n");
+            kprintf(">> Err: parameter short !\r\n");
             break;
         }
         case CMD_EXEC_ERR:
         {
-            kprintf("\r>> Err: command execute error !\r\n");
+            kprintf(">> Err: command execute error !\r\n");
             break;
         }
         default:
@@ -218,7 +220,7 @@ unsigned char cmd_hs_hdl(int argc, char* argv[])
 {
     for(int i = 0; i < 10; i++)
     {
-        kprintf("\r [%d] %s\r\n", 9 - i, hs_buf[(hs_pos + i) % 10]);
+        kprintf(" [%d] %s\r\n", 9 - i, hs_buf[(hs_pos + i) % 10]);
     }
     return 0;
 }
@@ -249,7 +251,7 @@ unsigned char cmd_help_hdl(int argc, char* argv[])
     CmdObj* cmd;
 
     unsigned int num = cmd_num(); // except cmd_list head
-    kprintf("\r CMD NUM: %d \r\n", num);
+    kprintf(" CMD NUM: %d \r\n", num);
     kprintf(" [Commands]           [Usage]\r\n");
     for(unsigned int i = num; i > 0; i--)
     {
@@ -266,7 +268,7 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_task_num();
-        kprintf("\r TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        kprintf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
         kprintf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
         for(unsigned int i = num; i > 0; i--)
         {
@@ -278,7 +280,7 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_del_task_num();
-        kprintf("\r DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
         kprintf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
         for(unsigned int i = num; i > 0; i--)
         {
@@ -288,7 +290,7 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
     }
     else 
     {
-        kprintf("\r>> Err: parameter not find !");
+        kprintf(">> Err: parameter not find !");
     }
     kprintf("\r\n");
     return 0;
@@ -308,12 +310,12 @@ unsigned char cmd_kill_hdl(int argc, char* argv[])
         {
             task_find = 1;
             timeslice_task_del(task);
-            kprintf("\r>> Task [%s] has deleted from system\r\n", task->name);
+            kprintf(">> Task [%s] has deleted from system\r\n", task->name);
         }
     }
 
     if(task_find == 0)
-        kprintf("\r>> Task not found !\r\n", task->name);
+        kprintf(">> Task not found !\r\n", task->name);
 
     return 0;
 }
@@ -332,12 +334,12 @@ unsigned char cmd_proc_hdl(int argc, char* argv[])
         {
             task_find = 1;
             timeslice_task_add(task);
-            kprintf("\r>> Task [%s] has add to system\r\n", task->name);
+            kprintf(">> Task [%s] has add to system\r\n", task->name);
         }
     }
 
     if(task_find == 0)
-        kprintf("\r>> Task not found !\r\n", task->name);
+        kprintf(">> Task not found !\r\n", task->name);
 
     return 0;
 }
@@ -348,7 +350,7 @@ unsigned char cmd_ps_hdl(int argc, char* argv[])
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_task_num();
-        kprintf("\r TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        kprintf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
         kprintf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
         for(unsigned int i = num; i > 0; i--)
         {
@@ -360,7 +362,7 @@ unsigned char cmd_ps_hdl(int argc, char* argv[])
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_del_task_num();
-        kprintf("\r DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
         kprintf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
         for(unsigned int i = num; i > 0; i--)
         {
@@ -370,7 +372,7 @@ unsigned char cmd_ps_hdl(int argc, char* argv[])
     }
     else 
     {
-        kprintf("\r>> Err: parameter not find !\r\n");
+        kprintf(">> Err: parameter not find !\r\n");
     }
     return 0;
 }
