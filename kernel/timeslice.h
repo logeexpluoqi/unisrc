@@ -24,7 +24,7 @@ typedef struct timesilce
     unsigned int timer;
     unsigned int timeslice_len;
     unsigned long long run_time;
-    ListObj timeslice_task_list;
+    ListObj timeslice_task_node;
     const char* usage;
 } TimesilceTaskObj;
 
@@ -41,6 +41,7 @@ void timeslice_change_slice(TimesilceTaskObj* obj, unsigned int slice_len);
 unsigned int timeslice_get_task_timeslice_len(TimesilceTaskObj* obj);
 unsigned int timeslice_get_task_num(void);
 unsigned char timeslice_task_isexist(TimesilceTaskObj* obj);
+unsigned char timesilce_task_del_isexist(TimesilceTaskObj* obj);
 TimesilceTaskObj* timeslice_obj_get(unsigned int serial);
 unsigned int timeslice_get_del_task_num(void);
 TimesilceTaskObj* timeslice_del_obj_get(unsigned int serial);
