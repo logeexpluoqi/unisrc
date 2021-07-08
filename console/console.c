@@ -128,7 +128,6 @@ void console_cmd_recv(char recv_byte)
         kprintf("\r\033[k");
         console_print_usr_head();
         kprintf("%s", cmd_buf);
-        console_cmd_reset();
     }
     else if(recv_byte > 60)
     {
