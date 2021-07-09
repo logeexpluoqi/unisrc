@@ -21,7 +21,7 @@ static unsigned int recv_cnt = 0;
 
 static CmdObj cmd_ls;
 static CmdObj cmd_kill;
-static CmdObj cmd_proc;
+static CmdObj cmd_join;
 static CmdObj cmd_reboot;
 static CmdObj cmd_help;
 static CmdObj cmd_timer;
@@ -34,7 +34,7 @@ static unsigned char cmd_help_hdl(int argc, char* argv[]);
 static unsigned char cmd_ls_hdl(int argc, char* argv[]);
 static unsigned char cmd_timer_hdl(int argc, char* argv[]);
 static unsigned char cmd_kill_hdl(int argc, char* argv[]);
-static unsigned char cmd_proc_hdl(int argc, char* argv[]);
+static unsigned char cmd_join_hdl(int argc, char* argv[]);
 static unsigned char cmd_hs_hdl(int argc, char* argv[]);
 static unsigned char cmd_ps_hdl(int argc, char* argv[]);
 static unsigned char cmd_clear_hdl(int argc, char* argv[]);
@@ -51,7 +51,7 @@ DbgErrType console_task_init()
     cmd_init(&cmd_ls, "ls", 1, cmd_ls_hdl, "list objects <task/fsm/dtask>");
     cmd_init(&cmd_timer, "timer", 0, cmd_timer_hdl, "show system abs timer");
     cmd_init(&cmd_kill, "kill", 1, cmd_kill_hdl, "kill timeslice task <task id>");
-    cmd_init(&cmd_proc, "proc", 1, cmd_proc_hdl, "recover deleted task <task id>");
+    cmd_init(&cmd_join, "proc", 1, cmd_join_hdl, "join deleted task to timeslice <task id>");
     cmd_init(&cmd_ps, "ps", 0xff, cmd_ps_hdl, "list all running tasks </-d>");
     cmd_init(&cmd_clear, "clear", 0, cmd_clear_hdl, "clear window");
 
@@ -61,7 +61,7 @@ DbgErrType console_task_init()
     cmd_add(&cmd_ls);
     cmd_add(&cmd_timer);
     cmd_add(&cmd_kill);
-    cmd_add(&cmd_proc);
+    cmd_add(&cmd_join);
     cmd_add(&cmd_ps);
     cmd_add(&cmd_clear);
 
@@ -319,7 +319,7 @@ unsigned char cmd_kill_hdl(int argc, char* argv[])
     return 0;
 }
 
-unsigned char cmd_proc_hdl(int argc, char* argv[])
+unsigned char cmd_join_hdl(int argc, char* argv[])
 {
     unsigned char task_find = 0;
 
