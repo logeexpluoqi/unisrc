@@ -15,12 +15,12 @@ typedef enum
 
 typedef enum
 {
-    UNFINISH,
-    NOCMD,
-    FINISHED
+    CMD_RECV_UNFINISH,
+    CMD_RECV_NOCMD,
+    CMD_RECV_FINISHED
 } CmdRecvState;
 
-void console_cmd_recv(char data);
+void console_cmd_recv(char recv_byte);
 DbgErrType console_task_init(void);
 DbgErrType console_task_exec(void);
 void console_print_usr_head(void);
