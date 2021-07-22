@@ -16,7 +16,7 @@
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[10][CMD_MAX_LEN];
 static char hs_pos = 0;
-static CmdRecvState cmd_recv_state = NOCMD;
+static CmdRecvState cmd_recv_state = CMD_RECV_NOCMD;
 static unsigned int recv_cnt = 0;
 
 static CmdObj cmd_ls;
@@ -40,7 +40,6 @@ static unsigned char cmd_ps_hdl(int argc, char* argv[]);
 static unsigned char cmd_clear_hdl(int argc, char* argv[]);
 
 void console_print_usr_head(void);
-inline void console_set_recv_state(CmdRecvState state);
 inline void console_cmd_reset(void);
 
 DbgErrType console_task_init()
@@ -97,7 +96,7 @@ void console_cmd_recv(char recv_byte)
             {
                 cmd_buf[recv_cnt - 1] = 0;
             }
-            cmd_recv_state = FINISHED;
+            cmd_recv_state = CMD_RECV_FINISHED;
             if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's'))
             {
                 memcpy(hs_buf[hs_pos], cmd_buf, sizeof(cmd_buf));
@@ -150,7 +149,7 @@ void console_cmd_reset()
 
 char* console_cmd()
 {
-    if(cmd_recv_state == FINISHED)
+    if(cmd_recv_state == CMD_FINISHED)
         return cmd_buf;
     else 
         return NULL;
@@ -168,7 +167,7 @@ CmdRecvState console_get_recv_state()
 
 DbgErrType console_task_exec()
 {
-    if(cmd_recv_state == FINISHED)
+    if(cmd_recv_state == CMD_RECV_FINISHED)
     {
         switch(cmd_exec(console_cmd()))
         {
@@ -210,14 +209,16 @@ DbgErrType console_task_exec()
         kprintf(CMD_USR_HEAD);
         memset(cmd_buf, 0, sizeof(cmd_buf));
         console_cmd_reset();
-        cmd_recv_state = NOCMD;
+        cmd_recv_state = CMD_RECV_NOCMD;
     }
     return DBG_NO_ERR;
 }
 
 unsigned char cmd_hs_hdl(int argc, char* argv[])
 {
-    for(int i = 0; i < 10; i++)
+    int i;
+
+    for(i = 0; i < 10; i++)
     {
         kprintf(" [%d] %s\r\n", 9 - i, hs_buf[(hs_pos + i) % 10]);
     }
@@ -248,11 +249,12 @@ unsigned char cmd_clear_hdl(int argc, char* argv[])
 unsigned char cmd_help_hdl(int argc, char* argv[])
 {
     CmdObj* cmd;
+    unsigned int i;
 
     unsigned int num = cmd_num(); // except cmd_list head
     kprintf(" CMD NUM: %d \r\n", num);
     kprintf(" [Commands]           [Usage]\r\n");
-    for(unsigned int i = num; i > 0; i--)
+    for(i = num; i > 0; i--)
     {
         cmd = cmd_obj_get(i);
         kprintf("  %-15s :    %s\r\n", cmd->name, cmd->usage);
@@ -267,9 +269,11 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_task_num();
+        unsigned int i;
+
         kprintf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
         kprintf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
-        for(unsigned int i = num; i > 0; i--)
+        for(i = num; i > 0; i--)
         {
             task = timeslice_obj_get(i);
             kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
@@ -281,7 +285,7 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
         unsigned int num = timeslice_get_del_task_num();
         kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
         kprintf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
-        for(unsigned int i = num; i > 0; i--)
+        for(i = num; i > 0; i--)
         {
             task = timeslice_del_obj_get(i);
             kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
@@ -322,11 +326,12 @@ unsigned char cmd_kill_hdl(int argc, char* argv[])
 unsigned char cmd_join_hdl(int argc, char* argv[])
 {
     unsigned char task_find = 0;
+    unsigned int i;
 
     TimesilceTaskObj* task;
 
     unsigned int num = timeslice_get_del_task_num();
-    for(unsigned int i = num; i > 0; i--)
+    for(i = num; i > 0; i--)
     {
         task = timeslice_del_obj_get(i);
         if(atoi(argv[1]) == task->id)
@@ -345,13 +350,14 @@ unsigned char cmd_join_hdl(int argc, char* argv[])
 
 unsigned char cmd_ps_hdl(int argc, char* argv[])
 {
+    unsigned int i;
     if(argc == 1)
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_task_num();
         kprintf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
         kprintf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
-        for(unsigned int i = num; i > 0; i--)
+        for(i = num; i > 0; i--)
         {
             task = timeslice_obj_get(i);
             kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
@@ -363,7 +369,7 @@ unsigned char cmd_ps_hdl(int argc, char* argv[])
         unsigned int num = timeslice_get_del_task_num();
         kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
         kprintf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
-        for(unsigned int i = num; i > 0; i--)
+        for(i = num; i > 0; i--)
         {
             task = timeslice_del_obj_get(i);
             kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
