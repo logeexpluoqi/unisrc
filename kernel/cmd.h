@@ -26,7 +26,7 @@ typedef enum cmd_err
 typedef struct cmd_object
 {
     const char* name;
-    /* id auto increase from 1, if return id is 0 means that there is not target command */
+    /* id auto increase from 1, if return id is 0 means that there is no target command */
     unsigned int id;
     /* parameter number, max 255 */
     unsigned char param_num;
