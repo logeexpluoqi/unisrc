@@ -99,12 +99,18 @@ void cmd_init(CmdObj* obj,
 
 void cmd_add(CmdObj* obj)
 {
-    list_insert_before(&cmd_list, &obj->cmd_list);
+    if(cmd_isexist(obj) == 0)
+    {
+        list_insert_before(&cmd_list, &obj->cmd_list);
+    }
 }
 
 void cmd_del(CmdObj* obj)
 {
-    list_remove(&obj->cmd_list);
+    if(cmd_isexist(obj))
+    {
+        list_remove(&obj->cmd_list);
+    }
 }
 
 unsigned char cmd_isexist(CmdObj* obj)
