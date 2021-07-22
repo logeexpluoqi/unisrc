@@ -73,8 +73,10 @@ void timeslice_task_init(TimesilceTaskObj* obj,
 
 void timeslice_task_add(TimesilceTaskObj* obj)
 {
-    list_remove(&obj->timeslice_task_node);
-    list_insert_before(&timeslice_task_list, &obj->timeslice_task_node);
+    if(timeslice_task_isexist(obj) == 0)
+    {
+        list_insert_before(&timeslice_task_list, &obj->timeslice_task_node);
+    }
 }
 
 unsigned char timeslice_task_del(TimesilceTaskObj* obj)
