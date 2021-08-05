@@ -130,7 +130,7 @@ void console_cmd_recv(char recv_byte)
     }
     else if(recv_byte > 60)
     {
-        kprintf("\r\n>> Err: Command buffer overflow !\n");
+        kprintf("\r\n #! Command buffer overflow !\n");
         console_print_usr_head();
         console_cmd_reset();
     }
@@ -174,32 +174,32 @@ DbgErrType console_task_exec()
         case CMD_NO_ERR: break;
         case CMD_LEN_OUT: 
         {
-            kprintf(">> Err: command length exceed !\r\n");
+            kprintf(" #! command length exceed !\r\n");
             break;
         }
         case CMD_NUM_OUT:
         {
-            kprintf(">> Err: command quantity exceed !\r\n");
+            kprintf(" #! command quantity exceed !\r\n");
             break;
         }
         case CMD_NO_CMD:
         {
-            kprintf(">> Err: command not found !\r\n");
+            kprintf(" #! command not found !\r\n");
             break;
         }
         case CMD_PARAM_EXCEED:
         {
-            kprintf(">> Err: parameter exceed !\r\n");
+            kprintf(" #! parameter exceed !\r\n");
             break;
         }
         case CMD_PARAM_LESS: 
         {
-            kprintf(">> Err: parameter short !\r\n");
+            kprintf(" #! parameter short !\r\n");
             break;
         }
         case CMD_EXEC_ERR:
         {
-            kprintf(">> Err: command execute error !\r\n");
+            kprintf(" #! command execute error !\r\n");
             break;
         }
         default:
@@ -281,6 +281,7 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
     }
     else if(strcmp(argv[1], "dtask") == 0)
     {
+        unsigned int i;
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_del_task_num();
         kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
@@ -293,7 +294,7 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
     }
     else 
     {
-        kprintf(">> Err: parameter not find !");
+        kprintf(" #! parameter not find !");
     }
     kprintf("\r\n");
     return 0;
@@ -343,7 +344,7 @@ unsigned char cmd_join_hdl(int argc, char* argv[])
     }
 
     if(task_find == 0)
-        kprintf(">> Task not found !\r\n", task->name);
+        kprintf(" #! Task not found !\r\n", task->name);
 
     return 0;
 }
@@ -377,7 +378,7 @@ unsigned char cmd_ps_hdl(int argc, char* argv[])
     }
     else 
     {
-        kprintf(">> Err: parameter not find !\r\n");
+        kprintf(" #! parameter not find !\r\n");
     }
     return 0;
 }
