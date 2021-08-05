@@ -149,7 +149,7 @@ void console_cmd_reset()
 
 char* console_cmd()
 {
-    if(cmd_recv_state == CMD_FINISHED)
+    if(cmd_recv_state == CMD_RECV_FINISHED)
         return cmd_buf;
     else 
         return NULL;
@@ -319,7 +319,7 @@ unsigned char cmd_kill_hdl(int argc, char* argv[])
     }
 
     if(task_find == 0)
-        kprintf(">> Task not found !\r\n", task->name);
+        kprintf(" #! Task not found !\r\n", task->name);
 
     return 0;
 }
