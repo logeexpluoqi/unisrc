@@ -5,18 +5,19 @@
  * @Last Modified time: 2021-05-26 16:15:03
  */
 
-#include "console.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include "qsh.h"
 #include "../kernel/cmd.h"
 #include "../kernel/timeslice.h"
-#include <string.h>
-#include <stdlib.h>
 
-#define CMD_USR_HEAD    "luoqi>$ "
+#define QSH_INPUT_LOGO    "luoqi>$ "
 
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[10][CMD_MAX_LEN];
-static char hs_pos = 0;
-static CmdRecvState cmd_recv_state = CMD_RECV_NOCMD;
+static char hs_index = 0;
+static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
 static unsigned int recv_cnt = 0;
 
 static CmdObj cmd_ls;
@@ -39,10 +40,10 @@ static unsigned char cmd_hs_hdl(int argc, char* argv[]);
 static unsigned char cmd_ps_hdl(int argc, char* argv[]);
 static unsigned char cmd_clear_hdl(int argc, char* argv[]);
 
-void console_print_usr_head(void);
-inline void console_cmd_reset(void);
+void qsh_input_logo(void);
+inline void qsh_cmd_reset(void);
 
-DbgErrType console_task_init()
+void qsh_task_init()
 {
     cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
@@ -63,30 +64,28 @@ DbgErrType console_task_init()
     cmd_add(&cmd_join);
     cmd_add(&cmd_ps);
     cmd_add(&cmd_clear);
-
-    return DBG_NO_ERR;
 }
 
-void console_print_usr_head()
+void qsh_input_logo()
 {
-    kprintf("\r");
-    kprintf(CMD_USR_HEAD);
+    qsh_printf("\r");
+    qsh_printf(QSH_INPUT_LOGO);
 }
 
 
-void console_cmd_recv(char recv_byte)
+void qsh_get_cmd(char recv_byte)
 {
     if(recv_byte != '\r' && recv_byte != '\b' && recv_byte != '^' && recv_cnt  <  60)
     { // normal charactor
         cmd_buf[recv_cnt++] = recv_byte;
-        kprintf("%c", recv_byte);
+        qsh_printf("%c", recv_byte);
     }
     else if(recv_byte == '\b' && recv_cnt > 0)
     { // backspace charactor
-        kprintf("\b ");
+        qsh_printf("\b ");
         cmd_buf[-- recv_cnt] = 0;
-        console_print_usr_head();
-        kprintf("%s", cmd_buf);
+        qsh_input_logo();
+        qsh_printf("%s", cmd_buf);
     }
     else if(recv_byte == '\r')
     { // enter key value
@@ -96,122 +95,154 @@ void console_cmd_recv(char recv_byte)
             {
                 cmd_buf[recv_cnt - 1] = 0;
             }
-            cmd_recv_state = CMD_RECV_FINISHED;
+            qsh_recv_state = QSH_RECV_FINISHED;
             if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's'))
             {
-                memcpy(hs_buf[hs_pos], cmd_buf, sizeof(cmd_buf));
-                if(++ hs_pos == 10)
-                    hs_pos = 0;
+                memcpy(hs_buf[hs_index], cmd_buf, sizeof(cmd_buf));
+                if(++ hs_index == 10)
+                    hs_index = 0;
             }
-            kprintf("\r\n");
+            qsh_printf("\r\n");
             recv_cnt = 0;
         }
         else 
         {
-            kprintf("\r\n");
-            console_print_usr_head();
+            qsh_printf("\r\n");
+            qsh_input_logo();
         }
     }
     else if(recv_byte == '^')
     { // history recall
-        memcpy(cmd_buf, hs_buf[hs_pos - 1], sizeof(hs_buf[hs_pos - 1]));
-        if(-- hs_pos < 0)
+        memcpy(cmd_buf, hs_buf[hs_index - 1], sizeof(hs_buf[hs_index - 1]));
+        if(-- hs_index < 0)
         {
-            hs_pos = 9;
+            hs_index = 9;
         }
         recv_cnt = 0;
         while(cmd_buf[recv_cnt] != 0)
         {
             recv_cnt ++;
         }
-        kprintf("\r\033[k");
-        console_print_usr_head();
-        kprintf("%s", cmd_buf);
+        qsh_printf("\r\033[k");
+        qsh_input_logo();
+        qsh_printf("%s", cmd_buf);
     }
     else if(recv_byte > 60)
     {
-        kprintf("\r\n #! Command buffer overflow !\n");
-        console_print_usr_head();
-        console_cmd_reset();
+        qsh_printf("\r\n #! Command buffer overflow !\n");
+        qsh_input_logo();
+        qsh_cmd_reset();
     }
     else 
     {
-        console_print_usr_head();
-        console_cmd_reset();
+        qsh_input_logo();
+        qsh_cmd_reset();
     }
 }
 
-void console_cmd_reset()
+void qsh_gets_cmd(char* cmd)
+{
+    uint32_t len = strlen(cmd);
+    if(len <= CMD_MAX_LEN && len > 0){
+        if(len == 3 && cmd[0] == 0x1b && cmd[1] == 0x5b && cmd[2] == 0x41){
+            qsh_printf("\r\03[k"); // clear line 
+            if(hs_index > 0){
+                hs_index --;
+                memcpy(cmd_buf, hs_buf[hs_index], sizeof(hs_buf[hs_index]));
+                qsh_input_logo();
+                qsh_printf("%s\r\n", cmd_buf);
+            }
+            else{
+                qsh_printf("\r\03[k");
+                qsh_input_logo();
+                return;
+            }
+        }else{
+            memcpy(cmd_buf, cmd, len);
+        }
+        if(strcmp(cmd_buf, "hs") != 0){
+            memcpy(hs_buf[hs_index++], cmd_buf, sizeof(cmd_buf));
+            if(hs_index == 10){
+                hs_index = 0;
+            }
+        }
+        qsh_recv_state = QSH_RECV_FINISHED;
+    }else{
+        qsh_input_logo();
+        return;
+    }
+}
+
+void qsh_cmd_reset()
 {
     recv_cnt = 0;
     memset(cmd_buf, 0, sizeof(cmd_buf));
 }
 
-char* console_cmd()
+char* qsh_cmd()
 {
-    if(cmd_recv_state == CMD_RECV_FINISHED)
+    if(qsh_recv_state == QSH_RECV_FINISHED)
         return cmd_buf;
     else 
         return NULL;
 }
 
-void console_set_recv_state(CmdRecvState state)
+void qsh_set_recv_state(QshRecvState state)
 {
-    cmd_recv_state = state;
+    qsh_recv_state = state;
 }
 
-CmdRecvState console_get_recv_state()
+QshRecvState qsh_get_recv_state()
 {
-    return cmd_recv_state;
+    return qsh_recv_state;
 }
 
-DbgErrType console_task_exec()
+void qsh_task_exec()
 {
-    if(cmd_recv_state == CMD_RECV_FINISHED)
+    if(qsh_recv_state == QSH_RECV_FINISHED)
     {
-        switch(cmd_exec(console_cmd()))
+        switch(cmd_exec(qsh_cmd()))
         {
         case CMD_NO_ERR: break;
         case CMD_LEN_OUT: 
         {
-            kprintf(" #! command length exceed !\r\n");
+            qsh_printf(" #! command length exceed !\r\n");
             break;
         }
         case CMD_NUM_OUT:
         {
-            kprintf(" #! command quantity exceed !\r\n");
+            qsh_printf(" #! command quantity exceed !\r\n");
             break;
         }
         case CMD_NO_CMD:
         {
-            kprintf(" #! command not found !\r\n");
+            qsh_printf(" #! command not found !\r\n");
             break;
         }
         case CMD_PARAM_EXCEED:
         {
-            kprintf(" #! parameter exceed !\r\n");
+            qsh_printf(" #! parameter exceed !\r\n");
             break;
         }
         case CMD_PARAM_LESS: 
         {
-            kprintf(" #! parameter short !\r\n");
+            qsh_printf(" #! parameter short !\r\n");
             break;
         }
         case CMD_EXEC_ERR:
         {
-            kprintf(" #! command execute error !\r\n");
+            qsh_printf(" #! command execute error !\r\n");
             break;
         }
         default:
             break;
         }
         recv_cnt = 0;
-        kprintf(CMD_USR_HEAD);
+        qsh_printf(QSH_INPUT_LOGO);
         memset(cmd_buf, 0, sizeof(cmd_buf));
-        console_cmd_reset();
-        cmd_recv_state = CMD_RECV_NOCMD;
+        qsh_cmd_reset();
+        qsh_recv_state = QSH_RECV_NOCMD;
     }
-    return DBG_NO_ERR;
 }
 
 unsigned char cmd_hs_hdl(int argc, char* argv[])
@@ -220,7 +251,7 @@ unsigned char cmd_hs_hdl(int argc, char* argv[])
 
     for(i = 0; i < 10; i++)
     {
-        kprintf(" [%d] %s\r\n", 9 - i, hs_buf[(hs_pos + i) % 10]);
+        qsh_printf(" [%d] %s\r\n", 9 - i, hs_buf[(hs_index + i) % 10]);
     }
     return 0;
 }
@@ -234,14 +265,14 @@ unsigned char cmd_reboot_hdl(int argc, char* argv[])
 
 unsigned char cmd_timer_hdl(int argc, char* argv[])
 {
-    // kprintf("\r>> System timer count[x100us] is: %lld\r\n", sys_get_abs_time());
+    // qsh_printf("\r>> System timer count[x100us] is: %lld\r\n", sys_get_abs_time());
 
     return 0;
 }
 
 unsigned char cmd_clear_hdl(int argc, char* argv[])
 {
-    kprintf("\033[H\033[J");
+    qsh_printf("\033[H\033[J");
 
     return 0;
 }
@@ -252,14 +283,14 @@ unsigned char cmd_help_hdl(int argc, char* argv[])
     unsigned int i;
 
     unsigned int num = cmd_num(); // except cmd_list head
-    kprintf(" CMD NUM: %d \r\n", num);
-    kprintf(" [Commands]           [Usage]\r\n");
+    qsh_printf(" CMD NUM: %d \r\n", num);
+    qsh_printf(" [Commands]           [Usage]\r\n");
     for(i = num; i > 0; i--)
     {
         cmd = cmd_obj_get(i);
-        kprintf("  %-15s :    %s\r\n", cmd->name, cmd->usage);
+        qsh_printf("  %-15s :    %s\r\n", cmd->name, cmd->usage);
     }
-    kprintf("\r\n");
+    qsh_printf("\r\n");
     return 0;
 }
 
@@ -271,12 +302,12 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
         unsigned int num = timeslice_get_task_num();
         unsigned int i;
 
-        kprintf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
-        kprintf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
+        qsh_printf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        qsh_printf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
         for(i = num; i > 0; i--)
         {
             task = timeslice_obj_get(i);
-            kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+            qsh_printf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
         }
     }
     else if(strcmp(argv[1], "dtask") == 0)
@@ -284,19 +315,19 @@ unsigned char cmd_ls_hdl(int argc, char* argv[])
         unsigned int i;
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_del_task_num();
-        kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
-        kprintf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
+        qsh_printf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        qsh_printf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
         for(i = num; i > 0; i--)
         {
             task = timeslice_del_obj_get(i);
-            kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+            qsh_printf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
         }
     }
     else 
     {
-        kprintf(" #! parameter not find !");
+        qsh_printf(" #! parameter not find !");
     }
-    kprintf("\r\n");
+    qsh_printf("\r\n");
     return 0;
 }
 
@@ -314,12 +345,12 @@ unsigned char cmd_kill_hdl(int argc, char* argv[])
         {
             task_find = 1;
             timeslice_task_del(task);
-            kprintf(">> Task [%s] has deleted from system\r\n", task->name);
+            qsh_printf(">> Task [%s] has deleted from system\r\n", task->name);
         }
     }
 
     if(task_find == 0)
-        kprintf(" #! Task not found !\r\n", task->name);
+        qsh_printf(" #! Task not found !\r\n", task->name);
 
     return 0;
 }
@@ -339,12 +370,12 @@ unsigned char cmd_join_hdl(int argc, char* argv[])
         {
             task_find = 1;
             timeslice_task_add(task);
-            kprintf(">> Task [%s] has add to system\r\n", task->name);
+            qsh_printf(">> Task [%s] has add to system\r\n", task->name);
         }
     }
 
     if(task_find == 0)
-        kprintf(" #! Task not found !\r\n", task->name);
+        qsh_printf(" #! Task not found !\r\n", task->name);
 
     return 0;
 }
@@ -356,29 +387,29 @@ unsigned char cmd_ps_hdl(int argc, char* argv[])
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_task_num();
-        kprintf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
-        kprintf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
+        qsh_printf(" TASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        qsh_printf(" [Task name]                [Task ID]         [Timeslice]            [Usage]\r\n");
         for(i = num; i > 0; i--)
         {
             task = timeslice_obj_get(i);
-            kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+            qsh_printf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
         }
     }
     else if(argc == 2 && strcmp(argv[1], "-d") == 0)
     {
         TimesilceTaskObj* task;
         unsigned int num = timeslice_get_del_task_num();
-        kprintf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
-        kprintf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
+        qsh_printf(" DTASK NUM: %d, TIME TICK: %dus \r\n", num, 100);
+        qsh_printf(" [DTask name]               [Task ID]         [Timeslice]            [Usage]\r\n");
         for(i = num; i > 0; i--)
         {
             task = timeslice_del_obj_get(i);
-            kprintf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
+            qsh_printf("  %-20s :     %-6d       :    %-6d          :      %s\r\n", task->name, task->id, task->timeslice_len, task->usage);
         } 
     }
     else 
     {
-        kprintf(" #! parameter not find !\r\n");
+        qsh_printf(" #! parameter not find !\r\n");
     }
     return 0;
 }
