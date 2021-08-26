@@ -10,7 +10,6 @@
 #include <stdint.h>
 #include "qsh.h"
 #include "../kernel/cmd.h"
-#include "../kernel/timeslice.h"
 
 #define QSH_INPUT_LOGO    "luoqi>$ "
 
@@ -114,7 +113,7 @@ void qsh_gets_cmd(char* cmd)
     uint32_t len = strlen(cmd);
     if(len <= CMD_MAX_LEN && len > 0){
         if(len == 3 && cmd[0] == 0x1b && cmd[1] == 0x5b && cmd[2] == 0x41){
-            qsh_printf("\r\03[k"); // clear line 
+            qsh_clear_line(); 
             if(hs_index > 0){
                 hs_index --;
                 memcpy(cmd_buf, hs_buf[hs_index], sizeof(hs_buf[hs_index]));
@@ -122,7 +121,7 @@ void qsh_gets_cmd(char* cmd)
                 qsh_printf("%s\r\n", cmd_buf);
             }
             else{
-                qsh_printf("\r\03[k");
+                qsh_clear_line();
                 qsh_input_logo();
                 return;
             }
