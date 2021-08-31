@@ -5,7 +5,11 @@ set(CMAKE_C_STANDARD 11)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(demo)
+add_subdirectory(console)
+add_subdirectory(controller)
+add_subdirectory(kernel)
 
 add_executable(unitest unitest.c)
 
-target_link_libraries(demo)
+target_link_libraries(unitest qsh)
+target_link_libraries(unitest -lpthread)
