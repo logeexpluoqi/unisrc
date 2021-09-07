@@ -10,8 +10,11 @@
 
 #include <stdio.h>
 
+#define QSH_HISTORY_MAX     10
+
 typedef enum
 {
+    QSH_RECV_SPEC,
     QSH_RECV_UNFINISH,
     QSH_RECV_NOCMD,
     QSH_RECV_FINISHED
