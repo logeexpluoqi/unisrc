@@ -24,6 +24,13 @@ static inline void qsh_cmd_reset(void);
 static void qsh_save_history(char* hs_cmd, int size);
 static void qsh_recall_history(void);
 static int qsh_recv_spec(char recv_byte);
+static void qsh_recv_buf(char recv_byte);
+static void qsh_recv_backspace(void);
+static void qsh_recv_enter(void);
+static void qsh_recv_up(void);
+static void qsh_recv_down(void);
+static void qsh_recv_right(void);
+static void qsh_recv_left(void);
 
 static CmdObj cmd_reboot;
 static CmdObj cmd_help;
@@ -77,16 +84,6 @@ char* qsh_cmd()
         return NULL;
 }
 
-// void qsh_set_recv_state(QshRecvState state)
-// {
-//     qsh_recv_state = state;
-// }
-
-// QshRecvState qsh_get_recv_state()
-// {
-//     return qsh_recv_state;
-// }
-
 void qsh_save_history(char* hs_cmd, int size)
 {
     memcpy(hs_buf[hs_index ++], hs_cmd, size);
@@ -106,6 +103,69 @@ void qsh_recall_history()
     cmd_buf_size = strlen(cmd_buf);
 }
 
+void qsh_recv_buf(char recv_byte)
+{
+    cmd_buf[cmd_buf_size++] = recv_byte;
+    QSH_PRINTF("%c", recv_byte);
+}
+
+void qsh_recv_backspace()
+{
+    QSH_PRINTF("\b ");
+    cmd_buf[--cmd_buf_size] = 0;
+    qsh_input_logo();
+    QSH_PRINTF("%s", cmd_buf);
+}
+
+void qsh_recv_enter()
+{
+    if(cmd_buf_size != 0){
+        if(cmd_buf[cmd_buf_size - 1] == ' '){
+            cmd_buf[cmd_buf_size - 1] = 0;
+        }
+        if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's')){
+            qsh_save_history(cmd_buf, sizeof(cmd_buf));
+        }
+        cmd_buf_size = 0;
+        QSH_PRINTF("\r\n");
+        qsh_recv_state = QSH_RECV_FINISHED;
+    }else {
+        QSH_PRINTF("\r\n");
+        qsh_input_logo();
+    }
+}
+
+void qsh_recv_up()
+{
+    if(hs_index > 0)
+    {
+        qsh_clear_line();
+        qsh_input_logo();
+        qsh_recall_history();
+        QSH_PRINTF("%s", cmd_buf);
+    }
+    else
+    {
+        qsh_clear_line();
+        qsh_input_logo();
+    }
+}
+
+void qsh_recv_down()
+{
+
+}
+
+void qsh_recv_right()
+{
+
+}
+
+void qsh_recv_left()
+{
+
+}
+
 int qsh_recv_spec(char recv_byte)
 {
     if(recv_byte == '\x1b' || recv_byte == '\x5b' 
@@ -120,25 +180,19 @@ int qsh_recv_spec(char recv_byte)
             || recv_byte == '\x43'
             || recv_byte == '\x44')
         {
-            if(recv_byte == '\x41')
-            {
-                if(hs_index > 0)
-                {
-                    qsh_clear_line();
-                    qsh_input_logo();
-                    qsh_recall_history();
-                    // qsh_printf("%s", cmd_buf);
-                    return 1;
-                }
-                else
-                {
-                    qsh_clear_line();
-                    qsh_input_logo();
-                    return 0;
-                }
-            }
+            if(recv_byte == '\x41') // up-key
+                return 1;
+            else if(recv_byte == '\x42') // down-key
+                return 2;
+            else if(recv_byte == '\x43') // right -key
+                return 3;
+            else if(recv_byte == '\x44') // left-key
+                return 4;
             else 
+            {
+                memset(cmd_buf, 0, sizeof(cmd_buf));
                 return 0;
+            }
         }
         else 
             return 0;
@@ -150,39 +204,28 @@ int qsh_recv_spec(char recv_byte)
 void qsh_get_cmd(char recv_byte)
 {
     int spec = qsh_recv_spec(recv_byte);
-    if(recv_byte != '\r' && recv_byte != '\b' && spec != 1 && cmd_buf_size  <  60){ // normal charactor
-        cmd_buf[cmd_buf_size++] = recv_byte;
-        QSH_PRINTF("%c", recv_byte);
-    }else if(recv_byte == '\b' && cmd_buf_size > 0){ // backspace charactor
-        QSH_PRINTF("\b ");
-        cmd_buf[--cmd_buf_size] = 0;
-        qsh_input_logo();
-        QSH_PRINTF("%s", cmd_buf);
-    }else if(recv_byte == '\r'){ // enter key value
-        if(cmd_buf_size != 0){
-            if(cmd_buf[cmd_buf_size - 1] == ' '){
-                cmd_buf[cmd_buf_size - 1] = 0;
-            }
-            qsh_recv_state = QSH_RECV_FINISHED;
-            if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's')){
-                memcpy(hs_buf[hs_index ++], cmd_buf, sizeof(cmd_buf));
-                if(hs_index== 10){
-                    hs_index = 0;
-                }
-            }
-            cmd_buf_size = 0;
-            QSH_PRINTF("\r\n");
-        }else {
-            QSH_PRINTF("\r\n");
-            qsh_input_logo();
-        }
-    }else if(spec == 1){// history recall
-        QSH_PRINTF("%s", cmd_buf);
-    }else if(recv_byte > 60){
-        QSH_PRINTF("\r\n>> #! Command buffer overflow !\n");
+    if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_buf_size  <  CMD_MAX_LEN) // normal charactor
+        qsh_recv_buf(recv_byte);
+    else if(recv_byte == '\b' && cmd_buf_size > 0)// backspace charactor
+        qsh_recv_backspace();
+    else if(recv_byte == '\r') // enter key value
+        qsh_recv_enter();
+    else if(spec == 1)
+        qsh_recv_up();
+    else if(spec == 2)
+        qsh_recv_down();
+    else if(spec == 3)
+        qsh_recv_right();
+    else if(spec == 4)
+        qsh_recv_left();
+    else if(cmd_buf_size > CMD_MAX_LEN)
+    {
+        QSH_PRINTF("\r\n>> #! Command buffer overflow !\r\n");
         qsh_input_logo();
         qsh_cmd_reset();
-    }else {
+    }
+    else
+    {
         qsh_input_logo();
         qsh_cmd_reset();
     }
