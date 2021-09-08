@@ -69,7 +69,7 @@ void* thread_qsh_input_isr(void* param)
             pthread_cancel(tid_qsh_isr);
         }
 
-        usleep(1);
+        usleep(10000);
     }
 }
 
