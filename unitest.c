@@ -63,7 +63,7 @@ void* thread_qsh_input_isr(void* param)
         {
             system("stty -raw echo");
             printf("\33[2K");
-            printf(" \rqsh input thread close_alld !\r\n");
+            printf(" \rqsh input thread closed !\r\n");
             close_all = 1;
             pthread_cancel(tid_tasks);
             pthread_cancel(tid_qsh_isr);
