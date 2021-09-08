@@ -9,6 +9,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 #include "unitest_def.h"
 #include "console/qsh.h"
 #include "kernel/fsm.h"
@@ -23,6 +24,8 @@ static void* thread_qsh_input_isr(void*);
 static pthread_t tid_tasks;
 static void* thread_tasks(void*);
 
+static int close_all = 0;
+
 int main()
 {
     pthread_create(&tid_qsh_isr, NULL, thread_qsh_input_isr, NULL);
@@ -35,8 +38,13 @@ int main()
 
     for(;;)
     {
-        qsh_task_exec();
-        timeslice_exec();
+        if(close_all == 0)
+        {
+            qsh_task_exec();
+            timeslice_exec();
+        }
+        else
+            return 0;
     }
 
     return 0;
@@ -44,17 +52,23 @@ int main()
 
 void* thread_qsh_input_isr(void* param)
 {
-    char cmd[60];
+    char ch;
     for(;;)
     {
-        if(fgets(cmd, 60, stdin)) {
-            char *find_LF = strchr(cmd, '\n');
-            if (find_LF) {
-                *find_LF = '\0';
-            }
-            qsh_gets_cmd(cmd);
-            memset(cmd, 0, sizeof(cmd));
+        system("stty raw -echo");
+        ch = getchar();
+        if(ch != 3)
+            qsh_get_cmd(ch);
+        else
+        {
+            system("stty -raw echo");
+            printf("\33[2K");
+            printf(" \rqsh input thread close_alld !\r\n");
+            close_all = 1;
+            pthread_cancel(tid_tasks);
+            pthread_cancel(tid_qsh_isr);
         }
+
         usleep(1);
     }
 }

@@ -269,39 +269,6 @@ void qsh_get_cmd(char recv_byte)
     }
 }
 
-void qsh_gets_cmd(char* cmd)
-{
-    uint32_t len = strlen(cmd);
-    if(len <= CMD_MAX_LEN && len > 0){
-        if(len == 3 && cmd[0] == 0x1b && cmd[1] == 0x5b && cmd[2] == 0x41){
-            qsh_clear_line(); 
-            if(hs_index > 0){
-                hs_index --;
-                memcpy(cmd_buf, hs_buf[hs_index], sizeof(hs_buf[hs_index]));
-                qsh_input_logo();
-                QSH_PRINTF("%s\r\n", cmd_buf);
-            }
-            else{
-                qsh_clear_line();
-                qsh_input_logo();
-                return;
-            }
-        }else{
-            memcpy(cmd_buf, cmd, len);
-        }
-        if(strcmp(cmd_buf, "hs") != 0){
-            memcpy(hs_buf[hs_index++], cmd_buf, sizeof(cmd_buf));
-            if(hs_index == 10){
-                hs_index = 0;
-            }
-        }
-        qsh_recv_state = QSH_RECV_FINISHED;
-    }else{
-        qsh_input_logo();
-        return;
-    }
-}
-
 void qsh_task_exec()
 {
     if(qsh_recv_state == QSH_RECV_FINISHED){

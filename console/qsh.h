@@ -21,7 +21,6 @@ typedef enum
 } QshRecvState;
 
 void qsh_get_cmd(char recv_byte);
-void qsh_gets_cmd(char* cmd);
 void qsh_task_init(void);
 void qsh_task_exec(void);
 void qsh_input_logo(void);

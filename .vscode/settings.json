@@ -2,6 +2,8 @@
     "files.associations": {
         "*.m": "matlab",
         "demo_fsm.h": "c",
-        "fsm.h": "c"
-    }
+        "fsm.h": "c",
+        "string.h": "c"
+    },
+    "cmake.cmakePath": "cmake"
 }
