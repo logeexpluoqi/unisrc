@@ -16,13 +16,17 @@
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
 static char hs_index = 0;
+static char hs_num = 0;
+static char hs_recall_pos = 0;
+static char hs_recall_times = 0;
 static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
 static unsigned int cmd_buf_size = 0;
 
 static void qsh_clear_line(void);
 static inline void qsh_cmd_reset(void);
 static void qsh_save_history(char* hs_cmd, int size);
-static void qsh_recall_history(void);
+static void qsh_recall_prev_history(void);
+static void qsh_recall_next_history(void);
 static int qsh_recv_spec(char recv_byte);
 static void qsh_recv_buf(char recv_byte);
 static void qsh_recv_backspace(void);
@@ -46,6 +50,15 @@ static unsigned char cmd_clear_hdl(int argc, char* argv[]);
 
 void qsh_task_init()
 {
+    memset(cmd_buf, 0, sizeof(cmd_buf));
+    memset(hs_buf, 0, sizeof(hs_buf));
+    hs_index = 0;
+    hs_num = 0;
+    hs_recall_pos = 0;
+    hs_recall_times = 0;
+    qsh_recv_state = QSH_RECV_NOCMD;
+    cmd_buf_size = 0;
+
     cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
     cmd_init(&cmd_reboot, "reboot", 0, cmd_reboot_hdl, "reboot system");
@@ -86,21 +99,35 @@ char* qsh_cmd()
 
 void qsh_save_history(char* hs_cmd, int size)
 {
-    memcpy(hs_buf[hs_index ++], hs_cmd, size);
-    if(hs_index >= QSH_HISTORY_MAX)
-    {
-        hs_index = 0;
-    }
+    memcpy(hs_buf[hs_index], hs_cmd, size);
+    hs_index = (hs_index + 1) % QSH_HISTORY_MAX;
+    hs_recall_pos = hs_index;
+    hs_num = (hs_num + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_num + 1);
 }
 
-void qsh_recall_history()
+void qsh_recall_prev_history()
 {
-    if(hs_index -- <= 0)
-    {
-        hs_index = QSH_HISTORY_MAX - 1;
-    }
-    memcpy(cmd_buf, hs_buf[hs_index], sizeof(hs_buf[hs_index]));
+    if(hs_recall_times ++ < hs_num)
+        hs_recall_pos  = (hs_recall_pos - 1 + QSH_HISTORY_MAX) % QSH_HISTORY_MAX;
+    else
+        hs_recall_times = hs_num;
+    memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
     cmd_buf_size = strlen(cmd_buf);
+}
+
+void qsh_recall_next_history()
+{
+    if(hs_recall_times -- > 0)
+    {
+        hs_recall_pos = (hs_recall_pos + 1) % QSH_HISTORY_MAX;
+        memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
+        cmd_buf_size = strlen(cmd_buf);
+    }
+    else
+    {
+        hs_recall_times = 0;
+        qsh_cmd_reset();
+    }
 }
 
 void qsh_recv_buf(char recv_byte)
@@ -141,7 +168,7 @@ void qsh_recv_up()
     {
         qsh_clear_line();
         qsh_input_logo();
-        qsh_recall_history();
+        qsh_recall_prev_history();
         QSH_PRINTF("%s", cmd_buf);
     }
     else
@@ -153,7 +180,18 @@ void qsh_recv_up()
 
 void qsh_recv_down()
 {
-
+    if(hs_num > 0)
+    {
+        qsh_clear_line();
+        qsh_input_logo();
+        qsh_recall_next_history();
+        QSH_PRINTF("%s", cmd_buf);
+    }
+    else
+    {
+        qsh_clear_line();
+        qsh_input_logo();
+    }
 }
 
 void qsh_recv_right()
@@ -306,11 +344,14 @@ void qsh_task_exec()
 
 unsigned char cmd_hs_hdl(int argc, char* argv[])
 {
-    int i;
-
-    for(i = 0; i < 10; i++)
+    char hs_pos;
+    if((hs_index - hs_num) >= 0)
+        hs_pos  = hs_index - hs_num;
+    else
+        hs_pos = hs_index;
+    for(int i = 0; i < hs_num; i++)
     {
-        QSH_PRINTF(" [%d] %s\r\n", 9 - i, hs_buf[(hs_index + i) % 10]);
+        QSH_PRINTF(" %2d: %s\r\n", hs_num - i, hs_buf[(hs_pos + i) % QSH_HISTORY_MAX]);
     }
     return 0;
 }
