@@ -5,5 +5,6 @@
         "fsm.h": "c",
         "string.h": "c"
     },
-    "cmake.cmakePath": "cmake"
+    "cmake.cmakePath": "cmake",
+    "clang.executable": "clang"
 }

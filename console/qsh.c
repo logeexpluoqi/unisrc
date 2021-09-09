@@ -153,6 +153,7 @@ void qsh_recv_enter()
         if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's')){
             qsh_save_history(cmd_buf, sizeof(cmd_buf));
         }
+
         cmd_buf_size = 0;
         QSH_PRINTF("\r\n");
         qsh_recv_state = QSH_RECV_FINISHED;
@@ -164,7 +165,7 @@ void qsh_recv_enter()
 
 void qsh_recv_up()
 {
-    if(hs_index > 0)
+    if(hs_num > 0)
     {
         qsh_clear_line();
         qsh_input_logo();
