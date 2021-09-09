@@ -6,5 +6,5 @@
         "string.h": "c"
     },
     "cmake.cmakePath": "cmake",
-    "clang.executable": "clang"
+    "clang.executable": "clang",
 }

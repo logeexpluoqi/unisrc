@@ -57,13 +57,15 @@ void* thread_qsh_input_isr(void* param)
     {
         system("stty raw -echo");
         ch = getchar();
+        if(ch == 127)
+            ch = 8;
         if(ch != 3)
             qsh_get_cmd(ch);
         else
         {
             system("stty -raw echo");
             printf("\33[2K");
-            printf(" \r\n qsh input thread closed !\r\n\r\n");
+            printf(" \r\n>> qsh input thread closed !\r\n\r\n");
             close_all = 1;
             pthread_cancel(tid_tasks);
             pthread_cancel(tid_qsh_isr);
