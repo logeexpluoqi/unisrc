@@ -6,10 +6,15 @@
  */
 
 #include "demo_qsh.h"
-#include "../kernel/cmd.h"
-#include "../kernel/timeslice.h"
+#include "../console/qsh.h"
+
+unsigned char uni_handle(int argc, char* argv[])
+{
+    printf("qsh test\r\n");
+    return 0;
+}
 
 int demo_qsh_init()
 {
-    
+    qsh_cmd_add("uni", 0xff, uni_handle, "qsh test");
 }

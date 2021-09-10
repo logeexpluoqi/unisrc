@@ -34,7 +34,6 @@ int main()
     demo_fsm_init();
     demo_timeslice_init();
     demo_qsh_init();
-    qsh_task_init();
 
     for(;;)
     {

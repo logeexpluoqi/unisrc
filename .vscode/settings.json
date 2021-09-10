@@ -3,7 +3,9 @@
         "*.m": "matlab",
         "demo_fsm.h": "c",
         "fsm.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "cmd.h": "c",
+        "timeslice.h": "c"
     },
     "cmake.cmakePath": "cmake",
     "clang.executable": "clang",

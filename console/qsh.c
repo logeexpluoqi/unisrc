@@ -13,6 +13,8 @@
 
 #define QSH_INPUT_LOGO    "luoqi>$ "
 
+static char qsh_is_init = 0;
+
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
 static char hs_index = 0;
@@ -48,7 +50,7 @@ static unsigned char cmd_clear_hdl(int argc, char* argv[]);
 
 
 
-void qsh_task_init()
+void qsh_init()
 {
     memset(cmd_buf, 0, sizeof(cmd_buf));
     memset(hs_buf, 0, sizeof(hs_buf));
@@ -69,6 +71,7 @@ void qsh_task_init()
     cmd_add(&cmd_reboot);
     cmd_add(&cmd_clear);
     qsh_input_logo();
+    qsh_is_init = 1;
 }
 
 void qsh_input_logo()
@@ -308,6 +311,20 @@ void qsh_task_exec()
         qsh_cmd_reset();
         qsh_recv_state = QSH_RECV_NOCMD;
     }
+}
+
+void qsh_cmd_add(const char* name, unsigned char param_num, unsigned char (*handle)(int, char** ), const char* usage)
+{
+    static CmdObj qcmd;
+
+    if(qsh_is_init == 0)
+        qsh_init();
+        
+    qcmd.name = name;
+    qcmd.param_num = param_num;
+    qcmd.cmd_hdl = handle;
+    qcmd.usage = usage;
+    cmd_add(&qcmd);
 }
 
 unsigned char cmd_hs_hdl(int argc, char* argv[])

@@ -12,6 +12,7 @@
 
 #define QSH_HISTORY_MAX     10
 
+
 typedef enum
 {
     QSH_RECV_SPEC,
@@ -21,10 +22,13 @@ typedef enum
 } QshRecvState;
 
 void qsh_get_cmd(char recv_byte);
-void qsh_task_init(void);
+void qsh_init(void);
 void qsh_task_exec(void);
 void qsh_input_logo(void);
 
 #define QSH_PRINTF(...) printf(__VA_ARGS__)
+
+void qsh_cmd_add(const char* name, unsigned char param_num, unsigned char (*handle)(int, char** ), const char* usage);
+
 
 #endif
