@@ -10,7 +10,7 @@
 
 unsigned char uni_handle(int argc, char* argv[])
 {
-    printf("qsh test\r\n");
+    printf(">> qsh test\r\n");
     return 0;
 }
 
