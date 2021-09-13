@@ -9,9 +9,9 @@
 #define _QSH_H
 
 #include <stdio.h>
+#include "../kernel/cmd.h"
 
 #define QSH_HISTORY_MAX     10
-
 
 typedef enum
 {
@@ -28,7 +28,12 @@ void qsh_input_logo(void);
 
 #define QSH_PRINTF(...) printf(__VA_ARGS__)
 
-void qsh_cmd_add(const char* name, unsigned char param_num, unsigned char (*handle)(int, char** ), const char* usage);
+typedef CmdObj     QshCmd;
 
+void qsh_cmd_creat(QshCmd* qcmd,
+                    const char* name,
+                    unsigned char param_num,
+                    unsigned char (*handle)(int, char**),
+                    const char* usage);
 
 #endif

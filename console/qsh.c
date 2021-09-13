@@ -13,20 +13,19 @@
 
 #define QSH_INPUT_LOGO    "luoqi>$ "
 
-static char qsh_is_init = 0;
-
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
 static char hs_index = 0;
 static char hs_num = 0;
 static char hs_recall_pos = 0;
 static char hs_recall_times = 0;
+static char hs_recall_status = 0;
 static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
 static unsigned int cmd_buf_size = 0;
 
 static void qsh_clear_line(void);
 static inline void qsh_cmd_reset(void);
-static void qsh_save_history(char* hs_cmd, int size);
+static void qsh_save_history(char* save_cmd, int size);
 static void qsh_recall_prev_history(void);
 static void qsh_recall_next_history(void);
 static int qsh_recv_spec(char recv_byte);
@@ -58,6 +57,7 @@ void qsh_init()
     hs_num = 0;
     hs_recall_pos = 0;
     hs_recall_times = 0;
+    hs_recall_status = 0;
     qsh_recv_state = QSH_RECV_NOCMD;
     cmd_buf_size = 0;
 
@@ -71,7 +71,6 @@ void qsh_init()
     cmd_add(&cmd_reboot);
     cmd_add(&cmd_clear);
     qsh_input_logo();
-    qsh_is_init = 1;
 }
 
 void qsh_input_logo()
@@ -100,16 +99,38 @@ char* qsh_cmd()
         return NULL;
 }
 
-void qsh_save_history(char* hs_cmd, int size)
+void qsh_save_history(char* save_cmd, int size)
 {
-    memcpy(hs_buf[hs_index], hs_cmd, size);
-    hs_index = (hs_index + 1) % QSH_HISTORY_MAX;
+    if(strcmp(save_cmd, hs_buf[hs_index]) != 0)
+    {
+        memcpy(hs_buf[hs_index], save_cmd, size);
+        hs_index = (hs_index + 1) % QSH_HISTORY_MAX;
+        hs_num = (hs_num + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_num + 1);
+        hs_recall_pos = hs_index;
+        hs_recall_status = 0;
+        return;
+    }
+    else if(hs_recall_status == -1)
+    {
+        if(hs_recall_times != hs_num)
+            hs_recall_times --;
+        else
+            hs_recall_times = hs_num;
+    }
+    else if(hs_recall_status == 1)
+    {
+        if(hs_recall_times != 0)
+            hs_recall_times ++;
+        else
+            hs_recall_times = 0;
+    }
     hs_recall_pos = hs_index;
-    hs_num = (hs_num + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_num + 1);
+    hs_recall_status = 0;
 }
 
 void qsh_recall_prev_history()
 {
+    hs_recall_status = 1;
     if(hs_recall_times ++ < hs_num)
         hs_recall_pos  = (hs_recall_pos - 1 + QSH_HISTORY_MAX) % QSH_HISTORY_MAX;
     else
@@ -120,6 +141,7 @@ void qsh_recall_prev_history()
 
 void qsh_recall_next_history()
 {
+    hs_recall_status = 1;
     if(hs_recall_times -- > 0)
     {
         hs_recall_pos = (hs_recall_pos + 1) % QSH_HISTORY_MAX;
@@ -313,18 +335,14 @@ void qsh_task_exec()
     }
 }
 
-void qsh_cmd_add(const char* name, unsigned char param_num, unsigned char (*handle)(int, char** ), const char* usage)
+void qsh_cmd_creat(QshCmd* qcmd,
+                    const char* name,
+                    unsigned char param_num,
+                    unsigned char (*handle)(int, char**),
+                    const char* usage)
 {
-    static CmdObj qcmd;
-
-    if(qsh_is_init == 0)
-        qsh_init();
-        
-    qcmd.name = name;
-    qcmd.param_num = param_num;
-    qcmd.cmd_hdl = handle;
-    qcmd.usage = usage;
-    cmd_add(&qcmd);
+    cmd_init((CmdObj*)qcmd, name, param_num, handle, usage);
+    cmd_add((CmdObj*)qcmd);
 }
 
 unsigned char cmd_hs_hdl(int argc, char* argv[])

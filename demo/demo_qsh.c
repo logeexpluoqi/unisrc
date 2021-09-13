@@ -8,13 +8,24 @@
 #include "demo_qsh.h"
 #include "../console/qsh.h"
 
-unsigned char uni_handle(int argc, char* argv[])
+static QshCmd qcmd1;
+static QshCmd qcmd2;
+
+unsigned char q1_handle(int argc, char* argv[])
 {
-    printf(">> qsh test\r\n");
+    printf(">> qsh test 1\r\n");
+    return 0;
+}
+
+unsigned char q2_handle(int argc, char* argv[])
+{
+    printf(">> qsh test 2\r\n");
     return 0;
 }
 
 int demo_qsh_init()
 {
-    qsh_cmd_add("uni", 0xff, uni_handle, "qsh test");
+    qsh_cmd_creat(&qcmd1, "qcmd1", 0xff, q1_handle, " qsh test 1");
+    qsh_cmd_creat(&qcmd2, "qcmd2", 0xff, q2_handle, " qsh test 2");
+    return 0;
 }

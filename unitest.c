@@ -31,6 +31,8 @@ int main()
     pthread_create(&tid_qsh_isr, NULL, thread_qsh_input_isr, NULL);
     pthread_create(&tid_tasks, NULL, thread_tasks, NULL);
 
+    qsh_init();
+
     demo_fsm_init();
     demo_timeslice_init();
     demo_qsh_init();
