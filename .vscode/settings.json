@@ -5,7 +5,8 @@
         "fsm.h": "c",
         "string.h": "c",
         "cmd.h": "c",
-        "timeslice.h": "c"
+        "timeslice.h": "c",
+        "demo_qsh.h": "c"
     },
     "cmake.cmakePath": "cmake",
     "clang.executable": "clang",
