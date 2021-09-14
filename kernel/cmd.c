@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 00:29:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-09-14 18:09:26
+ * @Last Modified time: 2021-09-14 18:17:25
  */
 
 #include "cmd.h"
@@ -51,32 +51,35 @@ CmdErrType cmd_exec(char* cmd_msg)
     list_for_each(node, &cmd_list)
     {
         cmd = list_entry(node, CmdObj, cmd_list);
-        if (cmd_strcmp(cmd->name, argv[0]) == 0 && cmd->param_num != 0xff)
+        if (cmd_strcmp(cmd->name, argv[0]) == 0)
         {
-            if (cmd->param_num > argc - 1)
+            if(cmd->param_num != 0xff)
             {
-                return CMD_PARAM_LESS;
-            }
-            else if (cmd->param_num < argc - 1)
-            {
-                return CMD_PARAM_EXCEED;
-            }
+                if (cmd->param_num > argc - 1)
+                {
+                    return CMD_PARAM_LESS;
+                }
+                else if (cmd->param_num < argc - 1)
+                {
+                    return CMD_PARAM_EXCEED;
+                }
 
-            if (cmd->cmd_hdl(argc, argv) != 0)
-            {
-                return CMD_EXEC_ERR;
+                if (cmd->cmd_hdl(argc, argv) != 0)
+                {
+                    return CMD_EXEC_ERR;
+                }
+                else
+                {
+                    return CMD_NO_ERR;
+                }
             }
             else
             {
-                return CMD_NO_ERR;
+                if(cmd->cmd_hdl(argc, argv) != 0)
+                    return CMD_EXEC_ERR;
+                else
+                    return CMD_NO_ERR;
             }
-        }
-        if(cmd_strcmp(cmd->name, argv[0]) == 0 && cmd->param_num == 0xff)
-        {
-            if(cmd->cmd_hdl(argc, argv) != 0)
-                return CMD_EXEC_ERR;
-            else
-                return CMD_NO_ERR;
         }
     }
 
