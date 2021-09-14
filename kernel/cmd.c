@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 00:29:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-05-25 15:11:31
+ * @Last Modified time: 2021-09-14 18:09:26
  */
 
 #include "cmd.h"
@@ -71,7 +71,7 @@ CmdErrType cmd_exec(char* cmd_msg)
                 return CMD_NO_ERR;
             }
         }
-        if(cmd->param_num == 0xff)
+        if(cmd_strcmp(cmd->name, argv[0]) == 0 && cmd->param_num == 0xff)
         {
             if(cmd->cmd_hdl(argc, argv) != 0)
                 return CMD_EXEC_ERR;
