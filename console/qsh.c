@@ -336,10 +336,10 @@ void qsh_task_exec()
 }
 
 void qsh_cmd_add(CmdObj* qcmd,
-                    const char* name,
-                    unsigned char param_num,
-                    unsigned char (*handle)(int, char**),
-                    const char* usage)
+                 const char* name,
+                 unsigned char param_num,
+                 unsigned char (*handle)(int, char**),
+                 const char* usage)
 {
     cmd_init(qcmd, name, param_num, handle, usage);
     cmd_add(qcmd);
