@@ -37,7 +37,7 @@ int main()
     demo_fsm_init();
     demo_timeslice_init();
     demo_msg_init();
-    // demo_qsh_init();
+    demo_qsh_init();
 
     for(;;)
     {

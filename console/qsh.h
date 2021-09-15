@@ -28,7 +28,9 @@ void qsh_input_logo(void);
 
 #define QSH_PRINTF(...) printf(__VA_ARGS__)
 
+
 typedef CmdObj     QshCmd;
+#define QSH_CMD_CREAT(qcmd)     static QshCmd qcmd
 
 void qsh_cmd_creat(QshCmd* qcmd,
                     const char* name,

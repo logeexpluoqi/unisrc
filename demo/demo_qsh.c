@@ -8,8 +8,8 @@
 #include "demo_qsh.h"
 #include "../console/qsh.h"
 
-static QshCmd qcmd1;
-static QshCmd qcmd2;
+QSH_CMD_CREAT(qcmd1);
+QSH_CMD_CREAT(qcmd2);
 
 unsigned char q1_handle(int argc, char* argv[])
 {
