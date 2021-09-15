@@ -8,8 +8,8 @@
 #include "demo_qsh.h"
 #include "../console/qsh.h"
 
-QSH_CMD_CREAT(qcmd1);
-QSH_CMD_CREAT(qcmd2);
+static QSH_CMD_CREAT(qcmd1);
+static QSH_CMD_CREAT(qcmd2);
 
 unsigned char q1_handle(int argc, char* argv[])
 {
@@ -25,7 +25,7 @@ unsigned char q2_handle(int argc, char* argv[])
 
 int demo_qsh_init()
 {
-    qsh_cmd_creat(&qcmd1, "qcmd1", 0xff, q1_handle, " qsh test 1");
-    qsh_cmd_creat(&qcmd2, "qcmd2", 0xff, q2_handle, " qsh test 2");
+    qsh_cmd_add(&qcmd1, "qcmd1", 0xff, q1_handle, " qsh test 1");
+    qsh_cmd_add(&qcmd2, "qcmd2", 0xff, q2_handle, " qsh test 2");
     return 0;
 }

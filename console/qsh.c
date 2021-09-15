@@ -335,14 +335,14 @@ void qsh_task_exec()
     }
 }
 
-void qsh_cmd_creat(QshCmd* qcmd,
+void qsh_cmd_add(CmdObj* qcmd,
                     const char* name,
                     unsigned char param_num,
                     unsigned char (*handle)(int, char**),
                     const char* usage)
 {
-    cmd_init((CmdObj*)qcmd, name, param_num, handle, usage);
-    cmd_add((CmdObj*)qcmd);
+    cmd_init(qcmd, name, param_num, handle, usage);
+    cmd_add(qcmd);
 }
 
 unsigned char cmd_hs_hdl(int argc, char* argv[])
