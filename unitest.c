@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:09:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-09-14 17:16:25
+ * @Last Modified time: 2021-09-16 19:10:52
  */
 
 #include <stdio.h>
@@ -83,7 +83,7 @@ void* thread_tasks(void* param)
     for(;;)
     {
         timeslice_tick();
-        usleep(1e4);
+        usleep(1e3);
     }
 }
 
