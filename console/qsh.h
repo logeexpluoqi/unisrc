@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:33 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-08-31 16:51:49
+ * @Last Modified time: 2021-09-16 12:03:42
  */
 
 #ifndef _QSH_H
@@ -31,9 +31,8 @@ void qsh_input_logo(void);
 #define  QSH_CMD_CREAT(qcmd)    CmdObj qcmd
 
 void qsh_cmd_add(CmdObj* qcmd,
-                    const char* name,
-                    unsigned char param_num,
-                    unsigned char (*handle)(int, char**),
-                    const char* usage);
-
+                 const char* name,
+                 unsigned char param_num,
+                 unsigned char (*handle)(int, char**),
+                 const char* usage); 
 #endif
