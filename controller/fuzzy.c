@@ -89,30 +89,63 @@ static float _psig_memfunc(float x, float ak1, float ck1, float ak2, float ck2);
 int fuzz_mf_init(FuzzMemFuncObj* mf, FuzzMemFuncType mf_type, float *param, int param_num)
 {
     mf->type = mf_type;
+    mf->mf_param = param;
 
     switch(mf_type)
     {
     case FUZZ_TRIMF:
+        if(param_num != 3)
+            return -1;
+        
         break;
     case FUZZ_TRAPMF:
+        if(param_num != 4)
+            return -1;
+
         break;
     case FUZZ_PIMF:
+        if(param_num != 4)
+            return -1;
+
         break;
     case FUZZ_SMF:
+        if(param_num != 3)
+            return -1;
+
         break;
     case FUZZ_ZMF:
+        if(param_num != 3)
+            return -1;
+
         break;
     case FUZZ_GBELLMF:
+        if(param_num != 3)
+            return -1;
+
         break;
     case FUZZ_GAUSSMF:
+        if(param_num != 2)
+            return -1;
+
         break;
     case FUZZ_GAUSS2MF:
+        if(param_num != 4)
+            return -1;
+
         break;
     case FUZZ_SIGMF:
+        if(param_num != 2)
+            return -1;
         break;
     case FUZZ_DSIGMF:
+        if(param_num != 4)
+            return -1;
+
         break;
     case FUZZ_PSIGMF:
+        if(param_num != 4)
+            return -1;
+
         break;
     default:
         break;
