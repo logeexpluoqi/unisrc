@@ -9,6 +9,7 @@ add_subdirectory(console)
 add_subdirectory(controller)
 add_subdirectory(kernel)
 add_subdirectory(qmath)
+add_subdirectory(solver)
 
 add_executable(udemo unitest.c)
 
