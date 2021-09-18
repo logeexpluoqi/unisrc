@@ -148,6 +148,7 @@ int fuzz_mf_init(FuzzMemFuncObj* mf, FuzzMemFuncType mf_type, float *param, int 
 
         break;
     default:
+        return -1;
         break;
     }
     
