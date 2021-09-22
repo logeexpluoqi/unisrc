@@ -136,8 +136,10 @@ void fuzz_init(FuzzObj* fuzz_obj,
                float output_min, float output_max,
                DefuzzMethod defuzz_method)
 {
-    fuzz_obj->mf_num = 0;
-    list_init(&fuzz_obj->_fuzz_mf_list);
+    fuzz_obj->mf_e_num = 0;
+    fuzz_obj->mf_u_num = 0;
+    list_init(&fuzz_obj->_fuzz_mf_list_e);
+    list_init(&fuzz_obj->_fuzz_mf_list_u);
     fuzz_obj->fuzz_input_range[0] = input_min;
     fuzz_obj->fuzz_input_range[1] = input_max;
     fuzz_obj->fuzz_output_range[0] = output_max;
@@ -153,16 +155,33 @@ float fuzz_control(FuzzObj* fuzz_obj, float err)
 }
 
 
-int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMemFuncObj* mf)
+int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMfDir dir, FuzzMemFuncObj* mf)
 {
-    list_insert_before(&fuzz_obj->_fuzz_mf_list, &mf->_mf_inner_list);
-    fuzz_obj->mf_num ++;
+    switch(dir)
+    {
+    case FUZZ_INPUT:
+        list_insert_before(&fuzz_obj->_fuzz_mf_list_e, &mf->_mf_inner_list);
+        fuzz_obj->mf_e_num ++;
+        break;
+    case FUZZ_OUTPUT:
+        list_insert_before(&fuzz_obj->_fuzz_mf_list_u, &mf->_mf_inner_list);
+        fuzz_obj->mf_e_num ++;
+        break;
+    default:
+        return -1;
+        break;
+    }
     return 0;
 }
 
-int fuzz_mf_num(FuzzObj* fuzz_obj)
+int fuzz_mf_num(FuzzObj* fuzz_obj, FuzzMfDir dir)
 {
-    return list_len(&fuzz_obj->_fuzz_mf_list);
+    if(dir == FUZZ_INPUT)
+        return list_len(&fuzz_obj->_fuzz_mf_list_e);
+    else if(FUZZ_OUTPUT)
+        return list_len(&fuzz_obj->_fuzz_mf_list_u);
+    else
+        return -1;
 }
 
 float _memfunc_output(FuzzMemFuncObj *mf, float x)

@@ -19,6 +19,12 @@ typedef enum _defuzz_method
     FUZZ_LOM         // maximum membership degree to dafa
 } DefuzzMethod;
 
+typedef enum _fuzz_mf_dir
+{
+    FUZZ_INPUT,
+    FUZZ_OUTPUT
+} FuzzMfDir;
+
 typedef enum _membership_function_type
 {
     FUZZ_TRIMF,     // Triangular membership function
@@ -50,10 +56,12 @@ typedef struct _fuzz_controller_object
 {
     float fuzz_input_range[2];
     float fuzz_output_range[2];
-    int mf_num;
     DefuzzMethod defuzz_method;
 
-    ListObj _fuzz_mf_list;
+    int mf_e_num;
+    int mf_u_num;
+    ListObj _fuzz_mf_list_e;
+    ListObj _fuzz_mf_list_u;
 } FuzzObj;
 
 /**
@@ -72,12 +80,12 @@ int fuzz_mf_init(FuzzMemFuncObj* mf, FuzzMemFuncType mf_type, float *param, int 
 /**
  *
  */
-int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMemFuncObj* mf);
+int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMfDir dir, FuzzMemFuncObj* mf);
 
 /** 
  *
  */
-int fuzz_mf_num(FuzzObj* fuzz_obj);
+int fuzz_mf_num(FuzzObj* fuzz_obj, FuzzMfDir dir);
 
 /** 
  *
