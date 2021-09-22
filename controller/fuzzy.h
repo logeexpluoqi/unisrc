@@ -38,8 +38,10 @@ typedef enum _membership_function_type
 typedef struct _fuzz_membership_function_object
 {
     FuzzMemFuncType type;
-    float *mf_param;
-    float (*mf)(float);
+    float param_a; // sigma  | sigma1 | ak | ak1
+    float param_b; // c      | c1     | ck | ck1
+    float param_c; // sigma2 | ak2
+    float param_d; // c2     | ck2
     ListObj _mf_inner_list;
 } FuzzMemFuncObj;
 
@@ -48,6 +50,7 @@ typedef struct _fuzz_controller_object
 {
     float fuzz_input_range[2];
     float fuzz_output_range[2];
+    int mf_num;
     DefuzzMethod defuzz_method;
 
     ListObj _fuzz_mf_list;
@@ -69,7 +72,12 @@ int fuzz_mf_init(FuzzMemFuncObj* mf, FuzzMemFuncType mf_type, float *param, int 
 /**
  *
  */
-void fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMemFuncObj* mf);
+int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMemFuncObj* mf);
+
+/** 
+ *
+ */
+int fuzz_mf_num(FuzzObj* fuzz_obj);
 
 /** 
  *

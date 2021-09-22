@@ -7,77 +7,11 @@
 
 #include "fuzzy.h"
 
-typedef struct _trimf
-{
-    float a, b, c;
-    float (*trimf)(float);
-} Trimf;
-
-typedef struct _trapmf
-{
-    float a, b, c, d;
-    float (*trapmf)(float);
-} Trapmf;
-
-typedef struct _pimf
-{
-    float a, b, c, d;
-    float (*pimf)(float);
-} Pimf;
-
-typedef struct _smf
-{
-    float a, b;
-    float (*smf)(float);
-} Smf;
-
-typedef struct _zmf
-{
-    float a, b;
-    float (*zmf)(float);
-} Zmf;
-
-typedef struct _gbellmf
-{
-    float a, b, c;   
-    float (*gbellmf)(float);
-} Gbellmf;
-
-typedef struct _gaussmf
-{
-    float sigma, c;
-    float (*gaussmf)(float);
-} Gaussmf;
-
-typedef struct _gauss2mf
-{
-    float sigma1, c1, sigma2, c2;
-    float (*gauss2mf)(float);
-} Gauss2mf;
-
-typedef struct _sigmf
-{
-    float ak, ck;
-    float (*sigmf)(float);
-} Sigmf;
-
-typedef struct _dsigmf
-{
-    float ak1, ck1, ak2, ck2;
-    float (*dsigmf)(float);
-} DSigmf;
-
-typedef struct _psigmf
-{
-    float ak1, ck1, ak2, ck2;
-    float (*psigmf)(float);
-} PSigmf;
-
 static float _tri_memfunc(float x, float a, float b, float c);
 static float _trap_memfunc(float x, float a, float b, float c, float d);
-static float _pimf_memfunc(float x, float a, float b, float c, float d);
-static float _smf_memfunc(float x, float a, float b);
-static float _zmf_memfunc(float x, float a, float b);
+static float _pi_memfunc(float x, float a, float b, float c, float d);
+static float _s_memfunc(float x, float a, float b);
+static float _z_memfunc(float x, float a, float b);
 static float _gbell_memfunc(float x, float a, float b, float c);
 static float _gauss_memfunc(float x, float sigma, float c);
 static float _gauss2_memfunc(float x, float sigma1, float c1, float sigma2, float c2);
@@ -85,67 +19,109 @@ static float _sig_memfunc(float x, float ak, float ck);
 static float _dsig_memfunc(float x, float ak1, float ck1, float ak2, float ck2);
 static float _psig_memfunc(float x, float ak1, float ck1, float ak2, float ck2);
 
+static float _memfunc_output(FuzzMemFuncObj (*), float);
 
 int fuzz_mf_init(FuzzMemFuncObj* mf, FuzzMemFuncType mf_type, float *param, int param_num)
 {
     mf->type = mf_type;
-    mf->mf_param = param;
-
     switch(mf_type)
     {
     case FUZZ_TRIMF:
         if(param_num != 3)
             return -1;
-        
+
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = 0;
         break;
     case FUZZ_TRAPMF:
         if(param_num != 4)
             return -1;
 
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = param[3];
         break;
     case FUZZ_PIMF:
         if(param_num != 4)
             return -1;
-
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = param[3];
         break;
     case FUZZ_SMF:
         if(param_num != 3)
             return -1;
-
+        
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = 0;
         break;
     case FUZZ_ZMF:
         if(param_num != 3)
             return -1;
 
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = 0;
         break;
     case FUZZ_GBELLMF:
         if(param_num != 3)
             return -1;
-
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = 0;
         break;
     case FUZZ_GAUSSMF:
         if(param_num != 2)
             return -1;
 
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = 0;
+        mf->param_d = 0;
         break;
     case FUZZ_GAUSS2MF:
         if(param_num != 4)
             return -1;
 
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = param[3];
         break;
     case FUZZ_SIGMF:
         if(param_num != 2)
             return -1;
+
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = 0;
+        mf->param_d = 0;
         break;
     case FUZZ_DSIGMF:
         if(param_num != 4)
             return -1;
 
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = param[3];
         break;
     case FUZZ_PSIGMF:
         if(param_num != 4)
             return -1;
 
+        mf->param_a = param[0];
+        mf->param_b = param[1];
+        mf->param_c = param[2];
+        mf->param_d = param[3];
         break;
     default:
         return -1;
@@ -160,7 +136,13 @@ void fuzz_init(FuzzObj* fuzz_obj,
                float output_min, float output_max,
                DefuzzMethod defuzz_method)
 {
-
+    fuzz_obj->mf_num = 0;
+    list_init(&fuzz_obj->_fuzz_mf_list);
+    fuzz_obj->fuzz_input_range[0] = input_min;
+    fuzz_obj->fuzz_input_range[1] = input_max;
+    fuzz_obj->fuzz_output_range[0] = output_max;
+    fuzz_obj->fuzz_output_range[1] = output_max;
+    fuzz_obj->defuzz_method = defuzz_method;
 }
 
 float fuzz_control(FuzzObj* fuzz_obj, float err)
@@ -170,6 +152,50 @@ float fuzz_control(FuzzObj* fuzz_obj, float err)
     return y_k;
 }
 
+
+int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMemFuncObj* mf)
+{
+    list_insert_before(&fuzz_obj->_fuzz_mf_list, &mf->_mf_inner_list);
+    fuzz_obj->mf_num ++;
+    return 0;
+}
+
+int fuzz_mf_num(FuzzObj* fuzz_obj)
+{
+    return list_len(&fuzz_obj->_fuzz_mf_list);
+}
+
+float _memfunc_output(FuzzMemFuncObj *mf, float x)
+{
+    switch(mf->type)
+    {
+    case FUZZ_TRIMF:
+        return _tri_memfunc(x, mf->param_a, mf->param_b, mf->param_c);
+    case FUZZ_TRAPMF:
+        return _trap_memfunc(x, mf->param_a, mf->param_b, mf->param_c, mf->param_d);
+    case FUZZ_PIMF:
+        return _pi_memfunc(x, mf->param_a, mf->param_b, mf->param_c, mf->param_d);
+    case FUZZ_ZMF:
+        return _z_memfunc(x, mf->param_a, mf->param_b);
+    case FUZZ_SMF:
+        return _s_memfunc(x, mf->param_a, mf->param_b);
+    case FUZZ_GBELLMF:
+        return _gbell_memfunc(x, mf->param_a, mf->param_b, mf->param_c);
+    case FUZZ_GAUSSMF:
+        return _gauss_memfunc(x, mf->param_a, mf->param_b);
+    case FUZZ_GAUSS2MF:
+        return _gauss2_memfunc(x, mf->param_a, mf->param_b, mf->param_c, mf->param_d);
+    case FUZZ_SIGMF:
+        return _sig_memfunc(x, mf->param_a, mf->param_b);
+    case FUZZ_DSIGMF:
+        return _dsig_memfunc(x, mf->param_a, mf->param_b, mf->param_c, mf->param_d);
+    case FUZZ_PSIGMF:
+        return _psig_memfunc(x, mf->param_a, mf->param_b, mf->param_c, mf->param_d);
+    default:
+        break;
+    }
+    return 0;
+}
 
 float _tri_memfunc(float x, float a, float b, float c)
 {
@@ -197,7 +223,7 @@ float _trap_memfunc(float x, float a, float b, float c, float d)
         return 0;   
 }
 
-float _pimf_memfunc(float x, float a, float b, float c, float d)
+float _pi_memfunc(float x, float a, float b, float c, float d)
 {
     if(x <= a)
         return 0;
@@ -215,7 +241,7 @@ float _pimf_memfunc(float x, float a, float b, float c, float d)
         return 0;
 }
 
-float _smf_memfunc(float x, float a, float b)
+float _s_memfunc(float x, float a, float b)
 {
     if(x <= a)
         return 0;
@@ -227,7 +253,7 @@ float _smf_memfunc(float x, float a, float b)
         return 0;
 }
 
-float _zmf_memfunc(float x, float a, float b)
+float _z_memfunc(float x, float a, float b)
 {
     if(x <= a)
         return 0;
