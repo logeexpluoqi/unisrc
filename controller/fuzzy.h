@@ -46,16 +46,16 @@ typedef enum _fuzz_domain
 
 typedef enum _fuzz_method
 {
-    
+    FUZZ_METHOD_SELF_DEF,
 } FuzzMethod;
 
 typedef enum _defuzz_method
 {
-    FUZZ_MOM,        // maximum membership average method
-    FUZZ_CENTROID,   // area center of gravity method
-    FUZZ_BISECTOR,   // area dividing method
-    FUZZ_SOM,        // smallest method of maximum membership
-    FUZZ_LOM         // maximum membership degree to dafa
+    DFUZZ_METHOD_MOM,        // maximum membership average method
+    DFUZZ_METHOD_CENTROID,   // area center of gravity method
+    DFUZZ_METHOD_BISECTOR,   // area dividing method
+    DFUZZ_METHOD_SOM,        // smallest method of maximum membership
+    DFUZZ_METHOD_LOM         // maximum membership degree to dafa
 } DefuzzMethod;
 typedef struct _fuzz_membership_function_object
 {
