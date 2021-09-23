@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-09-16 11:45:00 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-09-17 18:18:31
+ * @Last Modified time: 2021-09-23 17:50:03
  */
 
 #include "fuzzy.h"
@@ -21,9 +21,13 @@ static float _psig_memfunc(float x, float ak1, float ck1, float ak2, float ck2);
 
 static float _memfunc_output(FuzzMemFuncObj (*), float);
 
-int fuzz_mf_init(FuzzMemFuncObj* mf, FuzzMemFuncType mf_type, float *param, int param_num)
+static FuzzDesc _fuzzification(FuzzMethod method, float x);
+
+
+int fuzz_mf_init(FuzzMemFuncObj* mf, const char *name, FuzzMemFuncType mf_type, float *param, int param_num)
 {
     mf->type = mf_type;
+    mf->name = name;
     switch(mf_type)
     {
     case FUZZ_TRIMF:
@@ -132,40 +136,67 @@ int fuzz_mf_init(FuzzMemFuncObj* mf, FuzzMemFuncType mf_type, float *param, int 
 }
 
 void fuzz_init(FuzzObj* fuzz_obj,
-               float input_min, float input_max,
-               float output_min, float output_max,
+               float e_min, float e_max,
+               float ec_min, float ec_max,
+               float u_min, float u_max,
+               int dis_e_size,
+               int dis_ec_size,
+               int dis_u_size,
+               const FuzzDesc **rules,
+               FuzzMethod fuzz_method,
                DefuzzMethod defuzz_method)
 {
     fuzz_obj->mf_e_num = 0;
+    fuzz_obj->mf_ec_num = 0;
     fuzz_obj->mf_u_num = 0;
-    list_init(&fuzz_obj->_fuzz_mf_list_e);
-    list_init(&fuzz_obj->_fuzz_mf_list_u);
-    fuzz_obj->fuzz_input_range[0] = input_min;
-    fuzz_obj->fuzz_input_range[1] = input_max;
-    fuzz_obj->fuzz_output_range[0] = output_max;
-    fuzz_obj->fuzz_output_range[1] = output_max;
+    fuzz_obj->dis_e_size = dis_e_size;
+    fuzz_obj->dis_ec_size = dis_ec_size;
+    fuzz_obj->dis_u_size = dis_u_size;
+    fuzz_obj->rules = rules;
+    list_init(&fuzz_obj->_mf_list_e);
+    list_init(&fuzz_obj->_mf_list_ec);
+    list_init(&fuzz_obj->_mf_list_u);
+    fuzz_obj->e_range[0] = e_min;
+    fuzz_obj->e_range[1] = e_max;
+    fuzz_obj->ec_range[0] = ec_min;
+    fuzz_obj->ec_range[1] = ec_max;
+    fuzz_obj->u_range[0] = u_max;
+    fuzz_obj->u_range[1] = u_max;
+    fuzz_obj->fuzz_method = fuzz_method;
     fuzz_obj->defuzz_method = defuzz_method;
 }
 
-float fuzz_control(FuzzObj* fuzz_obj, float err)
+float fuzz_control_2d(FuzzObj* fuzz_obj, float e, float ec)
 {
-    float y_k;
+    float uk;
 
-    return y_k;
+    return uk;
 }
 
-
-int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMfDir dir, FuzzMemFuncObj* mf)
+float fuzz_control_1d(FuzzObj* fuzz_obj, float e)
 {
-    switch(dir)
+    float uk;
+    
+
+
+    return uk;
+}
+
+int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMfVar var, FuzzMemFuncObj* mf)
+{
+    switch(var)
     {
-    case FUZZ_INPUT:
-        list_insert_before(&fuzz_obj->_fuzz_mf_list_e, &mf->_mf_inner_list);
+    case FUZZ_E:
+        list_insert_before(&fuzz_obj->_mf_list_e, &mf->_mf_inner_list);
         fuzz_obj->mf_e_num ++;
         break;
-    case FUZZ_OUTPUT:
-        list_insert_before(&fuzz_obj->_fuzz_mf_list_u, &mf->_mf_inner_list);
-        fuzz_obj->mf_e_num ++;
+    case FUZZ_EC:
+        list_insert_before(&fuzz_obj->_mf_list_ec, &mf->_mf_inner_list);
+        fuzz_obj->mf_ec_num ++;
+        break;
+    case FUZZ_U:
+        list_insert_before(&fuzz_obj->_mf_list_u, &mf->_mf_inner_list);
+        fuzz_obj->mf_u_num ++;
         break;
     default:
         return -1;
@@ -174,14 +205,22 @@ int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMfDir dir, FuzzMemFuncObj* mf)
     return 0;
 }
 
-int fuzz_mf_num(FuzzObj* fuzz_obj, FuzzMfDir dir)
+int fuzz_mf_num(FuzzObj* fuzz_obj, FuzzMfVar var)
 {
-    if(dir == FUZZ_INPUT)
-        return list_len(&fuzz_obj->_fuzz_mf_list_e);
-    else if(FUZZ_OUTPUT)
-        return list_len(&fuzz_obj->_fuzz_mf_list_u);
+    if(var == FUZZ_E)
+        return list_len(&fuzz_obj->_mf_list_e);
+    else if(FUZZ_EC)
+        return list_len(&fuzz_obj->_mf_list_ec);
+    else if(FUZZ_U)
+        return list_len(&fuzz_obj->_mf_list_u);
     else
         return -1;
+}
+
+FuzzDesc _fuzzification(FuzzMethod method, float x)
+{
+    
+    
 }
 
 float _memfunc_output(FuzzMemFuncObj *mf, float x)
