@@ -101,58 +101,79 @@ char* qsh_cmd()
 
 void qsh_save_history(char* save_cmd, int size)
 {
-    if(strcmp(save_cmd, hs_buf[hs_index]) != 0)
+    memcpy(hs_buf[hs_index], save_cmd, size);
+    hs_index = (hs_index + 1) % QSH_HISTORY_MAX;
+    hs_num = (hs_num + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_num + 1);
+}
+
+void qsh_recv_enter()
+{
+    if(cmd_buf_size != 0)
     {
-        memcpy(hs_buf[hs_index], save_cmd, size);
-        hs_index = (hs_index + 1) % QSH_HISTORY_MAX;
-        hs_num = (hs_num + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_num + 1);
+        if(cmd_buf[cmd_buf_size - 1] == ' ')
+            cmd_buf[cmd_buf_size - 1] = 0;
+        
+        if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's'))
+            qsh_save_history(cmd_buf, sizeof(cmd_buf));
+        
+        if(hs_recall_status == -1)
+        {
+            if(hs_recall_times != hs_num)
+                hs_recall_times --;
+            else
+                hs_recall_times = hs_num;
+        }
+        else if(hs_recall_status == 1)
+        {
+            if(hs_recall_times != 0)
+                hs_recall_times ++;
+            else
+                hs_recall_times = 0;
+        }
+
         hs_recall_pos = hs_index;
-        hs_recall_status = 0;
-        return;
-    }
-    else if(hs_recall_status == -1)
+        cmd_buf_size = 0;
+        QSH_PRINTF("\r\n");
+        qsh_recv_state = QSH_RECV_FINISHED;
+    }else 
     {
-        if(hs_recall_times != hs_num)
-            hs_recall_times --;
-        else
-            hs_recall_times = hs_num;
+        QSH_PRINTF("\r\n");
+        qsh_input_logo();
     }
-    else if(hs_recall_status == 1)
-    {
-        if(hs_recall_times != 0)
-            hs_recall_times ++;
-        else
-            hs_recall_times = 0;
-    }
-    hs_recall_pos = hs_index;
     hs_recall_status = 0;
 }
 
 void qsh_recall_prev_history()
 {
     hs_recall_status = 1;
-    if(hs_recall_times ++ < hs_num)
+    if(hs_recall_times  < hs_num)
+    {
         hs_recall_pos  = (hs_recall_pos - 1 + QSH_HISTORY_MAX) % QSH_HISTORY_MAX;
+        hs_recall_times ++;
+    }
     else
         hs_recall_times = hs_num;
     memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
     cmd_buf_size = strlen(cmd_buf);
+    printf(">%d-%d] ", hs_index, hs_recall_pos);
 }
 
 void qsh_recall_next_history()
 {
     hs_recall_status = 1;
-    if(hs_recall_times -- > 0)
+    if(hs_recall_times > 0)
     {
         hs_recall_pos = (hs_recall_pos + 1) % QSH_HISTORY_MAX;
         memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
         cmd_buf_size = strlen(cmd_buf);
+        hs_recall_times --;
     }
     else
     {
         hs_recall_times = 0;
         qsh_cmd_reset();
     }
+    printf(">%d-%d] ", hs_index, hs_recall_pos);
 }
 
 void qsh_recv_buf(char recv_byte)
@@ -169,24 +190,6 @@ void qsh_recv_backspace()
     QSH_PRINTF("%s", cmd_buf);
 }
 
-void qsh_recv_enter()
-{
-    if(cmd_buf_size != 0){
-        if(cmd_buf[cmd_buf_size - 1] == ' '){
-            cmd_buf[cmd_buf_size - 1] = 0;
-        }
-        if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's')){
-            qsh_save_history(cmd_buf, sizeof(cmd_buf));
-        }
-
-        cmd_buf_size = 0;
-        QSH_PRINTF("\r\n");
-        qsh_recv_state = QSH_RECV_FINISHED;
-    }else {
-        QSH_PRINTF("\r\n");
-        qsh_input_logo();
-    }
-}
 
 void qsh_recv_up()
 {
@@ -300,30 +303,30 @@ void qsh_task_exec()
     if(qsh_recv_state == QSH_RECV_FINISHED){
         switch(cmd_exec(qsh_cmd())){
         case CMD_NO_ERR: break;
-        case CMD_LEN_OUT: {
+        case CMD_LEN_OUT: 
             QSH_PRINTF(" #! command length exceed !\r\n");
             break;
-        }
-        case CMD_NUM_OUT:{
+        
+        case CMD_NUM_OUT:
             QSH_PRINTF(" #! command quantity exceed !\r\n");
             break;
-        }
-        case CMD_NO_CMD:{
+        
+        case CMD_NO_CMD:
             QSH_PRINTF(" #! command not found !\r\n");
             break;
-        }
-        case CMD_PARAM_EXCEED:{
+        
+        case CMD_PARAM_EXCEED:
             QSH_PRINTF(" #! parameter exceed !\r\n");
             break;
-        }
-        case CMD_PARAM_LESS: {
+        
+        case CMD_PARAM_LESS: 
             QSH_PRINTF(" #! parameter short !\r\n");
             break;
-        }
-        case CMD_EXEC_ERR:{
+        
+        case CMD_EXEC_ERR:
             QSH_PRINTF(" #! command execute error !\r\n");
             break;
-        }
+        
         default:
             break;
         }
