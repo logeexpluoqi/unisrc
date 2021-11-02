@@ -31,9 +31,15 @@ void pid_init(PidObj* obj,
               float kd_min, float kd_max);
 
 void pid_set_param(PidObj* obj, float kp, float ki, float kd);
+
 void pid_get_param(PidObj* obj, float* kp, float* ki, float* kd);
+
 void pid_set_param_limit(PidObj* obj, PidParam param, float min, float max);
+
 void pid_get_param_limit(PidObj* obj, PidParam param, float* min, float* max);
+
 float pid_control(PidObj* obj, float err);
+
+float pid_control_ki_separation(PidObj* obj, float err, float seplimit);
 
 #endif

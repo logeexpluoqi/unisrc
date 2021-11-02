@@ -104,3 +104,20 @@ float pid_control(PidObj *obj, float err)
     obj->u_k = obj->u_k1 + obj->delta_u_k;
     return obj->u_k;
 }
+
+float pid_control_ki_separation(PidObj* obj, float err, float seplimit)
+{
+    unsigned char beta = err > seplimit ? 0 : 1;
+
+    obj->err_k2 = obj->err_k1;
+    obj->err_k1 = obj->err_k;
+    obj->err_k = err;
+    obj->u_k1 = obj->u_k;
+
+    obj->delta_u_k = obj->kp * (obj->err_k - obj->err_k1) +
+                     beta * obj->ki * obj->err_k +
+                     obj->kd * (obj->err_k - 2 * obj->err_k1 + obj->err_k2);
+
+    obj->u_k = obj->u_k1 + obj->delta_u_k;
+    return obj->u_k;
+}
