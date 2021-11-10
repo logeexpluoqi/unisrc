@@ -42,4 +42,6 @@ float pid_control(PidObj* obj, float err);
 
 float pid_control_ki_separation(PidObj* obj, float err, float seplimit);
 
+void pid_clear_uk(PidObj* obj);
+
 #endif

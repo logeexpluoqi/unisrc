@@ -105,6 +105,16 @@ float pid_control(PidObj *obj, float err)
     return obj->u_k;
 }
 
+void pid_clear_uk(PidObj* obj)
+{
+    obj->u_k = 0;
+    obj->u_k1 = 0;
+    obj->delta_u_k = 0;
+    obj->err_k = 0;
+    obj->err_k1 = 0;
+    obj->err_k2 = 0;
+}
+
 float pid_control_ki_separation(PidObj* obj, float err, float seplimit)
 {
     unsigned char beta = err > seplimit ? 0 : 1;
