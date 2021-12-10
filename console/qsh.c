@@ -21,7 +21,7 @@ static char hs_recall_pos = 0;
 static char hs_recall_times = 0;
 static char hs_recall_status = 0;
 static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
-static unsigned int cmd_buf_size = 0;
+static unsigned int cmd_recv_size = 0;
 
 static void qsh_clear_line(void);
 static inline void qsh_cmd_reset(void);
@@ -59,7 +59,7 @@ void qsh_init()
     hs_recall_times = 0;
     hs_recall_status = 0;
     qsh_recv_state = QSH_RECV_NOCMD;
-    cmd_buf_size = 0;
+    cmd_recv_size = 0;
 
     cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
@@ -87,7 +87,7 @@ void qsh_clear_line()
 
 void qsh_cmd_reset()
 {
-    cmd_buf_size = 0;
+    cmd_recv_size = 0;
     memset(cmd_buf, 0, sizeof(cmd_buf));
 }
 
@@ -108,12 +108,13 @@ void qsh_save_history(char* save_cmd, int size)
 
 void qsh_recv_enter()
 {
-    if(cmd_buf_size != 0)
+    int i = 1;
+    if(cmd_recv_size != 0)
     {
-        if(cmd_buf[cmd_buf_size - 1] == ' ')
-            cmd_buf[cmd_buf_size - 1] = 0;
+        for( ; cmd_buf[cmd_recv_size - i] == '\x20'; i++)
+            cmd_buf[cmd_recv_size - i] = 0;
         
-        if(!(cmd_buf[0] == 'h' && cmd_buf[1] == 's'))
+        if((strcmp(cmd_buf, "hs") != 0) && (strcmp(cmd_buf, hs_buf[hs_index - 1]) != 0))
             qsh_save_history(cmd_buf, sizeof(cmd_buf));
         
         if(hs_recall_status == -1)
@@ -132,7 +133,8 @@ void qsh_recv_enter()
         }
 
         hs_recall_pos = hs_index;
-        cmd_buf_size = 0;
+        hs_recall_times = 0;
+        cmd_recv_size = 0;
         QSH_PRINTF("\r\n");
         qsh_recv_state = QSH_RECV_FINISHED;
     }else 
@@ -154,18 +156,17 @@ void qsh_recall_prev_history()
     else
         hs_recall_times = hs_num;
     memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
-    cmd_buf_size = strlen(cmd_buf);
-    printf(">%d-%d] ", hs_index, hs_recall_pos);
+    cmd_recv_size = strlen(cmd_buf);
 }
 
 void qsh_recall_next_history()
 {
-    hs_recall_status = 1;
+    hs_recall_status = -1;
     if(hs_recall_times > 0)
     {
         hs_recall_pos = (hs_recall_pos + 1) % QSH_HISTORY_MAX;
         memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
-        cmd_buf_size = strlen(cmd_buf);
+        cmd_recv_size = strlen(cmd_buf);
         hs_recall_times --;
     }
     else
@@ -173,19 +174,18 @@ void qsh_recall_next_history()
         hs_recall_times = 0;
         qsh_cmd_reset();
     }
-    printf(">%d-%d] ", hs_index, hs_recall_pos);
 }
 
 void qsh_recv_buf(char recv_byte)
 {
-    cmd_buf[cmd_buf_size++] = recv_byte;
+    cmd_buf[cmd_recv_size++] = recv_byte;
     QSH_PRINTF("%c", recv_byte);
 }
 
 void qsh_recv_backspace()
 {
     QSH_PRINTF("\b ");
-    cmd_buf[--cmd_buf_size] = 0;
+    cmd_buf[--cmd_recv_size] = 0;
     qsh_input_logo();
     QSH_PRINTF("%s", cmd_buf);
 }
@@ -271,9 +271,9 @@ int qsh_recv_spec(char recv_byte)
 void qsh_get_cmd(char recv_byte)
 {
     int spec = qsh_recv_spec(recv_byte);
-    if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_buf_size  <  CMD_MAX_LEN) // normal charactor
+    if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_recv_size  <  CMD_MAX_LEN) // normal charactor
         qsh_recv_buf(recv_byte);
-    else if(recv_byte == '\b' && cmd_buf_size > 0)// backspace charactor
+    else if(recv_byte == '\b' && cmd_recv_size > 0)// backspace charactor
         qsh_recv_backspace();
     else if(recv_byte == '\r') // enter key value
         qsh_recv_enter();
@@ -285,7 +285,7 @@ void qsh_get_cmd(char recv_byte)
         qsh_recv_right();
     else if(spec == 4)
         qsh_recv_left();
-    else if(cmd_buf_size > CMD_MAX_LEN)
+    else if(cmd_recv_size > CMD_MAX_LEN)
     {
         QSH_PRINTF("\r\n>> #! Command buffer overflow !\r\n");
         qsh_input_logo();
@@ -330,7 +330,7 @@ void qsh_task_exec()
         default:
             break;
         }
-        cmd_buf_size = 0;
+        cmd_recv_size = 0;
         QSH_PRINTF(QSH_INPUT_LOGO);
         memset(cmd_buf, 0, sizeof(cmd_buf));
         qsh_cmd_reset();
