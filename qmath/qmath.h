@@ -8,4 +8,7 @@
 #ifndef _QMATH_H
 #define _QMATH_H
 
+float qabs(float x);
+float qsign(float x);
+
 #endif
