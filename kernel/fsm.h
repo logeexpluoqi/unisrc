@@ -26,15 +26,22 @@ typedef struct fsm_state_object {
     ListObj fsm_state_list;
 } FsmStateObj;
 
-void fsm_init(FsmObj* obj, const char* name, int init_state);
-void fsm_change_state(FsmObj* obj, int next_state);
-int fsm_state_get(FsmObj* obj);
-unsigned char fsm_exec(FsmObj* obj);
+void fsm_init(FsmObj* fsm, const char* name, int init_state);
 
-void fsm_state_init(FsmStateObj* obj, int link_state, unsigned char (*fsm_state_task_hdl)(void));
-void fsm_state_add(FsmObj* fsm_obj, FsmStateObj* state_obj);
-void fsm_state_del(FsmStateObj* obj);
-int fsm_state_link(FsmStateObj* obj);
-const char* fsm_state_belong_to(FsmStateObj* obj);
+void fsm_change_state(FsmObj* fsm, int next_state);
+
+int fsm_state_get(FsmObj* fsm);
+
+unsigned char fsm_exec(FsmObj* fsm);
+
+void fsm_state_init(FsmStateObj* state, int link_state, unsigned char (*fsm_state_task_hdl)(void));
+
+void fsm_state_add(FsmObj* fsm, FsmStateObj* state);
+
+void fsm_state_del(FsmStateObj* state);
+
+int fsm_state_link(FsmStateObj* state);
+
+const char* fsm_state_belong_to(FsmStateObj* state);
 
 #endif

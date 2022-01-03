@@ -7,25 +7,25 @@
 
 #include "fsm.h"
 
-void fsm_init(FsmObj* obj, const char* name, int init_state)
+void fsm_init(FsmObj* fsm, const char* name, int init_state)
 {
-    obj->name = name;
-    obj->curr_state = init_state;
-    obj->next_state = init_state;
-    obj->fsm_state_id_base = 0;
-    list_init(&obj->fsm_list_head);
+    fsm->name = name;
+    fsm->curr_state = init_state;
+    fsm->next_state = init_state;
+    fsm->fsm_state_id_base = 0;
+    list_init(&fsm->fsm_list_head);
 }
 
-unsigned char fsm_exec(FsmObj* obj)
+unsigned char fsm_exec(FsmObj* fsm)
 {
     ListObj* node;
     FsmStateObj* state;
 
-    obj->curr_state = obj->next_state;
-    list_for_each(node, &obj->fsm_list_head)
+    fsm->curr_state = fsm->next_state;
+    list_for_each(node, &fsm->fsm_list_head)
     {
         state = list_entry(node, FsmStateObj, fsm_state_list);
-        if (state->link_state == obj->curr_state)
+        if (state->link_state == fsm->curr_state)
         {
             return state->fsm_state_task_hdl();
         }
@@ -33,47 +33,47 @@ unsigned char fsm_exec(FsmObj* obj)
     return 1;
 }
 
-void fsm_change_state(FsmObj* obj, int next_state)
+void fsm_change_state(FsmObj* fsm, int next_state)
 {
-    obj->next_state = next_state;
+    fsm->next_state = next_state;
 }
 
-void fsm_state_init(FsmStateObj* obj, int link_state, unsigned char (*fsm_state_task_hdl)(void))
+void fsm_state_init(FsmStateObj* state, int link_state, unsigned char (*fsm_state_task_hdl)(void))
 {
-    obj->id = 0;
-    obj->link_state = link_state;
-    obj->fsm_state_task_hdl = fsm_state_task_hdl;
+    state->id = 0;
+    state->link_state = link_state;
+    state->fsm_state_task_hdl = fsm_state_task_hdl;
 }
 
-void fsm_state_add(FsmObj* fsm_obj, FsmStateObj* state_obj)
+void fsm_state_add(FsmObj* fsm, FsmStateObj* state)
 {
-    if (state_obj->id == 0)
+    if (state->id == 0)
     {
-        fsm_obj->fsm_state_id_base++;
-        state_obj->id = fsm_obj->fsm_state_id_base;
+        fsm->fsm_state_id_base++;
+        state->id = fsm->fsm_state_id_base;
     }
-    state_obj->belong_to = fsm_obj->name;
-    list_insert_before(&fsm_obj->fsm_list_head, &state_obj->fsm_state_list);
+    state->belong_to = fsm->name;
+    list_insert_before(&fsm->fsm_list_head, &state->fsm_state_list);
 }
 
-void fsm_state_del(FsmStateObj* obj)
+void fsm_state_del(FsmStateObj* state)
 {
-    list_remove(&obj->fsm_state_list);
+    list_remove(&state->fsm_state_list);
 }
 
-int fsm_state_get(FsmObj* obj)
+int fsm_state_get(FsmObj* state)
 {
-    return obj->curr_state;
+    return state->curr_state;
 }
 
-int fsm_state_link(FsmStateObj* obj)
+int fsm_state_link(FsmStateObj* state)
 {
-    return obj->link_state;
+    return state->link_state;
 }
 
-const char* fsm_state_belong_to(FsmStateObj* obj)
+const char* fsm_state_belong_to(FsmStateObj* state)
 {
-    return obj->belong_to;
+    return state->belong_to;
 }
 
 
