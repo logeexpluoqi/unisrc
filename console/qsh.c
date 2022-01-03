@@ -22,6 +22,7 @@ static char hs_recall_times = 0;
 static char hs_recall_status = 0;
 static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
 static unsigned int cmd_recv_size = 0;
+static unsigned int cmd_index = 0;
 
 static void qsh_clear_line(void);
 static inline void qsh_cmd_reset(void);
@@ -60,6 +61,7 @@ void qsh_init()
     hs_recall_status = 0;
     qsh_recv_state = QSH_RECV_NOCMD;
     cmd_recv_size = 0;
+    cmd_index = 0;
 
     cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
@@ -135,6 +137,7 @@ void qsh_recv_enter()
         hs_recall_pos = hs_index;
         hs_recall_times = 0;
         cmd_recv_size = 0;
+        cmd_index = 0;
         QSH_PRINTF("\r\n");
         qsh_recv_state = QSH_RECV_FINISHED;
     }else 

@@ -25,7 +25,7 @@ unsigned char q2_handle(int argc, char* argv[])
 
 int demo_qsh_init()
 {
-    qsh_cmd_add(&qcmd1, "qcmd1", 0xff, q1_handle, " qsh test 1");
-    qsh_cmd_add(&qcmd2, "qcmd2", 0xff, q2_handle, " qsh test 2");
+    qsh_cmd_add(&qcmd1, "qcmd1", 0xff, q1_handle, "qsh test 1");
+    qsh_cmd_add(&qcmd2, "qcmd2", 0xff, q2_handle, "qsh test 2");
     return 0;
 }
