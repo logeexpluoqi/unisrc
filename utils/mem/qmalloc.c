@@ -6,3 +6,12 @@
  */
 
 #include "qmalloc.h"
+
+static char qheap[QHEAP_SIZE] = {0};
+
+int qmalloc_init()
+{
+
+
+    return 0;
+}

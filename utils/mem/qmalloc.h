@@ -8,4 +8,8 @@
 #ifndef _QMALLOC_H
 #define _QMALLOC_H
 
+#define QHEAP_SIZE     1024
+
+int qmalloc_init(void);
+
 #endif
