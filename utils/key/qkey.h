@@ -8,7 +8,7 @@
 #ifndef _QKEY_H
 #define _QKEY_H
 
-#include "../kernal/service/list.h"
+#include "../../kernel/service/list.h"
 
 typedef enum _qkey_state
 {
@@ -30,15 +30,16 @@ typedef struct _qkey_obj
     int (*getkey)(void);
     int key_id;
     QKeyState key_state;
-    QKeyPressDef press_def;
+    QKeyPressDef press;
     unsigned int debounce_time;
+    unsigned int debounce_cnt;
     unsigned char debounce_start;
     ListObj qkey_internal_list;
 } QKeyObj;
 
 void qkey_init(QKeyObj* key,
                const unsigned char* name,
-               QKeyPressDef press_def,
+               QKeyPressDef press,
                int (*getkey)(void),
                int (*callback)(void),
                unsigned int debounce_time);
