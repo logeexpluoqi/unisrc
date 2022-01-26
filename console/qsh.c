@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-08-31 17:02:45
+ * @Last Modified time: 2022-01-26 16:41:51
  */
 
 #include <stdlib.h>
@@ -341,13 +341,17 @@ void qsh_task_exec()
     }
 }
 
-void qsh_cmd_add(CmdObj* qcmd,
+void qsh_cmd_init(CmdObj* qcmd,
                  const char* name,
                  unsigned char param_num,
                  unsigned char (*handle)(int, char**),
                  const char* usage)
 {
     cmd_init(qcmd, name, param_num, handle, usage);
+}
+
+void qsh_cmd_add(CmdObj* qcmd)
+{
     cmd_add(qcmd);
 }
 

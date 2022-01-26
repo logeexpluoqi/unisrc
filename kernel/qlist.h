@@ -1,12 +1,12 @@
 /*
  * @Author: luoqi 
  * @Date: 2021-05-07 21:18:06 
- * @Last Modified by:   luoqi 
- * @Last Modified time: 2021-05-07 21:18:06 
+ * @Last Modified by: luoqi
+ * @Last Modified time: 2022-01-26 16:18:53
  */
 
-#ifndef _LIST_H
-#define _LIST_H
+#ifndef _QLIST_H
+#define _QLIST_H
 
 #define offset_of(type, member)             (unsigned long) &((type*)0)->member
 #define container_of(ptr, type, member)     ((type *)((char *)(ptr) - offset_of(type, member)))

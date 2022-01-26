@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 14:45:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-08-31 17:17:35
+ * @Last Modified time: 2022-01-26 16:42:58
  */
 
 #include "demo_qsh.h"
@@ -25,7 +25,10 @@ unsigned char q2_handle(int argc, char* argv[])
 
 int demo_qsh_init()
 {
-    qsh_cmd_add(&qcmd1, "qcmd1", 0xff, q1_handle, "qsh test 1");
-    qsh_cmd_add(&qcmd2, "qcmd2", 0xff, q2_handle, "qsh test 2");
+    qsh_cmd_init(&qcmd1, "qcmd1", 0xff, q1_handle, "qsh test 1");
+    qsh_cmd_add(&qcmd1);
+    
+    qsh_cmd_init(&qcmd2, "qcmd2", 0xff, q2_handle, "qsh test 2");
+    qsh_cmd_add(&qcmd2);
     return 0;
 }

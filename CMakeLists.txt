@@ -14,7 +14,7 @@ add_subdirectory(solver)
 add_executable(udemo unitest.c)
 
 target_link_libraries(udemo demo_qsh qsh cmd)
-target_link_libraries(udemo demo_timeslice timeslice)
+target_link_libraries(udemo demo_timeslice qsh timeslice)
 target_link_libraries(udemo demo_msg msg)
 target_link_libraries(udemo demo_fsm fsm)
 target_link_libraries(udemo -lpthread)

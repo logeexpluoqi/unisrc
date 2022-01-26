@@ -2,13 +2,13 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 00:30:20 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-05-25 14:26:26
+ * @Last Modified time: 2022-01-26 16:26:10
  */
 
 #ifndef _CMD_H
 #define _CMD_H
 
-#include "service/list.h"
+#include "qlist.h"
 #define CMD_MAX_LEN     60
 #define CMD_MAX_NUM     20
 
@@ -36,16 +36,23 @@ typedef struct cmd_object
 } CmdObj;
 
 CmdErrType cmd_exec(char* cmd_msg);
-void cmd_init(CmdObj* obj,
+
+void cmd_init(CmdObj* cmd,
               const char* name,
               unsigned char param_num, // if this value is 0xff, means that no arg number limit
               unsigned char(*cmd_hdl)(int, char* []),
               const char* usage);
-void cmd_add(CmdObj* obj);
-void cmd_del(CmdObj* obj);
-unsigned char cmd_isexist(CmdObj* obj);
-unsigned int cmd_get_id(CmdObj* obj);
+
+void cmd_add(CmdObj* cmd);
+
+void cmd_del(CmdObj* cmd);
+
+unsigned char cmd_isexist(CmdObj* cmd);
+
+unsigned int cmd_get_id(CmdObj* cmd);
+
 unsigned int cmd_num(void);
-CmdObj* cmd_obj_get(unsigned int serial);
+
+CmdObj* cmd_obj_get(unsigned int cmd_id);
 
 #endif

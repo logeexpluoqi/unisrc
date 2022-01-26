@@ -2,13 +2,13 @@
  * @Author: luoqi 
  * @Date: 2021-09-16 11:44:17 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-09-23 17:48:22
+ * @Last Modified time: 2022-01-26 16:22:25
  */
 
 #ifndef _FUZZY_H
 #define _FUZZY_H
 
-#include "../kernel/service/list.h"
+#include "../kernel/qlist.h"
 
 typedef enum _fuzz_mf_var
 {

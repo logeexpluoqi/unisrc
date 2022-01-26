@@ -1,13 +1,13 @@
 /*
  * @Author: luoqi 
  * @Date: 2021-05-11 10:02:35 
- * @Last Modified by:   luoqi 
- * @Last Modified time: 2021-05-11 10:02:35 
+ * @Last Modified by: luoqi
+ * @Last Modified time: 2022-01-26 16:20:10
  */
 #ifndef _MSG_H
 #define _MSG_H
 
-#include "service/list.h"
+#include "qlist.h"
 
 typedef enum MSG_STATE
 {
@@ -59,13 +59,21 @@ void msg_init(MsgObj* obj,
               const char* usage);
 
 void msg_add(MsgContainer* container, MsgObj* obj);
+
 void msg_del(MsgObj* obj);
+
 void* msg_get(MsgContainer* container, const char* name);
+
 unsigned char msg_set(MsgContainer* container, const char* name, void* msg_data, unsigned int size);
+
 unsigned char msg_is_update(MsgContainer* container, const char* name);
+
 unsigned char msg_mem_location_set(MsgContainer* container, const char* name, void* new_mem);
+
 unsigned int msg_container_num_get(void);
+
 unsigned int msg_num_get(MsgContainer* container);
+
 MsgObj* msg_obj_get(MsgContainer* container, unsigned int serial);
 
 #endif

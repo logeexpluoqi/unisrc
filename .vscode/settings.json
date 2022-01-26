@@ -7,7 +7,8 @@
         "cmd.h": "c",
         "timeslice.h": "c",
         "demo_qsh.h": "c",
-        "list.h": "c"
+        "list.h": "c",
+        "qlist.h": "c"
     },
     "cmake.cmakePath": "cmake",
     "clang.executable": "clang",

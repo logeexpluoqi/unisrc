@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 00:29:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-09-14 18:17:25
+ * @Last Modified time: 2022-01-26 16:28:26
  */
 
 #include "cmd.h"
@@ -86,46 +86,46 @@ CmdErrType cmd_exec(char* cmd_msg)
     return CMD_NO_CMD;
 }
 
-void cmd_init(CmdObj* obj,
+void cmd_init(CmdObj* cmd,
               const char* name,
               unsigned char param_num,
               unsigned char(*cmd_hdl)(int, char* []),
               const char* usage)
 {
-    obj->name = name;
-    obj->param_num = param_num;
-    obj->id = cmd_id;
-    obj->cmd_hdl = cmd_hdl;
-    obj->usage = usage;
+    cmd->name = name;
+    cmd->param_num = param_num;
+    cmd->id = cmd_id;
+    cmd->cmd_hdl = cmd_hdl;
+    cmd->usage = usage;
     cmd_id++;
 }
 
-void cmd_add(CmdObj* obj)
+void cmd_add(CmdObj* cmd)
 {
-    if(cmd_isexist(obj) == 0)
+    if(cmd_isexist(cmd) == 0)
     {
-        list_insert_before(&cmd_list, &obj->cmd_list);
+        list_insert_before(&cmd_list, &cmd->cmd_list);
     }
 }
 
-void cmd_del(CmdObj* obj)
+void cmd_del(CmdObj* cmd)
 {
-    if(cmd_isexist(obj))
+    if(cmd_isexist(cmd))
     {
-        list_remove(&obj->cmd_list);
+        list_remove(&cmd->cmd_list);
     }
 }
 
-unsigned char cmd_isexist(CmdObj* obj)
+unsigned char cmd_isexist(CmdObj* cmd)
 {
     unsigned char isexist = 0;
     ListObj* node;
-    CmdObj* cmd;
+    CmdObj* _cmd;
 
     list_for_each(node, &cmd_list)
     {
-        cmd = list_entry(node, CmdObj, cmd_list);
-        if (obj->id == cmd->id)
+        _cmd = list_entry(node, CmdObj, cmd_list);
+        if (cmd->id == _cmd->id)
         {
             isexist = 1;
         }
@@ -134,9 +134,9 @@ unsigned char cmd_isexist(CmdObj* obj)
     return isexist;
 }
 
-unsigned int cmd_get_id(CmdObj* obj)
+unsigned int cmd_get_id(CmdObj* cmd)
 {
-    return obj->id;
+    return cmd->id;
 }
 
 unsigned int cmd_num()
@@ -160,11 +160,11 @@ unsigned char cmd_strcmp(const char* s1, const char* s2)
     return 0;
 }
 
-CmdObj* cmd_obj_get(unsigned int serial)
+CmdObj* cmd_obj_get(unsigned int cmd_id)
 {
     ListObj* node = &cmd_list;
 
-    for(unsigned int i = serial; i > 0; i--)
+    for(unsigned int i = cmd_id; i > 0; i--)
         node = node->next;
 
     return list_entry(node, CmdObj, cmd_list);
