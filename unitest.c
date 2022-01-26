@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:09:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 17:21:59
+ * @Last Modified time: 2022-01-26 17:46:47
  */
 
 #include <stdio.h>
@@ -18,6 +18,7 @@
 #include "demo/demo_timeslice.h"
 #include "demo/demo_msg.h"
 #include "demo/demo_qmath.h"
+#include "demo/demo_qkey.h"
 
 static pthread_t tid_qsh_isr;
 static void* thread_qsh_input_isr(void*);
@@ -39,6 +40,7 @@ int main()
     demo_msg_init();
     demo_qsh_init();
     demo_qmath_init();
+    demo_qkey_init();
 
     for(;;)
     {

@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-10-17 20:28:35 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:20:30
+ * @Last Modified time: 2022-01-26 17:44:26
  */
 
 #ifndef _QKEY_H
@@ -17,11 +17,11 @@ typedef enum _qkey_state
     
 } QKeyState;
 
-typedef enum _qkey_press_def
+typedef enum _qkey_trig_def
 {
-    QKEY_L_IS_PRESSED = 0,
-    QKEY_H_IS_PRESSED = 1
-} QKeyPressDef;
+    QKEY_L_IS_TRIG = 0,
+    QKEY_H_IS_TRIG = 1
+} QKeyTrigDef;
 
 typedef struct _qkey_obj
 {
@@ -30,7 +30,7 @@ typedef struct _qkey_obj
     int (*getkey)(void);
     int key_id;
     QKeyState key_state;
-    QKeyPressDef press;
+    QKeyTrigDef trig;
     unsigned int debounce_time;
     unsigned int debounce_cnt;
     unsigned char debounce_start;
@@ -39,7 +39,7 @@ typedef struct _qkey_obj
 
 void qkey_init(QKeyObj* key,
                const unsigned char* name,
-               QKeyPressDef press,
+               QKeyTrigDef trig,
                int (*getkey)(void),
                int (*callback)(void),
                unsigned int debounce_time);
