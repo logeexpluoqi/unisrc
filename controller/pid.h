@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-27 19:19:44 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-04-28 18:22:00
+ * @Last Modified time: 2022-01-26 17:03:39
  */
 
 #ifndef _PID_H
@@ -24,24 +24,20 @@ typedef enum {
     KD
 } PidParam;
 
-void pid_init(PidObj* obj,
-              float kp, float ki, float kd,
-              float kp_min, float kp_max,
-              float ki_min, float ki_max,
-              float kd_min, float kd_max);
+void pid_init(PidObj* pid, float kp, float ki, float kd);
 
-void pid_set_param(PidObj* obj, float kp, float ki, float kd);
+void pid_param_set(PidObj* pid, float kp, float ki, float kd);
 
-void pid_get_param(PidObj* obj, float* kp, float* ki, float* kd);
+void pid_param_get(PidObj* pid, float* kp, float* ki, float* kd);
 
-void pid_set_param_limit(PidObj* obj, PidParam param, float min, float max);
+void pid_param_limit_set(PidObj* pid, PidParam param, float min, float max);
 
-void pid_get_param_limit(PidObj* obj, PidParam param, float* min, float* max);
+void pid_param_limit_get(PidObj* pid, PidParam param, float* min, float* max);
 
-float pid_control(PidObj* obj, float err);
+float pid_control_once(PidObj* pid, float err);
 
-float pid_control_ki_separation(PidObj* obj, float err, float seplimit);
+float pid_ki_separation_control_once(PidObj* pid, float err, float seplimit);
 
-void pid_clear_uk(PidObj* obj);
+void pid_uk_clear(PidObj* pid);
 
 #endif
