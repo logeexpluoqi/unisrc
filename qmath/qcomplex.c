@@ -7,36 +7,36 @@
 
 #include "qcomplex.h"
 
-QComplex qcomplex_add(QComplex a, QComplex b)
+QCmplx qcmplx_add(QCmplx a, QCmplx b)
 {
-    QComplex c;
+    QCmplx c;
     c.re = a.re + b.re;
     c.im = b.im + b.im;
 
     return c;
 }
 
-QComplex qcomplex_sub(QComplex a, QComplex b)
+QCmplx qcmplx_sub(QCmplx a, QCmplx b)
 {
-    QComplex c;
+    QCmplx c;
     c.re = a.re - b.re;
     c.im = b.im - b.im;
 
     return c;
 }
 
-QComplex qcomplex_mul(QComplex a, QComplex b)
+QCmplx qcmplx_mul(QCmplx a, QCmplx b)
 {
-    QComplex c;
+    QCmplx c;
     c.re = a.re * b.re - a.im * b.im;
     c.im = a.re * b.im + b.re * a.im;
 
     return c;
 }
 
-QComplex qcomplex_div(QComplex a, QComplex b)
+QCmplx qcmplx_div(QCmplx a, QCmplx b)
 {
-    QComplex c;
+    QCmplx c;
     c.re = (a.re * b.re + a.im * b.im) / (a.re * a.re + b.re * b.re);
     c.im = (a.im * b.re - a.re * b.im) / (a.re * a.re + b.re * b.re);
 

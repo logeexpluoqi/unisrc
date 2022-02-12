@@ -12,19 +12,19 @@ typedef struct _qcomplex
 {
     float re;
     float im;
-} QComplex;
+} QCmplx;
 
 /* addition */
-QComplex qcomplex_add(QComplex a, QComplex b);
+QCmplx qcmplx_add(QCmplx a, QCmplx b);
 
 /* subtraction */
-QComplex qcomplex_sub(QComplex a, QComplex b);
+QCmplx qcmplx_sub(QCmplx a, QCmplx b);
 
 /* multiplication */
-QComplex qcomplex_mul(QComplex a, QComplex b);
+QCmplx qcmplx_mul(QCmplx a, QCmplx b);
 
 /* division */
-QComplex qcomplex_div(QComplex a, QComplex b);
+QCmplx qcmplx_div(QCmplx a, QCmplx b);
 
 #endif
 
