@@ -4,6 +4,8 @@ add_library(msg msg.c)
 add_library(timeslice timeslice.c)
 add_library(qlist qlist.c)
 
+add_library(qmem qmem.c)
+
 target_link_libraries(cmd qlist)
 target_link_libraries(fsm qlist)
 target_link_libraries(timeslice qlist)

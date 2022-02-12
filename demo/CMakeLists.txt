@@ -12,6 +12,6 @@ target_link_libraries(demo_qsh qsh cmd)
 target_link_libraries(demo_timeslice qsh timeslice)
 target_link_libraries(demo_qmath qsh qcomplex qmath)
 target_link_libraries(demo_msg msg)
-target_link_libraries(demo_fsm fsm)
+target_link_libraries(demo_fsm fsm qsh)
 
 target_link_libraries(demo_qkey qkey)
