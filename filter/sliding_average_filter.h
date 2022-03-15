@@ -8,12 +8,13 @@
 #ifndef _SLIDING_AVERAGE_FILTER_H
 #define _SLIDING_AVERAGE_FILTER_H
 
+#define SLIDING_AVERAGE_FILTER_USEING_STDLIB  1
+
 typedef struct _sliding_average_filter
 {
     int w_size;
     int head;
     float sum;
-    float counter;
     float *cache;
 } SlidAveFilterObj;
 
