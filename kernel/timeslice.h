@@ -40,7 +40,7 @@ void timeslice_task_init(TimesilceTaskObj* task,
 
 void timeslice_task_add(TimesilceTaskObj* task);
 
-unsigned char timeslice_task_del(TimesilceTaskObj* task);
+int timeslice_task_del(TimesilceTaskObj* task);
 
 void timeslice_slice_change(TimesilceTaskObj* task, unsigned int slice_len);
 
@@ -48,9 +48,9 @@ unsigned int timeslice_slice_len_get(TimesilceTaskObj* task);
 
 unsigned int timeslice_task_num_get(void);
 
-unsigned char timeslice_task_isexist(TimesilceTaskObj* task);
+int timeslice_task_isexist(TimesilceTaskObj* task);
 
-unsigned char timesilce_del_task_isexist(TimesilceTaskObj* task);
+int timesilce_del_task_isexist(TimesilceTaskObj* task);
 
 TimesilceTaskObj* timeslice_obj_get(unsigned int task_id);
 

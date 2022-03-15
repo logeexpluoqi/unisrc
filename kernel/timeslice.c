@@ -79,7 +79,7 @@ void timeslice_task_add(TimesilceTaskObj* task)
     }
 }
 
-unsigned char timeslice_task_del(TimesilceTaskObj* task)
+int timeslice_task_del(TimesilceTaskObj* task)
 {
     if(timeslice_task_isexist(task))
     {
@@ -92,7 +92,7 @@ unsigned char timeslice_task_del(TimesilceTaskObj* task)
 }
 
 
-unsigned char timeslice_task_isexist(TimesilceTaskObj* task)
+int timeslice_task_isexist(TimesilceTaskObj* task)
 {
     unsigned char isexist = 0;
     ListObj* node;
@@ -108,7 +108,7 @@ unsigned char timeslice_task_isexist(TimesilceTaskObj* task)
     return isexist;
 }
 
-unsigned char timesilce_del_task_isexist(TimesilceTaskObj* task)
+int timesilce_del_task_isexist(TimesilceTaskObj* task)
 {
     unsigned char isexist = 0;
     ListObj* node;
