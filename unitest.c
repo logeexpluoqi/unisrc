@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:09:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 17:46:47
+ * @Last Modified time: 2022-03-15 13:28:12
  */
 
 #include <stdio.h>
@@ -19,6 +19,7 @@
 #include "demo/demo_msg.h"
 #include "demo/demo_qmath.h"
 #include "demo/demo_qkey.h"
+#include "demo/demo_filter.h"
 
 static pthread_t tid_qsh_isr;
 static void* thread_qsh_input_isr(void*);
@@ -41,6 +42,7 @@ int main()
     demo_qsh_init();
     demo_qmath_init();
     demo_qkey_init();
+    demo_filter_init(); 
 
     for(;;)
     {
@@ -48,9 +50,11 @@ int main()
         {
             qsh_task_exec();
             timeslice_exec();
+            usleep(1);
         }
         else
             return 0;
+        
     }
 
     return 0;
@@ -71,7 +75,7 @@ void* thread_qsh_input_isr(void* param)
         {
             system("stty -raw echo");
             printf("\33[2K");
-            printf(" \r\n>> qsh input thread closed !\r\n\r\n");
+            printf(" \r\n#! qsh input thread closed !\r\n\r\n");
             close_all = 1;
             pthread_cancel(tid_tasks);
             pthread_cancel(tid_qsh_isr);

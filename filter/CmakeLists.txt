@@ -1,0 +1,1 @@
+add_library(sliding_average_filter sliding_average_filter.c)
