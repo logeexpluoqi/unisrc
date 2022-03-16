@@ -36,7 +36,7 @@ void demo_filter_init()
     }
 
     sliding_average_filter_init(&sldave_filter, 100);
-    lpf_first_order_init(&lpf_1st, 0.1);
+    lpf_first_order_init(&lpf_1st, 0.01);
 
     qsh_cmd_init(&cmd_filter, "filter", 0xff, cmd_filter_hdl, "filter <nsig sldave lpf1st>");
     qsh_cmd_add(&cmd_filter);
