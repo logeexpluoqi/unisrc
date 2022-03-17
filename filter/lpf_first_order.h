@@ -11,7 +11,7 @@
 typedef struct _lpf_first_order
 {
     float fc;   // cut-off frequency
-    float uk;
+    float uk1;
     float alpha; // filter coefficient
     float T;     // samping period
 }LpfFirstOderObj;
