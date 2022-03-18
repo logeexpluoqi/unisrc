@@ -29,5 +29,5 @@ void lpf_first_order_fc_set(LpfFirstOderObj *filter, float fc, float T)
 {
     filter->fc = fc;
     filter->T = T;
-    filter->alpha = (2 * LPF_PI * fc) / (1 + 2 * LPF_PI * fc);
+    filter->alpha = (2 * LPF_PI * T * fc) / (1 + 2 * LPF_PI * T * fc);
 }
