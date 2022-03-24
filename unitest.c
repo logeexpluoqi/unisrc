@@ -50,7 +50,7 @@ int main()
         {
             qsh_task_exec();
             timeslice_exec();
-            usleep(1);
+            usleep(10);
         }
         else
             return 0;
@@ -70,7 +70,7 @@ void* thread_qsh_input_isr(void* param)
         if(ch == 127)
             ch = 8;
         if(ch != 3)
-            qsh_get_cmd(ch);
+            qsh_get_char(ch);
         else
         {
             system("stty -raw echo");

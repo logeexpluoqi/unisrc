@@ -46,10 +46,13 @@ unsigned char cmd_filter_hdl(int argc, char *argv[])
 {
     if(strcmp(argv[1], "nsig") == 0)
         nsig_show();
+
     else if(strcmp(argv[1], "sldave") == 0)
         demo_filter_sliding_average();
+
     else if(strcmp(argv[1], "lpf1st") == 0)
         demo_lpf_1st();
+
     else
         QSH_PRINTF(" #! parameter error !\r\n");
 
@@ -62,6 +65,7 @@ void nsig_show()
     {
         if(i % 9 == 0)
             QSH_PRINTF("\r\n");
+
         QSH_PRINTF(" % 7.6f", ndata[i]);
     }
     QSH_PRINTF("\r\n");
@@ -75,6 +79,7 @@ void demo_filter_sliding_average()
         fdata[i] = sliding_average_filter(&sldave_filter, ndata[i]);
         if(i % 9 == 0)
             QSH_PRINTF("\r\n");
+
         QSH_PRINTF(" % 7.6f", fdata[i]);
     }
     QSH_PRINTF("\r\n");
@@ -88,6 +93,7 @@ void demo_lpf_1st()
         fdata[i] = lpf_first_order(&lpf_1st, ndata[i]);
         if(i % 9 == 0)
             QSH_PRINTF("\r\n");
+            
         QSH_PRINTF(" % 7.6f", fdata[i]);
     }
     QSH_PRINTF("\r\n");
