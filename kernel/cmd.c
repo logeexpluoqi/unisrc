@@ -20,31 +20,28 @@ CmdErrType cmd_exec(char* cmd_msg)
     CmdObj* cmd;
     unsigned int argc;
     char* argv[CMD_MAX_NUM + 1];
-
-    /* This section is used to dismantling input command string */
-    unsigned char i = 0;
     unsigned int argn = 0;
-
-    while (cmd_msg[i] != 0)
-    {
-        if (i > CMD_MAX_LEN - 1) {
-            return CMD_LEN_OUT;
-        }
-        else if (argn > CMD_MAX_NUM - 1) {
-            return CMD_NUM_OUT;
-        }
-
-        if (i == 0)
-        {
+    unsigned char i = 0;
+    
+    /* cmd parser */
+    do{
+        if (i < 1)
             argv[argn] = &cmd_msg[i];
-        }
-        if (cmd_msg[i] == ASCII_SPACE)
+        else if(cmd_msg[i] == ASCII_SPACE)
         {
             argv[++argn] = &cmd_msg[i + 1];
             cmd_msg[i] = 0;
         }
         i++;
-    }
+
+        if (i > CMD_MAX_LEN - 1) 
+            return CMD_LEN_OUT;
+
+        if (argn > CMD_MAX_NUM - 1) 
+            return CMD_NUM_OUT;
+        
+    } while(cmd_msg[i] != 0);
+
     argc = argn + 1; // add 1 because there is no space key value front of the first argv
     /* End of dismantling input command string */
 
@@ -56,22 +53,14 @@ CmdErrType cmd_exec(char* cmd_msg)
             if(cmd->param_num != 0xff)
             {
                 if (cmd->param_num > argc - 1)
-                {
                     return CMD_PARAM_LESS;
-                }
                 else if (cmd->param_num < argc - 1)
-                {
                     return CMD_PARAM_EXCEED;
-                }
 
                 if (cmd->cmd_hdl(argc, argv) != 0)
-                {
                     return CMD_EXEC_ERR;
-                }
                 else
-                {
                     return CMD_NO_ERR;
-                }
             }
             else
             {
@@ -103,17 +92,17 @@ void cmd_init(CmdObj* cmd,
 void cmd_add(CmdObj* cmd)
 {
     if(cmd_isexist(cmd) == 0)
-    {
         list_insert_before(&cmd_list, &cmd->cmd_list);
-    }
+    else
+        return;
 }
 
 void cmd_del(CmdObj* cmd)
 {
     if(cmd_isexist(cmd))
-    {
         list_remove(&cmd->cmd_list);
-    }
+    else
+        return;
 }
 
 unsigned char cmd_isexist(CmdObj* cmd)
@@ -126,9 +115,9 @@ unsigned char cmd_isexist(CmdObj* cmd)
     {
         _cmd = list_entry(node, CmdObj, cmd_list);
         if (cmd->id == _cmd->id)
-        {
             isexist = 1;
-        }
+        else
+            continue;
     }
 
     return isexist;
@@ -150,11 +139,10 @@ unsigned char cmd_strcmp(const char* s1, const char* s2)
 
     while (s1[i] != 0 || s2[i] != 0)
     {
-        if (((s1[i] == 0) && (s2[i] != 0)) || ((s1[i] != 0) && (s2[i] == 0)) || (s1[i] != s2[i]))
-        {
+        if (s1[i] != s2[i])
             return 1;
-        }
-        i++;
+        else
+            i++;
     }
 
     return 0;

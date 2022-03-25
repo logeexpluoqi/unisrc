@@ -10,7 +10,7 @@
 
 #include "qlist.h"
 #define CMD_MAX_LEN     60
-#define CMD_MAX_NUM     20
+#define CMD_MAX_NUM     10
 
 typedef enum cmd_err
 {

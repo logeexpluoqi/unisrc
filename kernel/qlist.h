@@ -8,7 +8,7 @@
 #ifndef _QLIST_H
 #define _QLIST_H
 
-#define offset_of(type, member)             (unsigned long) &((type*)0)->member
+#define offset_of(type, member)             ((unsigned long) &((type*)0)->member)
 #define container_of(ptr, type, member)     ((type *)((char *)(ptr) - offset_of(type, member)))
 
 typedef struct list_structure
