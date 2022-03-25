@@ -271,7 +271,7 @@ int qsh_recv_spec(char recv_byte)
         return 0;
 }
 
-void qsh_get_cmd(char recv_byte)
+void qsh_get_char(char recv_byte)
 {
     int spec = qsh_recv_spec(recv_byte);
     if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_recv_size  <  CMD_MAX_LEN) // normal charactor
