@@ -5,6 +5,7 @@
  * @Last Modified time: 2021-08-31 17:33:03
  */
 
+#include <string.h>
 #include "demo_fsm.h"
 #include "../kernel/fsm.h"
 #include "../console/qsh.h"
@@ -40,8 +41,25 @@ int demo_fsm_init()
     return 0;
 }
 
-unsigned char cmd_fsm_hdl(int argc, char *argvp[])
+unsigned char cmd_fsm_hdl(int argc, char *argv[])
 {
+    if(argc <= 1)
+    {
+        QSH_PRINTF(" #! parameter error !\r\n");
+        return 1;
+    }
 
+    if(strcmp(argv[1], "run") == 0)
+    {
+
+        QSH_PRINTF(">> fsm funning\r\n");
+    }
+    else if(strcmp(argv[1], "stop") == 0)
+    {
+
+        QSH_PRINTF(">> fsm stopped\r\n");
+    }
+    else
+        QSH_PRINTF(" #! parameter error !\r\n");
     return 0;
 }

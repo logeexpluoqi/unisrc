@@ -13,12 +13,22 @@ static QSH_CMD_CREAT(qcmd2);
 
 unsigned char q1_handle(int argc, char* argv[])
 {
+    if(argc > 1)
+    {
+        QSH_PRINTF(" #! parameter error !\r\n");
+        return 1;
+    }
     printf(">> qsh test 1\r\n");
     return 0;
 }
 
 unsigned char q2_handle(int argc, char* argv[])
 {
+    if(argc > 1)
+    {
+        QSH_PRINTF(" #! parameter error !\r\n");
+        return 1;
+    }
     printf(">> qsh test 2\r\n");
     return 0;
 }

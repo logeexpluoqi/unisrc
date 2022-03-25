@@ -44,6 +44,12 @@ void demo_filter_init()
 
 unsigned char cmd_filter_hdl(int argc, char *argv[])
 {
+    if(argc <= 1)
+    {
+        QSH_PRINTF(" #! parameter error !\r\n");
+        return 1;
+    }
+    
     if(strcmp(argv[1], "nsig") == 0)
         nsig_show();
 

@@ -49,6 +49,12 @@ void task2_hdl()
 
 unsigned char cmd_task_hdl(int argc, char* argv[])
 {
+    if(argc <= 1)
+    {
+        QSH_PRINTF(" #! parameter error !\r\n");
+        return 1;
+    }
+    
     if(strcmp(argv[1], "run") == 0)
     {
         if(strcmp(argv[2], "1") == 0)

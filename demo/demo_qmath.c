@@ -24,6 +24,11 @@ void demo_qmath_init()
 
 unsigned char cmd_qmath_hdl(int argc, char* argv[])
 {
+    if(argc > 1)
+    {
+        QSH_PRINTF(" #! parameter error !\r\n");
+        return 1;
+    }
     printf(" qmath test: \r\n");
     return 0;
 }

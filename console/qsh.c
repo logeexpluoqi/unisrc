@@ -274,8 +274,10 @@ int qsh_recv_spec(char recv_byte)
 void qsh_get_char(char recv_byte)
 {
     int spec = qsh_recv_spec(recv_byte);
-    if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_recv_size  <  CMD_MAX_LEN) // normal charactor
+    if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_recv_size  <  CMD_MAX_LEN)
+    {
         qsh_recv_buf(recv_byte);
+    }
     else if(recv_byte == '\b' && cmd_recv_size > 0)// backspace charactor
         qsh_recv_backspace();
     else if(recv_byte == '\r') // enter key value
