@@ -71,19 +71,32 @@ void timeslice_task_init(TimesilceTaskObj* task,
     task->run_time = 0;
 }
 
-void timeslice_task_add(TimesilceTaskObj* task)
+int timeslice_task_add(TimesilceTaskObj* task)
 {
+    if(timeslice_del_task_isexist(task) == 1)
+    {
+        task->is_run = TASK_STOP;
+        list_remove(&task->timeslice_task_node);
+    }
+
     if(timeslice_task_isexist(task) == 0)
     {
         list_insert_before(&timeslice_task_list, &task->timeslice_task_node);
+        return 0;
     }
+    return 1;
 }
 
 int timeslice_task_del(TimesilceTaskObj* task)
 {
-    if(timeslice_task_isexist(task))
+    if(timeslice_task_isexist(task) == 1)
     {
+        task->is_run = TASK_STOP;
         list_remove(&task->timeslice_task_node);
+    }
+
+    if(timeslice_del_task_isexist(task) == 0)
+    {
         list_insert_before(&timeslice_task_del_list, &task->timeslice_task_node);
         return 0;
     }
@@ -94,7 +107,6 @@ int timeslice_task_del(TimesilceTaskObj* task)
 
 int timeslice_task_isexist(TimesilceTaskObj* task)
 {
-    unsigned char isexist = 0;
     ListObj* node;
     TimesilceTaskObj *_task;
 
@@ -102,26 +114,27 @@ int timeslice_task_isexist(TimesilceTaskObj* task)
     {
         _task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
         if(task->id == _task->id)
-            isexist = 1;
+            return 1;
+        else
+            continue;
     }
-
-    return isexist;
+    return 0;
 }
 
-int timesilce_del_task_isexist(TimesilceTaskObj* task)
+int timeslice_del_task_isexist(TimesilceTaskObj* task)
 {
-    unsigned char isexist = 0;
     ListObj* node;
     TimesilceTaskObj *_task;
 
     list_for_each(node, &timeslice_task_del_list)
     {
-        task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
+        _task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
         if(task->id == _task->id)
-            isexist = 1;
+            return 1;
+        else
+            continue;
     }
-
-    return isexist;
+    return 0;
 }
 
 unsigned int timeslice_slice_len_get(TimesilceTaskObj* task)
