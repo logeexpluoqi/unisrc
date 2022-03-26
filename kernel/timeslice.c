@@ -76,6 +76,7 @@ int timeslice_task_add(TimesilceTaskObj* task)
     if(timeslice_del_task_isexist(task) == 1)
     {
         task->is_run = TASK_STOP;
+        task->timer = task->timeslice_len;
         list_remove(&task->timeslice_task_node);
     }
 
@@ -92,6 +93,7 @@ int timeslice_task_del(TimesilceTaskObj* task)
     if(timeslice_task_isexist(task) == 1)
     {
         task->is_run = TASK_STOP;
+        task->timer = task->timeslice_len;
         list_remove(&task->timeslice_task_node);
     }
 
