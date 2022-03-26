@@ -8,6 +8,10 @@
 #ifndef _PID_H
 #define _PID_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 typedef struct pid_structure {
     float kp, ki, kd;
     float kp_max, kp_min;
@@ -39,5 +43,9 @@ float pid_control_once(PidObj* pid, float err);
 float pid_ki_separation_control_once(PidObj* pid, float err, float seplimit);
 
 void pid_uk_clear(PidObj* pid);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

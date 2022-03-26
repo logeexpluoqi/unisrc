@@ -7,6 +7,10 @@
 #ifndef _MSG_H
 #define _MSG_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include "qlist.h"
 
 typedef enum MSG_STATE
@@ -75,5 +79,9 @@ unsigned int msg_container_num_get(void);
 unsigned int msg_num_get(MsgContainer* container);
 
 MsgObj* msg_obj_get(MsgContainer* container, unsigned int serial);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

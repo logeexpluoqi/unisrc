@@ -8,5 +8,13 @@
 #ifndef _ODE_EULER_H
 #define _ODE_EULER_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

@@ -8,6 +8,10 @@
 #ifndef _LPF_FIRST_ORDER_H
 #define _LPF_FIRST_ORDER_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 typedef struct _lpf_first_order
 {
     float fc;   // cut-off frequency
@@ -21,5 +25,9 @@ void lpf_first_order_init(LpfFirstOderObj *filter, float alpha);
 float lpf_first_order(LpfFirstOderObj *filter, float k);
 
 void lpf_first_order_fc_set(LpfFirstOderObj *filter, float fc, float T);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

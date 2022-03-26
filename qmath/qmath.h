@@ -8,6 +8,10 @@
 #ifndef _QMATH_H
 #define _QMATH_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 float qabs(float x);
 
 float qsign(float x);
@@ -19,5 +23,9 @@ float qmin(float a, float b);
 float qfloor(float x);
 
 float qceil(float x);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

@@ -8,6 +8,10 @@
 #ifndef _FSM_H
 #define _FSM_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include "qlist.h"
 
 typedef struct fsm_object {
@@ -43,5 +47,9 @@ void fsm_state_del(FsmStateObj* state);
 int fsm_state_link(FsmStateObj* state);
 
 const char* fsm_state_belong_to(FsmStateObj* state);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

@@ -8,6 +8,10 @@
 #ifndef _FUZZY_H
 #define _FUZZY_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include "../kernel/qlist.h"
 
 typedef enum _fuzz_mf_var
@@ -110,5 +114,8 @@ float fuzz_control_2d(FuzzObj* fuzz_obj, float e, float ec);
 
 float fuzz_control_1d(FuzzObj* fuzz_obj, float e);
 
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

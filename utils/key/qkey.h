@@ -8,6 +8,10 @@
 #ifndef _QKEY_H
 #define _QKEY_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include "../../kernel/qlist.h"
 
 typedef enum _qkey_state
@@ -47,5 +51,9 @@ void qkey_init(QKeyObj* key,
 void qkey_exec(void);
 
 void qkey_tick(void);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

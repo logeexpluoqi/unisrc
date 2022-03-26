@@ -8,6 +8,10 @@
 #ifndef _CMD_H
 #define _CMD_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include "qlist.h"
 #define CMD_MAX_LEN     60
 #define CMD_MAX_NUM     10
@@ -54,5 +58,9 @@ unsigned int cmd_get_id(CmdObj* cmd);
 unsigned int cmd_num(void);
 
 CmdObj* cmd_obj_get(unsigned int cmd_id);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

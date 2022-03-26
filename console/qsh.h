@@ -8,6 +8,10 @@
 #ifndef _QSH_H
 #define _QSH_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include <stdio.h>
 #include "../kernel/cmd.h"
 
@@ -37,5 +41,9 @@ void qsh_cmd_init(CmdObj* qcmd,
                  const char* usage);
 
 void qsh_cmd_add(CmdObj* qcmd);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

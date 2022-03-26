@@ -8,5 +8,13 @@
 #ifndef _ALPHA_BETA_GAMMA_H
 #define _ALPHA_BETA_GAMMA_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

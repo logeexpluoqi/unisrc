@@ -8,6 +8,10 @@
 #ifndef _QLIST_H
 #define _QLIST_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #define offset_of(type, member)             ((unsigned long) &((type*)0)->member)
 #define container_of(ptr, type, member)     ((type *)((char *)(ptr) - offset_of(type, member)))
 
@@ -36,5 +40,9 @@ unsigned int list_len(const ListObj* list);
 #define list_for_each_safe(pos, n, head) \
 	for (pos = (head)->next, n = pos->next; pos != (head); \
 		pos = n, n = pos->next)
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

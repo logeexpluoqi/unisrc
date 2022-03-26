@@ -8,5 +8,12 @@
 #ifndef _ODE_RK_H
 #define _ODE_RK_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

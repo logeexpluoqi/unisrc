@@ -8,6 +8,10 @@
 #ifndef _QMATRIX_H
 #define _QMATRIX_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 typedef struct _qmatrix
 {
     unsigned int row;
@@ -30,5 +34,9 @@ QMatrix qmatrix_div(QMatrix *A, QMatrix *B);
 QMatrix qmatrix_dotdiv(QMatrix *A, QMatrix *B);
 
 QMatrix qmatrix_sub(QMatrix *A, QMatrix *B);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

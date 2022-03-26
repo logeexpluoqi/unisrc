@@ -8,6 +8,10 @@
 #ifndef _SLIDING_AVERAGE_FILTER_H
 #define _SLIDING_AVERAGE_FILTER_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #define SLIDING_AVERAGE_FILTER_USEING_STDLIB  1
 
 typedef struct _sliding_average_filter
@@ -23,5 +27,9 @@ void sliding_average_filter_init(SlidAveFilterObj *filter, int w_size);
 float sliding_average_filter(SlidAveFilterObj *filter, float k);
 
 int sliding_average_filter_cache_add(SlidAveFilterObj *filter, float *cache, int w_size);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

@@ -8,6 +8,10 @@
 #ifndef _TIMESLICE_H
 #define _TIMESLICE_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include "qlist.h"
 
 typedef enum {
@@ -57,5 +61,9 @@ TimesilceTaskObj* timeslice_obj_get(unsigned int task_id);
 unsigned int timeslice_del_task_num_get(void);
 
 TimesilceTaskObj* timeslice_del_obj_get(unsigned int task_id);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

@@ -8,6 +8,10 @@
 #ifndef _KALMAN_H
 #define _KALMAN_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 typedef struct _kalman_filter
 {
     float x;    // state
@@ -18,5 +22,9 @@ typedef struct _kalman_filter
     float P;    // estimate error convariance
     float Kg;   // kalman gain
 } KalmanFilter1DObj;
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif
