@@ -11,7 +11,7 @@ add_subdirectory(solver)
 add_subdirectory(utils/key)
 add_subdirectory(filter)
 
-add_executable(qdemo unitest.c)
+add_executable(qdemo qdemo.c)
 
 target_link_libraries(qdemo -lpthread)
 target_link_libraries(qdemo demo_qsh)
