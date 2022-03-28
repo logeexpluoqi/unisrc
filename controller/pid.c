@@ -18,12 +18,6 @@ void pid_init(PidObj* pid, float kp, float ki, float kd)
     pid->kp         = kp;
     pid->ki         = ki;
     pid->kd         = kd;
-    pid->kp_min     = 0;
-    pid->kp_max     = 3.4e38;
-    pid->ki_min     = 0;
-    pid->ki_max     = 3.4e38;
-    pid->kd_min     = 0;
-    pid->kd_max     = 3.4e38;
 }
 
 void pid_param_set(PidObj *pid, float kp, float ki, float kd)
@@ -38,25 +32,6 @@ void pid_param_get(PidObj *pid, float *kp, float *ki, float *kd)
     *kp = pid->kp;
     *ki = pid->ki;
     *kd = pid->kd;
-}
-
-void pid_param_limit_set(PidObj *pid, PidParam param, float min, float max)
-{
-    switch (param)
-    {
-    case KP:
-        pid->kp_min = min;
-        pid->kp_max = max;
-        break;
-    case KI:
-        pid->ki_min = min;
-        pid->ki_max = max;
-        break;
-    case KD:
-        pid->kd_min = min;
-        pid->kd_max = max;
-        break;
-    }
 }
 
 void pid_param_limit_get(PidObj *pid, PidParam param, float *min, float *max)
