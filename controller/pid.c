@@ -28,17 +28,9 @@ void pid_init(PidObj* pid, float kp, float ki, float kd)
 
 void pid_param_set(PidObj *pid, float kp, float ki, float kd)
 {
-    pid->kp = (pid->kp_min == 0 && pid->kp_max == 0) ? kp : \
-               ((kp > pid->kp_max) ? pid->kp_max : \
-               ((kp < pid->kp_min) ? pid->kp_min : kp));
-
-    pid->ki = (pid->ki_min == 0 && pid->ki_max == 0) ? ki : \
-               ((ki > pid->ki_max) ? pid->ki_max : \
-               ((ki < pid->ki_min) ? pid->ki_min : ki));
-
-    pid->kd = (pid->kd_min == 0 && pid->kd_max == 0) ? kd : \
-               ((kd > pid->kd_max) ? pid->kd_max : \
-               ((kd < pid->kd_min) ? pid->kd_min : kd));
+    pid->kp = kp;
+    pid->ki = ki;
+    pid->kd = kd;
 }
 
 void pid_param_get(PidObj *pid, float *kp, float *ki, float *kd)
