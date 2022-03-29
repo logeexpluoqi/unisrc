@@ -34,9 +34,9 @@ void pid_param_set(PidObj* pid, float kp, float ki, float kd);
 
 void pid_param_get(PidObj* pid, float* kp, float* ki, float* kd);
 
-float pid_control_once(PidObj* pid, float err);
+float pid_ctrl(PidObj* pid, float err);
 
-float pid_ki_separation_control_once(PidObj* pid, float err, float seplimit);
+float pid_ctrl_ki_separation(PidObj* pid, float err, float seplimit);
 
 void pid_uk_clear(PidObj* pid);
 

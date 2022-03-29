@@ -53,7 +53,7 @@ void pid_param_limit_get(PidObj *pid, PidParam param, float *min, float *max)
     }
 }
 
-float pid_control_once(PidObj *pid, float err)
+float pid_ctrl(PidObj *pid, float err)
 {
     pid->err_k2 = pid->err_k1;
     pid->err_k1 = pid->err_k;
@@ -78,7 +78,7 @@ void pid_uk_clear(PidObj* pid)
     pid->err_k2 = 0;
 }
 
-float pid_ki_separation_control_once(PidObj* pid, float err, float seplimit)
+float pid_ctrl_ki_separation(PidObj* pid, float err, float seplimit)
 {
     unsigned char beta = err > seplimit ? 0 : 1;
 
