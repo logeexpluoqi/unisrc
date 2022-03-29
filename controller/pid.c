@@ -34,25 +34,6 @@ void pid_param_get(PidObj *pid, float *kp, float *ki, float *kd)
     *kd = pid->kd;
 }
 
-void pid_param_limit_get(PidObj *pid, PidParam param, float *min, float *max)
-{
-    switch (param)
-    {
-    case KP:
-        *min = pid->kp_min;
-        *max = pid->kp_max;
-        break;
-    case KI:
-        *min = pid->ki_min;
-        *max = pid->ki_max;
-        break;
-    case KD:
-        *min = pid->kd_min;
-        *max = pid->kd_max;
-        break;
-    }
-}
-
 float pid_ctrl(PidObj *pid, float err)
 {
     pid->err_k2 = pid->err_k1;

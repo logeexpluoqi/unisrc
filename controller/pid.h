@@ -14,9 +14,6 @@
 
 typedef struct pid_structure {
     float kp, ki, kd;
-    float kp_max, kp_min;
-    float ki_max, ki_min;
-    float kd_max, kd_min;
     float err_k, err_k1, err_k2;
     float u_k, u_k1;
     float delta_u_k;
