@@ -82,7 +82,7 @@ void demo_filter_sliding_average()
     float fdata[NDATA_SIZE] = {0};
     for(int i = 0; i < NDATA_SIZE - 100; i++)
     {
-        fdata[i] = sliding_average_filter(&sldave_filter, ndata[i]);
+        fdata[i] = sliding_average_filter_calcu(&sldave_filter, ndata[i]);
         if(i % 9 == 0)
             QSH_PRINTF("\r\n");
 
@@ -96,7 +96,7 @@ void demo_lpf_1st()
     float fdata[NDATA_SIZE] = {0};
     for(int i = 0; i < NDATA_SIZE; i++)
     {
-        fdata[i] = lpf_first_order(&lpf_1st, ndata[i]);
+        fdata[i] = lpf_first_order_calcu(&lpf_1st, ndata[i]);
         if(i % 9 == 0)
             QSH_PRINTF("\r\n");
             
