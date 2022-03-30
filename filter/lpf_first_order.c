@@ -17,7 +17,7 @@ void lpf_first_order_init(LpfFirstOderObj *filter, float alpha)
     filter->uk1 = 0;
 }
 
-float lpf_first_order(LpfFirstOderObj *filter, float k)
+float lpf_first_order_calcu(LpfFirstOderObj *filter, float k)
 {
     float uk = filter->alpha * k + (1 - filter->alpha) * filter->uk1;
     filter->uk1 = uk;

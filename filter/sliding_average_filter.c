@@ -24,7 +24,7 @@ void sliding_average_filter_init(SlidAveFilterObj *filter, int w_size)
     filter->head = 0;
 }
 
-float sliding_average_filter(SlidAveFilterObj *filter, float k)
+float sliding_average_filter_calcu(SlidAveFilterObj *filter, float k)
 {
     filter->cache[filter->head] = k;
     filter->head = (filter->head + 1) % filter->w_size;

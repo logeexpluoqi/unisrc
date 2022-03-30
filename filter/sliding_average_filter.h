@@ -24,7 +24,7 @@ typedef struct _sliding_average_filter
 
 void sliding_average_filter_init(SlidAveFilterObj *filter, int w_size);
 
-float sliding_average_filter(SlidAveFilterObj *filter, float k);
+float sliding_average_filter_calcu(SlidAveFilterObj *filter, float k);
 
 int sliding_average_filter_cache_add(SlidAveFilterObj *filter, float *cache, int w_size);
 
