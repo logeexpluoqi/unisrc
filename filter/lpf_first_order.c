@@ -14,15 +14,15 @@ void lpf_first_order_init(LpfFirstOderObj *filter, float alpha)
     filter->alpha = alpha;
     filter->fc = 0;
     filter->T = 0;
-    filter->uk1 = 0;
+    filter->u_k1 = 0;
 }
 
 float lpf_first_order_calcu(LpfFirstOderObj *filter, float k)
 {
-    float uk = filter->alpha * k + (1 - filter->alpha) * filter->uk1;
-    filter->uk1 = uk;
+    float u_k = filter->alpha * k + (1 - filter->alpha) * filter->u_k1;
+    filter->u_k1 = u_k;
 
-    return uk;
+    return u_k;
 }
 
 void lpf_first_order_fc_set(LpfFirstOderObj *filter, float fc, float T)
