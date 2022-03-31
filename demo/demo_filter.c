@@ -12,6 +12,7 @@
 #include "../console/qsh.h"
 #include "../filter/sliding_average_filter.h"
 #include "../filter/lpf_first_order.h"
+#include "../filter/kalman_filter.h"
 
 #define NDATA_SIZE    10000
 

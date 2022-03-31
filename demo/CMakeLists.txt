@@ -17,4 +17,5 @@ target_link_libraries(demo_fsm fsm qsh)
 
 target_link_libraries(demo_filter sliding_average_filter qsh m)
 target_link_libraries(demo_filter lpf_first_order)
+target_link_libraries(demo_filter kalman_filter)
 target_link_libraries(demo_qkey qkey)
