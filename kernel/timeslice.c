@@ -13,18 +13,16 @@ static unsigned long timeslice_task_id = 0;
 
 void timeslice_exec()
 {
-    ListObj* node;
+    ListObj *node, *_node;
     TimesilceTaskObj *task;
 
-    list_for_each(node, &timeslice_task_list)
+    list_for_each_safe(node, _node, &timeslice_task_list)
     {
         task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
         if(task->is_run == TASK_RUN)
         {
-            // func_start();
             task->task_hdl();
             task->is_run = TASK_STOP;
-            // task->run_time = func_end();
         }
     }
 }
