@@ -21,8 +21,10 @@ void timeslice_exec()
         task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
         if(task->is_run == TASK_RUN)
         {
+            // func_start();
             task->task_hdl();
             task->is_run = TASK_STOP;
+            // task->run_time = func_end;
         }
     }
 }

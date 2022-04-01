@@ -47,8 +47,7 @@ static unsigned char cmd_reboot_hdl(int argc, char* argv[]);
 static unsigned char cmd_help_hdl(int argc, char* argv[]);
 static unsigned char cmd_hs_hdl(int argc, char* argv[]);
 static unsigned char cmd_clear_hdl(int argc, char* argv[]);
-
-
+static unsigned char cmd_ls_hdl(int argc, char* argv[]);
 
 void qsh_init()
 {
@@ -391,7 +390,7 @@ unsigned char cmd_help_hdl(int argc, char* argv[])
     unsigned int i;
 
     unsigned int num = cmd_num(); // except cmd_list head
-    QSH_PRINTF(" CMD NUM: %d \r\n", num);
+    QSH_PRINTF(" CMD NUM: %d\r\n", num);
     QSH_PRINTF(" [Commands]           [Usage]\r\n");
     for(i = num; i > 0; i--)
     {
