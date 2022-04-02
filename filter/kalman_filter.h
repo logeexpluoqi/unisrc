@@ -14,17 +14,19 @@
 
 typedef struct _kalman_filter_1dimension
 {
-    float x_k;  // state
-    float p_k;  // estimate covariance
-    float p_k1; // last estimate covariance
-    float q;    // process covariance
-    float r;    // observe covariance
-    float kg;   // kalman gain
+    float x; // state, x(k) = a*x(k-1) + b*u(k)
+    float a; // state transfer matrix
+    float b; // control matrix
+    float h; // observer matrix
+    float p; // estimate covariance
+    float q; // process covariance
+    float r; // observe covariance
+    float g; // kalman gain
 } KF1DimObj;
 
-void kf_1dim_init(KF1DimObj* kf, float q, float r);
+void kf_1dim_init(KF1DimObj* kf, float x_0, float a, float b, float h, float p_0, float q, float r);
 
-float kf_1dim_calcu(KF1DimObj* kf, float k);
+float kf_1dim_calcu(KF1DimObj* kf, float z);
 
 #ifdef __cplusplus
  }
