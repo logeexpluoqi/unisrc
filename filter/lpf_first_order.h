@@ -22,7 +22,7 @@ typedef struct _lpf_first_order
 
 void lpf_first_order_init(LpfFirstOderObj *filter, float alpha);
 
-float lpf_first_order_calcu(LpfFirstOderObj *filter, float k);
+float lpf_first_order_calcu(LpfFirstOderObj *filter, float z);
 
 void lpf_first_order_fc_set(LpfFirstOderObj *filter, float fc, float T);
 
