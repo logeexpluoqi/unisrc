@@ -16,12 +16,13 @@ void kf_1dim_init(KF1DimObj* kf, float x_0, float a, float b, float h, float p_0
     kf->p = p_0;
     kf->q = q;
     kf->r = r;
+    kf->g = 0;
 }
 
 float kf_1dim_calcu(KF1DimObj* kf, float z)
 {
     /* predict, time update */
-    kf->x = kf->a * kf->x;
+    kf->x = kf->a * kf->x + kf->b * z;
     kf->p = kf->a * kf->p * kf->a + kf->q;
 
     /* correct, measurement update */
