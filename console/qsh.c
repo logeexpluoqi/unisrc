@@ -109,14 +109,18 @@ void qsh_save_history(char* save_cmd, int size)
 
 void qsh_recv_enter()
 {
-    int i = 1;
+    int i = 1, h_index;
     if(cmd_recv_size != 0)
     {
         for( ; cmd_buf[cmd_recv_size - i] == '\x20'; i++)
             cmd_buf[cmd_recv_size - i] = 0;
         
-        if((strcmp(cmd_buf, "hs") != 0) && (strcmp(cmd_buf, hs_buf[hs_index - 1]) != 0))
-            qsh_save_history(cmd_buf, sizeof(cmd_buf));
+        if(strcmp(cmd_buf, "hs") != 0)
+        {
+            h_index = (hs_index + QSH_HISTORY_MAX - 1) % QSH_HISTORY_MAX;
+            if(strcmp(cmd_buf, hs_buf[h_index]) != 0)
+                qsh_save_history(cmd_buf, sizeof(cmd_buf));
+        }
         
         if(hs_recall_status == -1)
         {
