@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:47:43 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:52:02
+ * @Last Modified time: 2022-04-23 17:40:29
  */
 
 #include <string.h>
@@ -20,8 +20,8 @@ void task1_hdl(void);
 void task2_hdl(void);
 void task3_hdl(void);
 
-static QSH_CMD_CREAT(cmd_task);
-unsigned char cmd_task_hdl(int argc, char* argv[]);
+static QshCmd cmd_task;
+static unsigned char cmd_task_hdl(int , char**);
 
 int demo_timeslice_init()
 {
@@ -34,7 +34,7 @@ int demo_timeslice_init()
     timeslice_task_init(&task3, "task3", task3_hdl, 200, "timeslice task 3");
     timeslice_task_del(&task3);
 
-    qsh_cmd_init(&cmd_task, "task", 0xff, cmd_task_hdl, "task control command <task run/stop 1/2/all/3>");
+    qsh_cmd_init(&cmd_task, "task", cmd_task_hdl, "task control command <task run/stop 1/2/all/3>");
     qsh_cmd_add(&cmd_task);
 
     return 0;
@@ -42,25 +42,25 @@ int demo_timeslice_init()
 
 void task1_hdl()
 {
-    printf("\r\n$ task 1 running \r\n");
+    QSH("\r\n$ task 1 running \r\n");
 }
 
 void task2_hdl()
 {
-    printf("\r\n$ task 2 running \r\n");
+    QSH("\r\n$ task 2 running \r\n");
 }
 
 void task3_hdl()
 {
     timeslice_task_del(&task3);
-    printf("\r>> task 3 executed\r\n");
+    QSH("\r>> task 3 executed\r\n");
 }
 
 unsigned char cmd_task_hdl(int argc, char* argv[])
 {
     if(argc <= 1)
     {
-        QSH_PRINTF(" #! parameter error !\r\n");
+        QSH(" #! parameter error !\r\n");
         return 1;
     }
     
@@ -82,7 +82,7 @@ unsigned char cmd_task_hdl(int argc, char* argv[])
         else if(strcmp(argv[2], "3") == 0)
             timeslice_task_add(&task3);
         else
-            printf(" #! parameter error !\r\n");
+            QSH(" #! parameter error !\r\n");
     }
     else if(strcmp(argv[1], "stop") == 0)
     {
@@ -100,7 +100,7 @@ unsigned char cmd_task_hdl(int argc, char* argv[])
             timeslice_task_del(&task2);
         }
         else
-            printf(" #! parameter error !\r\n");
+            QSH(" #! parameter error !\r\n");
     }
 
     return 0;

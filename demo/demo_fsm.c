@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:49:21 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-08-31 17:33:03
+ * @Last Modified time: 2022-04-23 17:36:43
  */
 
 #include <string.h>
@@ -27,12 +27,12 @@ static unsigned char state_8_hdl(void);
 FsmStateObj state_idle;
 static unsigned char state_idle_hdl(void);
 
-static QSH_CMD_CREAT(cmd_fsm);
+static QshCmd cmd_fsm;
 static unsigned char cmd_fsm_hdl(int argc, char *argv[]);
 
 int demo_fsm_init()
 {
-    qsh_cmd_init(&cmd_fsm, "fsm", 0xff, cmd_fsm_hdl, "<fsm run/stop>");
+    qsh_cmd_init(&cmd_fsm, "fsm", cmd_fsm_hdl, "<fsm run/stop>");
     qsh_cmd_add(&cmd_fsm);
     fsm_init(&fsm_1, "fsm 1", 0);
     fsm_init(&fsm_2, "fsm 2", 0);
@@ -45,21 +45,21 @@ unsigned char cmd_fsm_hdl(int argc, char *argv[])
 {
     if(argc <= 1)
     {
-        QSH_PRINTF(" #! parameter error !\r\n");
+        QSH(" #! parameter error !\r\n");
         return 1;
     }
 
     if(strcmp(argv[1], "run") == 0)
     {
 
-        QSH_PRINTF(">> fsm funning\r\n");
+        QSH(">> fsm funning\r\n");
     }
     else if(strcmp(argv[1], "stop") == 0)
     {
 
-        QSH_PRINTF(">> fsm stopped\r\n");
+        QSH(">> fsm stopped\r\n");
     }
     else
-        QSH_PRINTF(" #! parameter error !\r\n");
+        QSH(" #! parameter error !\r\n");
     return 0;
 }

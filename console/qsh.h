@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:33 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:40:57
+ * @Last Modified time: 2022-04-23 17:31:09
  */
 
 #ifndef _QSH_H
@@ -17,6 +17,10 @@
 
 #define QSH_HISTORY_MAX     10
 
+#define QSH(...)        printf(__VA_ARGS__)
+
+typedef CmdObj  QshCmd;
+
 typedef enum
 {
     QSH_RECV_SPEC,
@@ -26,21 +30,19 @@ typedef enum
 } QshRecvState;
 
 void qsh_get_char(char recv_byte);
+
 void qsh_init(void);
+
 void qsh_task_exec(void);
-void qsh_input_logo(void);
 
-#define QSH_PRINTF(...) printf(__VA_ARGS__)
+void qsh_cmd_init(QshCmd *qcmd,
+                  const char *name,
+                  unsigned char (*handle)(int, char**),
+                  const char* usage);
 
-#define  QSH_CMD_CREAT(qcmd)    CmdObj qcmd
+void qsh_cmd_add(QshCmd* qcmd);
 
-void qsh_cmd_init(CmdObj* qcmd,
-                 const char* name,
-                 unsigned char param_num,
-                 unsigned char (*handle)(int, char**),
-                 const char* usage);
-
-void qsh_cmd_add(CmdObj* qcmd);
+void qsh_cmd_del(QshCmd* qcmd);
 
 #ifdef __cplusplus
  }

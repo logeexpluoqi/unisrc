@@ -10,6 +10,7 @@ add_subdirectory(qmath)
 add_subdirectory(solver)
 add_subdirectory(utils/key)
 add_subdirectory(filter)
+add_subdirectory(cv)
 
 add_executable(qdemo qdemo.c)
 

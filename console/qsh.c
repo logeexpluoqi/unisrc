@@ -2,16 +2,17 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:41:51
+ * @Last Modified time: 2022-04-23 17:30:09
  */
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include "qsh.h"
-#include "../kernel/cmd.h"
 
 #define QSH_INPUT_LOGO    "luoqi>$ "
+
+#define QSH_PRINTF(...) printf(__VA_ARGS__);
 
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
@@ -37,6 +38,7 @@ static void qsh_recv_up(void);
 static void qsh_recv_down(void);
 static void qsh_recv_right(void);
 static void qsh_recv_left(void);
+void qsh_input_logo(void);
 
 static CmdObj cmd_reboot;
 static CmdObj cmd_help;
@@ -71,6 +73,8 @@ void qsh_init()
     cmd_add(&cmd_help);
     cmd_add(&cmd_reboot);
     cmd_add(&cmd_clear);
+    QSH_PRINTF("\033[H\033[J");
+    QSH_PRINTF("======== QSH by luoqi ========\r\n");
     qsh_input_logo();
 }
 
@@ -346,18 +350,19 @@ void qsh_task_exec()
     }
 }
 
-void qsh_cmd_init(CmdObj* qcmd,
-                 const char* name,
-                 unsigned char param_num,
-                 unsigned char (*handle)(int, char**),
-                 const char* usage)
+void qsh_cmd_init(QshCmd* qcmd, const char* name, unsigned char (*handle)(int, char**), const char* usage)
 {
-    cmd_init(qcmd, name, param_num, handle, usage);
+    cmd_init((CmdObj*)qcmd, name, 0xff, handle, usage);
 }
 
-void qsh_cmd_add(CmdObj* qcmd)
+void qsh_cmd_add(QshCmd* qcmd)
 {
-    cmd_add(qcmd);
+    cmd_add((CmdObj *)qcmd);
+}
+
+void qsh_cmd_del(QshCmd* qcmd)
+{
+    cmd_del((CmdObj *)qcmd);
 }
 
 unsigned char cmd_hs_hdl(int argc, char* argv[])
@@ -394,12 +399,13 @@ unsigned char cmd_help_hdl(int argc, char* argv[])
     unsigned int i;
 
     unsigned int num = cmd_num(); // except cmd_list head
-    QSH_PRINTF(" CMD NUM: %d\r\n", num);
-    QSH_PRINTF(" [Commands]           [Usage]\r\n");
+    QSH_PRINTF(" Commands: <%d>\r\n", num);
+    QSH_PRINTF(" [Commands]     [Usage]\r\n");
+    QSH_PRINTF(" ----------     -------\r\n");
     for(i = num; i > 0; i--)
     {
         cmd = cmd_obj_get(i);
-        QSH_PRINTF("  %-15s :    %s\r\n", cmd->name, cmd->usage);
+        QSH_PRINTF("  -%-9s     %s\r\n", cmd->name, cmd->usage);
     }
     QSH_PRINTF("\r\n");
     return 0;

@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-03-15 10:35:32 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-03-15 15:45:48
+ * @Last Modified time: 2022-04-23 17:33:49
  */
 
 #include <math.h>
@@ -23,7 +23,7 @@ static void demo_filter_sliding_average(void);
 LpfFirstOderObj lpf_1st;
 static void demo_lpf_1st(void);
 
-static QSH_CMD_CREAT(cmd_filter);
+static QshCmd cmd_filter;
 static unsigned char cmd_filter_hdl(int argc, char *argv[]);
 
 static KF1DimObj kf_1dim;
@@ -43,7 +43,7 @@ void demo_filter_init()
     lpf_first_order_init(&lpf_1st, 0.01);
     kf_1dim_init(&kf_1dim, 0, 1, 0, 1, 0, 0.002, 0.5);
 
-    qsh_cmd_init(&cmd_filter, "filter", 0xff, cmd_filter_hdl, "filter <nsig sldave lpf1st kf1dim>");
+    qsh_cmd_init(&cmd_filter, "filter", cmd_filter_hdl, "filter <nsig sldave lpf1st kf1dim>");
     qsh_cmd_add(&cmd_filter);
 }
 
@@ -51,7 +51,7 @@ unsigned char cmd_filter_hdl(int argc, char *argv[])
 {
     if(argc <= 1)
     {
-        QSH_PRINTF(" #! parameter error !\r\n");
+        QSH(" #! parameter error !\r\n");
         return 1;
     }
     
@@ -65,7 +65,7 @@ unsigned char cmd_filter_hdl(int argc, char *argv[])
         demo_kf_1dim();
 
     else
-        QSH_PRINTF(" #! parameter error !\r\n");
+        QSH(" #! parameter error !\r\n");
 
     return 0;
 }
@@ -75,11 +75,11 @@ void nsig_show()
     for(int i = 0; i < NDATA_SIZE; i++)
     {
         if(i % 9 == 0)
-            QSH_PRINTF("\r\n");
+            QSH("\r\n");
 
-        QSH_PRINTF(" % 7.6f", ndata[i]);
+        QSH(" % 7.6f", ndata[i]);
     }
-    QSH_PRINTF("\r\n");
+    QSH("\r\n");
 }
 
 void demo_filter_sliding_average()
@@ -89,11 +89,11 @@ void demo_filter_sliding_average()
     {
         fdata[i] = sliding_average_filter_calcu(&sldave_filter, ndata[i]);
         if(i % 9 == 0)
-            QSH_PRINTF("\r\n");
+            QSH("\r\n");
 
-        QSH_PRINTF(" % 7.6f", fdata[i]);
+        QSH(" % 7.6f", fdata[i]);
     }
-    QSH_PRINTF("\r\n");
+    QSH("\r\n");
 }
 
 void demo_lpf_1st()
@@ -103,11 +103,11 @@ void demo_lpf_1st()
     {
         fdata[i] = lpf_first_order_calcu(&lpf_1st, ndata[i]);
         if(i % 9 == 0)
-            QSH_PRINTF("\r\n");
+            QSH("\r\n");
             
-        QSH_PRINTF(" % 7.6f", fdata[i]);
+        QSH(" % 7.6f", fdata[i]);
     }
-    QSH_PRINTF("\r\n");
+    QSH("\r\n");
 }
 
 void demo_kf_1dim()
@@ -117,9 +117,9 @@ void demo_kf_1dim()
     {
         fdata[i] = kf_1dim_calcu(&kf_1dim, ndata[i]);
         if(i % 9 == 0)
-            QSH_PRINTF("\r\n");
+            QSH("\r\n");
             
-        QSH_PRINTF(" % 7.6f", fdata[i]);
+        QSH(" % 7.6f", fdata[i]);
     }
-    QSH_PRINTF("\r\n");
+    QSH("\r\n");
 }
