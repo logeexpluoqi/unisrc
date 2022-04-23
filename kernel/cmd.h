@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 00:30:20 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:26:10
+ * @Last Modified time: 2022-04-23 19:18:48
  */
 
 #ifndef _CMD_H
@@ -34,7 +34,7 @@ typedef struct cmd_object
     unsigned int id;
     /* parameter number, max 255 */
     unsigned char param_num;
-    unsigned char (*cmd_hdl)(int, char* []);
+    int (*cmd_hdl)(int, char* []);
     const char* usage;
     ListObj cmd_list;
 } CmdObj;
@@ -44,7 +44,7 @@ CmdErrType cmd_exec(char* cmd_msg);
 void cmd_init(CmdObj* cmd,
               const char* name,
               unsigned char param_num, // if this value is 0xff, means that no arg number limit
-              unsigned char(*cmd_hdl)(int, char* []),
+              int(*cmd_hdl)(int, char* []),
               const char* usage);
 
 void cmd_add(CmdObj* cmd);

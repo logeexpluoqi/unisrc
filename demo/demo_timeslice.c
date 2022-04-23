@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:47:43 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 17:40:29
+ * @Last Modified time: 2022-04-23 19:22:25
  */
 
 #include <string.h>
@@ -21,7 +21,7 @@ void task2_hdl(void);
 void task3_hdl(void);
 
 static QshCmd cmd_task;
-static unsigned char cmd_task_hdl(int , char**);
+static int cmd_task_hdl(int , char**);
 
 int demo_timeslice_init()
 {
@@ -56,7 +56,7 @@ void task3_hdl()
     QSH("\r>> task 3 executed\r\n");
 }
 
-unsigned char cmd_task_hdl(int argc, char* argv[])
+int cmd_task_hdl(int argc, char* argv[])
 {
     if(argc <= 1)
     {

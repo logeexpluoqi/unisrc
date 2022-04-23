@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-13 09:59:48 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 18:44:12
+ * @Last Modified time: 2022-04-23 19:24:22
  */
 
 #include "fsm.h"
@@ -16,7 +16,7 @@ void fsm_init(FsmObj* fsm, const char* name, int init_state)
     list_init(&fsm->fsm_list_head);
 }
 
-unsigned char fsm_exec(FsmObj* fsm)
+int fsm_exec(FsmObj* fsm)
 {
     ListObj* node;
     FsmStateObj* state;
@@ -36,7 +36,7 @@ void fsm_change_state(FsmObj* fsm, int next_state)
     fsm->next_state = next_state;
 }
 
-void fsm_state_init(FsmStateObj* state, int link_state, unsigned char (*fsm_state_task_hdl)(void))
+void fsm_state_init(FsmStateObj* state, int link_state, int (*fsm_state_task_hdl)(void))
 {
     state->id = 0;
     state->link_state = link_state;

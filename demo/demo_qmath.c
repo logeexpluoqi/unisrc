@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-01-26 17:08:38 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 18:50:22
+ * @Last Modified time: 2022-04-23 19:21:58
  */
 
 #include <stdio.h>
@@ -14,15 +14,14 @@
 #include "../console/qsh.h"
 
 static QshCmd cmd_qmath;
-unsigned char cmd_qmath_hdl(int, char**);
+static int cmd_qmath_hdl(int, char**);
 
 void demo_qmath_init()
 {
     qsh_cmd_init(&cmd_qmath, "qmath", cmd_qmath_hdl, "qmath test");
     qsh_cmd_add(&cmd_qmath);
 }
-
-unsigned char cmd_qmath_hdl(int argc, char* argv[])
+int cmd_qmath_hdl(int argc, char* argv[])
 {
     if(argc > 1) {
         QSH(" #! parameter error !\r\n");

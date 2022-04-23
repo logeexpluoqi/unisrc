@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 00:29:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 18:49:56
+ * @Last Modified time: 2022-04-23 19:19:54
  */
 
 #include "cmd.h"
@@ -74,7 +74,7 @@ CmdErrType cmd_exec(char* cmd_msg)
     return CMD_NO_CMD;
 }
 
-void cmd_init(CmdObj* cmd, const char* name, unsigned char param_num, unsigned char(*cmd_hdl)(int, char* []), const char* usage)
+void cmd_init(CmdObj* cmd, const char* name, unsigned char param_num, int (*cmd_hdl)(int, char* []), const char* usage)
 {
     cmd->name = name;
     cmd->param_num = param_num;

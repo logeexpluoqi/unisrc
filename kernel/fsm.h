@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-13 09:57:45 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:19:24
+ * @Last Modified time: 2022-04-23 19:23:59
  */
 
 #ifndef _FSM_H
@@ -26,7 +26,7 @@ typedef struct fsm_state_object {
     unsigned int id;
     const char* belong_to;
     int link_state;
-    unsigned char (*fsm_state_task_hdl)(void);
+    int (*fsm_state_task_hdl)(void);
     ListObj fsm_state_list;
 } FsmStateObj;
 
@@ -36,9 +36,9 @@ void fsm_change_state(FsmObj* fsm, int next_state);
 
 int fsm_state_get(FsmObj* fsm);
 
-unsigned char fsm_exec(FsmObj* fsm);
+int fsm_exec(FsmObj* fsm);
 
-void fsm_state_init(FsmStateObj* state, int link_state, unsigned char (*fsm_state_task_hdl)(void));
+void fsm_state_init(FsmStateObj* state, int link_state, int (*fsm_state_task_hdl)(void));
 
 void fsm_state_add(FsmObj* fsm, FsmStateObj* state);
 

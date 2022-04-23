@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 14:45:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 18:51:52
+ * @Last Modified time: 2022-04-23 19:22:14
  */
 
 #include <string.h>
@@ -11,11 +11,11 @@
 #include "../kernel/timeslice.h"
 
 static QshCmd   qcmd1;
-static unsigned char q1_handle(int, char **);
+static int q1_handle(int, char **);
 static QshCmd   qcmd2;
-static unsigned char q2_handle(int, char **);
+static int q2_handle(int, char **);
 static QshCmd   cmd_ls;
-static unsigned char cmd_ls_hdl(int, char **);
+static int cmd_ls_hdl(int, char **);
 
 int demo_qsh_init()
 {
@@ -30,7 +30,7 @@ int demo_qsh_init()
     return 0;
 }
 
-unsigned char q1_handle(int argc, char* argv[])
+int q1_handle(int argc, char* argv[])
 {
     if(argc > 1) {
         QSH(QSH_MSG_PARAM_ERR);
@@ -40,7 +40,7 @@ unsigned char q1_handle(int argc, char* argv[])
     return 0;
 }
 
-unsigned char q2_handle(int argc, char* argv[])
+int q2_handle(int argc, char* argv[])
 {
     if(argc > 1) {
         QSH(QSH_MSG_PARAM_ERR);
@@ -50,7 +50,7 @@ unsigned char q2_handle(int argc, char* argv[])
     return 0;
 }
 
-unsigned char cmd_ls_hdl(int argc, char *argv[])
+int cmd_ls_hdl(int argc, char *argv[])
 {
     if(argc <= 1) {
         QSH(QSH_MSG_PARAM_ERR);

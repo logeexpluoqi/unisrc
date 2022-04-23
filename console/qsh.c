@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 18:47:02
+ * @Last Modified time: 2022-04-23 19:23:02
  */
 
 #include <stdlib.h>
@@ -53,11 +53,11 @@ static CmdObj cmd_help;
 static CmdObj cmd_hs;
 static CmdObj cmd_clear;
 
-static unsigned char cmd_reboot_hdl(int argc, char* argv[]);
-static unsigned char cmd_help_hdl(int argc, char* argv[]);
-static unsigned char cmd_hs_hdl(int argc, char* argv[]);
-static unsigned char cmd_clear_hdl(int argc, char* argv[]);
-static unsigned char cmd_ls_hdl(int argc, char* argv[]);
+static int cmd_reboot_hdl(int argc, char* argv[]);
+static int cmd_help_hdl(int argc, char* argv[]);
+static int cmd_hs_hdl(int argc, char* argv[]);
+static int cmd_clear_hdl(int argc, char* argv[]);
+static int cmd_ls_hdl(int argc, char* argv[]);
 
 void qsh_init()
 {
@@ -353,7 +353,7 @@ void qsh_task_exec()
     }
 }
 
-void qsh_cmd_init(QshCmd* qcmd, const char* name, unsigned char (*handle)(int, char**), const char* usage)
+void qsh_cmd_init(QshCmd* qcmd, const char* name, int (*handle)(int, char**), const char* usage)
 {
     cmd_init((CmdObj*)qcmd, name, 0xff, handle, usage);
 }
@@ -368,7 +368,7 @@ void qsh_cmd_del(QshCmd* qcmd)
     cmd_del((CmdObj *)qcmd);
 }
 
-unsigned char cmd_hs_hdl(int argc, char* argv[])
+int cmd_hs_hdl(int argc, char* argv[])
 {
     char hs_pos;
     if((hs_index - hs_num) >= 0) {
@@ -383,21 +383,21 @@ unsigned char cmd_hs_hdl(int argc, char* argv[])
     return 0;
 }
 
-unsigned char cmd_reboot_hdl(int argc, char* argv[])
+int cmd_reboot_hdl(int argc, char* argv[])
 {
     // device software reset fucntion
 
     return 0;
 }
 
-unsigned char cmd_clear_hdl(int argc, char* argv[])
+int cmd_clear_hdl(int argc, char* argv[])
 {
     QSH_PRINTF("\033[H\033[J");
 
     return 0;
 }
 
-unsigned char cmd_help_hdl(int argc, char* argv[])
+int cmd_help_hdl(int argc, char* argv[])
 {
     CmdObj* cmd;
     unsigned int i;

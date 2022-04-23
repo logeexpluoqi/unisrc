@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-03-15 10:35:32 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 18:48:25
+ * @Last Modified time: 2022-04-23 19:21:14
  */
 
 #include <math.h>
@@ -24,7 +24,7 @@ LpfFirstOderObj lpf_1st;
 static void demo_lpf_1st(void);
 
 static QshCmd cmd_filter;
-static unsigned char cmd_filter_hdl(int argc, char *argv[]);
+static int cmd_filter_hdl(int argc, char *argv[]);
 
 static KF1DimObj kf_1dim;
 static void demo_kf_1dim(void);
@@ -46,7 +46,7 @@ void demo_filter_init()
     qsh_cmd_add(&cmd_filter);
 }
 
-unsigned char cmd_filter_hdl(int argc, char *argv[])
+int cmd_filter_hdl(int argc, char *argv[])
 {
     if(argc <= 1) {
         QSH(" #! parameter error !\r\n");
