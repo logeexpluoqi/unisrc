@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 14:45:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 17:39:15
+ * @Last Modified time: 2022-04-23 18:51:52
  */
 
 #include <string.h>
@@ -32,65 +32,56 @@ int demo_qsh_init()
 
 unsigned char q1_handle(int argc, char* argv[])
 {
-    if(argc > 1)
-    {
-        QSH(" #! parameter error !\r\n");
-        return 1;
+    if(argc > 1) {
+        QSH(QSH_MSG_PARAM_ERR);
+        return -1;
     }
-    printf(">> qsh test 1\r\n");
+    QSH(">> qsh test 1\r\n");
     return 0;
 }
 
 unsigned char q2_handle(int argc, char* argv[])
 {
-    if(argc > 1)
-    {
-        QSH(" #! parameter error !\r\n");
-        return 1;
+    if(argc > 1) {
+        QSH(QSH_MSG_PARAM_ERR);
+        return -1;
     }
-    printf(">> qsh test 2\r\n");
+    QSH(">> qsh test 2\r\n");
     return 0;
 }
 
 unsigned char cmd_ls_hdl(int argc, char *argv[])
 {
-    if(argc <= 1)
-    {
-        QSH(" #! parameter error !\r\n");
+    if(argc <= 1) {
+        QSH(QSH_MSG_PARAM_ERR);
         return 0;
-    }
-    else
-    {
-        if(strcmp(argv[1], "task") == 0)
-        {
+    } else {
+        if(QSH_ISARG(argv[1], "task")) {
             TimesilceTaskObj *task;
             unsigned int i;
             unsigned int num = timeslice_task_num_get();
             QSH(" TASK NUM %u\r\n", num);
             QSH(" [Task name]                [Task ID]      [Run time]         [Timeslice]            [Usage]\r\n");
-            for(i = num; i > 0; i--)
-            {
+            for(i = num; i > 0; i--) {
                 task = timeslice_obj_get(i);
                 QSH("  %-20s       %-6u         %-6lld             %-6u                 %s\r\n",
                             task->name, task->id, task->run_time, task->timeslice_len, task->usage);
             }
-        }
-        else if(strcmp(argv[1], "dtask") == 0)
-        {
+        } else if(QSH_ISARG(argv[1], "dtask")) {
             TimesilceTaskObj *task;
             unsigned int i;
             unsigned int num = timeslice_del_task_num_get();
             QSH(" TASK NUM %u\r\n", num);
             QSH(" [Task name]                [Task ID]      [Run time]         [Timeslice]            [Usage]\r\n");
-            for(i = num; i > 0; i--)
-            {
+            for(i = num; i > 0; i--) {
                 task = timeslice_del_obj_get(i);
                 QSH("  %-20s       %-6u         %-6lld             %-6u                 %s\r\n",
-                            task->name, task->id, task->run_time, task->timeslice_len, task->usage);
+                       task->name, task->id, task->run_time, task->timeslice_len, task->usage);
             }
         }
-        else
-            QSH(" #! parameter error !\r\n");
+        else {
+            QSH(QSH_MSG_PARAM_ERR);
+        }
     }
     return 0;
 }

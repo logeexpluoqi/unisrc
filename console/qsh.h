@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:33 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 17:31:09
+ * @Last Modified time: 2022-04-23 18:52:11
  */
 
 #ifndef _QSH_H
@@ -13,21 +13,18 @@
 #endif
 
 #include <stdio.h>
+#include <string.h>
 #include "../kernel/cmd.h"
 
 #define QSH_HISTORY_MAX     10
 
-#define QSH(...)        printf(__VA_ARGS__)
+#define QSH(...)                    printf(__VA_ARGS__)
+
+#define QSH_MSG_PARAM_ERR           " #! parameter error !\r\n"
+
+#define QSH_ISARG(str1, str2)       (strcmp(str1, str2) == 0)
 
 typedef CmdObj  QshCmd;
-
-typedef enum
-{
-    QSH_RECV_SPEC,
-    QSH_RECV_UNFINISH,
-    QSH_RECV_NOCMD,
-    QSH_RECV_FINISHED
-} QshRecvState;
 
 void qsh_get_char(char recv_byte);
 

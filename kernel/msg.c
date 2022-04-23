@@ -1,8 +1,8 @@
 /*
  * @Author: luoqi 
  * @Date: 2021-05-11 10:02:21 
- * @Last Modified by:   luoqi 
- * @Last Modified time: 2021-05-11 10:02:21 
+ * @Last Modified by: luoqi
+ * @Last Modified time: 2022-04-23 18:41:34
  */
 
 #include "msg.h"
@@ -49,8 +49,7 @@ void* msg_get(MsgContainer* container, const char* name)
     ListObj* node;
     MsgObj* msg;
 
-    list_for_each(node, &container->msg_list)
-    {
+    list_for_each(node, &container->msg_list) {
         msg = list_entry(node, MsgObj, msg_list_node);
         if (msg_strcmp(name, msg->name) == 0 && msg->msg_state == MSG_UNLOCK)
         {
@@ -67,14 +66,11 @@ unsigned char msg_set(MsgContainer* container, const char* name, void* msg_data,
     ListObj* node;
     MsgObj* msg;
 
-    list_for_each(node, &container->msg_list)
-    {
+    list_for_each(node, &container->msg_list) {
         msg = list_entry(node, MsgObj, msg_list_node);
         msg->msg_state = MSG_LOCKED;
-        if (msg_strcmp(name, msg->name) == 0)
-        {
-            switch (msg->type)
-            {
+        if (msg_strcmp(name, msg->name) == 0) {
+            switch (msg->type) {
             case MSG_CHAR: 
                 for(i = 0; i < size; i ++)
                     ((char*)msg->mem)[i] = ((char*)msg_data)[i];
@@ -119,8 +115,7 @@ unsigned char msg_is_update(MsgContainer* container, const char* name)
 {
     ListObj* node;
     MsgObj* msg;
-    list_for_each(node, &container->msg_list)
-    {
+    list_for_each(node, &container->msg_list) {
         msg = list_entry(node, MsgObj, msg_list_node);
         if(msg_strcmp(msg->name, name) == 0)
            return msg->is_update; 
@@ -133,12 +128,10 @@ unsigned char msg_mem_location_set(MsgContainer* container, const char* name, vo
     ListObj* node;
     MsgObj* msg;
 
-    list_for_each(node, &container->msg_list)
-    {
+    list_for_each(node, &container->msg_list) {
         msg = list_entry(node, MsgObj, msg_list_node);
         msg->msg_state = MSG_LOCKED;
-        if (msg_strcmp(name, msg->name) == 0)
-        {
+        if (msg_strcmp(name, msg->name) == 0) {
             msg->mem = new_mem;
             msg->msg_state = MSG_UNLOCK;
             msg->is_update = 1;
@@ -160,8 +153,9 @@ unsigned int msg_num_get(MsgContainer* container)
 MsgObj* msg_obj_get(MsgContainer* container, unsigned int serial)
 {
     ListObj* node = &container->msg_list;
-    for (unsigned int i = serial; i > 0; i--)
+    for (unsigned int i = serial; i > 0; i--) {
         node = node->next;
+    }
     return list_entry(node, MsgObj, msg_list_node);
 }
 
@@ -169,10 +163,8 @@ static unsigned char msg_strcmp(const char* s1, const char* s2)
 {
     unsigned int i = 0;
 
-    while (s1[i] != 0 || s2[i] != 0)
-    {
-        if (((s1[i] == 0) && (s2[i] != 0)) || ((s1[i] != 0) && (s2[i] == 0)) || (s1[i] != s2[i]))
-        {
+    while (s1[i] != 0 || s2[i] != 0) {
+        if (((s1[i] == 0) && (s2[i] != 0)) || ((s1[i] != 0) && (s2[i] == 0)) || (s1[i] != s2[i])) {
             return 1;
         }
         i++;

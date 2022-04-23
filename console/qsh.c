@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 17:30:09
+ * @Last Modified time: 2022-04-23 18:47:02
  */
 
 #include <stdlib.h>
@@ -10,9 +10,17 @@
 #include <stdint.h>
 #include "qsh.h"
 
-#define QSH_INPUT_LOGO    "luoqi>$ "
+typedef enum
+{
+    QSH_RECV_SPEC,
+    QSH_RECV_UNFINISH,
+    QSH_RECV_NOCMD,
+    QSH_RECV_FINISHED
+} QshRecvState;
 
-#define QSH_PRINTF(...) printf(__VA_ARGS__);
+#define QSH_INPUT_LOGO      "luoqi>$ "
+
+#define QSH_PRINTF(...)     printf(__VA_ARGS__);
 
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
@@ -281,30 +289,25 @@ int qsh_recv_spec(char recv_byte)
 void qsh_get_char(char recv_byte)
 {
     int spec = qsh_recv_spec(recv_byte);
-    if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_recv_size  <  CMD_MAX_LEN)
-    {
+    if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_recv_size  <  CMD_MAX_LEN) {
         qsh_recv_buf(recv_byte);
-    }
-    else if(recv_byte == '\b' && cmd_recv_size > 0)// backspace charactor
+    } else if(recv_byte == '\b' && cmd_recv_size > 0) {// backspace charactor
         qsh_recv_backspace();
-    else if(recv_byte == '\r') // enter key value
+    } else if(recv_byte == '\r') { // enter key value
         qsh_recv_enter();
-    else if(spec == 1)
+    } else if(spec == 1) {
         qsh_recv_up();
-    else if(spec == 2)
+    } else if(spec == 2) {
         qsh_recv_down();
-    else if(spec == 3)
+    } else if(spec == 3) {
         qsh_recv_right();
-    else if(spec == 4)
+    } else if(spec == 4) {
         qsh_recv_left();
-    else if(cmd_recv_size > CMD_MAX_LEN)
-    {
+    } else if(cmd_recv_size > CMD_MAX_LEN) {
         QSH_PRINTF("\r\n>> #! Command buffer overflow !\r\n");
         qsh_input_logo();
         qsh_cmd_reset();
-    }
-    else
-    {
+    } else {
         qsh_input_logo();
         qsh_cmd_reset();
     }
@@ -312,7 +315,7 @@ void qsh_get_char(char recv_byte)
 
 void qsh_task_exec()
 {
-    if(qsh_recv_state == QSH_RECV_FINISHED){
+    if(qsh_recv_state == QSH_RECV_FINISHED) {
         switch(cmd_exec(qsh_cmd())){
         case CMD_NO_ERR: break;
         case CMD_LEN_OUT: 
@@ -368,12 +371,13 @@ void qsh_cmd_del(QshCmd* qcmd)
 unsigned char cmd_hs_hdl(int argc, char* argv[])
 {
     char hs_pos;
-    if((hs_index - hs_num) >= 0)
+    if((hs_index - hs_num) >= 0) {
         hs_pos  = hs_index - hs_num;
-    else
+    } else {
         hs_pos = hs_index;
-    for(int i = 0; i < hs_num; i++)
-    {
+    }
+    
+    for(int i = 0; i < hs_num; i++) {
         QSH_PRINTF(" %2d: %s\r\n", hs_num - i, hs_buf[(hs_pos + i) % QSH_HISTORY_MAX]);
     }
     return 0;
@@ -402,8 +406,7 @@ unsigned char cmd_help_hdl(int argc, char* argv[])
     QSH_PRINTF(" Commands: <%d>\r\n", num);
     QSH_PRINTF(" [Commands]     [Usage]\r\n");
     QSH_PRINTF(" ----------     -------\r\n");
-    for(i = num; i > 0; i--)
-    {
+    for(i = num; i > 0; i--) {
         cmd = cmd_obj_get(i);
         QSH_PRINTF("  -%-9s     %s\r\n", cmd->name, cmd->usage);
     }

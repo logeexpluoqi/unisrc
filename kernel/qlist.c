@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 13:51:58 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:19:01
+ * @Last Modified time: 2022-04-23 18:41:39
  */
 
 #include "qlist.h"
@@ -47,8 +47,7 @@ unsigned int list_len(const ListObj* list)
 {
     unsigned int len = 0;
     const ListObj* p = list;
-    while (p->next != list)
-    {
+    while (p->next != list) {
         p = p->next;
         len++;
     }

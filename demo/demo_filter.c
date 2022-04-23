@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-03-15 10:35:32 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 17:33:49
+ * @Last Modified time: 2022-04-23 18:48:25
  */
 
 #include <math.h>
@@ -34,8 +34,7 @@ static void nsig_show(void);
 
 void demo_filter_init()
 {
-    for(int i = 0; i < NDATA_SIZE; i++)
-    {
+    for(int i = 0; i < NDATA_SIZE; i++) {
         ndata[i] = sinf(0.001 * i) + (rand() % 10000) / 10000.0 - 0.5 + cos(0.005 * i);
     }
 
@@ -49,34 +48,32 @@ void demo_filter_init()
 
 unsigned char cmd_filter_hdl(int argc, char *argv[])
 {
-    if(argc <= 1)
-    {
+    if(argc <= 1) {
         QSH(" #! parameter error !\r\n");
-        return 1;
+        return -1;
     }
     
-    if(strcmp(argv[1], "nsig") == 0)
+    if(QSH_ISARG(argv[1], "nsig")) {
         nsig_show();
-    else if(strcmp(argv[1], "sldave") == 0)
+    } else if(QSH_ISARG(argv[1], "sldave")) {
         demo_filter_sliding_average();
-    else if(strcmp(argv[1], "lpf1st") == 0)
+    } else if(QSH_ISARG(argv[1], "lpf1st")) {
         demo_lpf_1st();
-    else if(strcmp(argv[1], "kf1dim") == 0)
+    } else if(QSH_ISARG(argv[1], "kf1dim")) {
         demo_kf_1dim();
-
-    else
+    } else {
         QSH(" #! parameter error !\r\n");
+    }
 
     return 0;
 }
 
 void nsig_show()
 {
-    for(int i = 0; i < NDATA_SIZE; i++)
-    {
-        if(i % 9 == 0)
+    for(int i = 0; i < NDATA_SIZE; i++) {
+        if(i % 9) {
             QSH("\r\n");
-
+        }
         QSH(" % 7.6f", ndata[i]);
     }
     QSH("\r\n");
@@ -85,12 +82,11 @@ void nsig_show()
 void demo_filter_sliding_average()
 {
     float fdata[NDATA_SIZE] = {0};
-    for(int i = 0; i < NDATA_SIZE - 100; i++)
-    {
+    for(int i = 0; i < NDATA_SIZE - 100; i++) {
         fdata[i] = sliding_average_filter_calcu(&sldave_filter, ndata[i]);
-        if(i % 9 == 0)
+        if(i % 9) {
             QSH("\r\n");
-
+        }
         QSH(" % 7.6f", fdata[i]);
     }
     QSH("\r\n");
@@ -99,12 +95,11 @@ void demo_filter_sliding_average()
 void demo_lpf_1st()
 {
     float fdata[NDATA_SIZE] = {0};
-    for(int i = 0; i < NDATA_SIZE; i++)
-    {
+    for(int i = 0; i < NDATA_SIZE; i++) {
         fdata[i] = lpf_first_order_calcu(&lpf_1st, ndata[i]);
-        if(i % 9 == 0)
+        if(i % 9) {
             QSH("\r\n");
-            
+        }
         QSH(" % 7.6f", fdata[i]);
     }
     QSH("\r\n");
@@ -113,12 +108,11 @@ void demo_lpf_1st()
 void demo_kf_1dim()
 {
     float fdata[NDATA_SIZE] = {0};
-    for(int i = 0; i < NDATA_SIZE; i++)
-    {
+    for(int i = 0; i < NDATA_SIZE; i++) {
         fdata[i] = kf_1dim_calcu(&kf_1dim, ndata[i]);
-        if(i % 9 == 0)
+        if(i % 9) {
             QSH("\r\n");
-            
+        }
         QSH(" % 7.6f", fdata[i]);
     }
     QSH("\r\n");

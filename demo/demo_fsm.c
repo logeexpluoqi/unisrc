@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:49:21 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 17:36:43
+ * @Last Modified time: 2022-04-23 18:49:23
  */
 
 #include <string.h>
@@ -43,23 +43,19 @@ int demo_fsm_init()
 
 unsigned char cmd_fsm_hdl(int argc, char *argv[])
 {
-    if(argc <= 1)
-    {
+    if(argc <= 1) {
         QSH(" #! parameter error !\r\n");
-        return 1;
+        return -1;
     }
 
-    if(strcmp(argv[1], "run") == 0)
-    {
+    if(strcmp(argv[1], "run") == 0) {
 
         QSH(">> fsm funning\r\n");
-    }
-    else if(strcmp(argv[1], "stop") == 0)
-    {
+    } else if(strcmp(argv[1], "stop") == 0) {
 
         QSH(">> fsm stopped\r\n");
-    }
-    else
+    } else {
         QSH(" #! parameter error !\r\n");
+    }
     return 0;
 }

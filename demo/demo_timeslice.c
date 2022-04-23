@@ -60,41 +60,41 @@ unsigned char cmd_task_hdl(int argc, char* argv[])
 {
     if(argc <= 1)
     {
-        QSH(" #! parameter error !\r\n");
+        QSH(QSH_MSG_PARAM_ERR);
         return 1;
     }
     
-    if(strcmp(argv[1], "run") == 0)
+    if(QSH_ISARG(argv[1], "run"))
     {
-        if(strcmp(argv[2], "1") == 0)
+        if(QSH_ISARG(argv[2], "1"))
         {
             timeslice_task_add(&task1);
         }
-        else if(strcmp(argv[2], "2") == 0)
+        else if(QSH_ISARG(argv[2], "2"))
         {
             timeslice_task_add(&task2);
         }
-        else if(strcmp(argv[2], "all") == 0)
+        else if(QSH_ISARG(argv[2], "all"))
         {
             timeslice_task_add(&task1);
             timeslice_task_add(&task2);
         }
-        else if(strcmp(argv[2], "3") == 0)
+        else if(QSH_ISARG(argv[2], "3"))
             timeslice_task_add(&task3);
         else
             QSH(" #! parameter error !\r\n");
     }
-    else if(strcmp(argv[1], "stop") == 0)
+    else if(QSH_ISARG(argv[1], "stop"))
     {
-        if(strcmp(argv[2], "1") == 0)
+        if(QSH_ISARG(argv[2], "1"))
         {
             timeslice_task_del(&task1);
         }
-        else if(strcmp(argv[2], "2") == 0)
+        else if(QSH_ISARG(argv[2], "2"))
         {
             timeslice_task_del(&task2);
         }
-        else if(strcmp(argv[2], "all") == 0)
+        else if(QSH_ISARG(argv[2], "all"))
         {
             timeslice_task_del(&task1);
             timeslice_task_del(&task2);

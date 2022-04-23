@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 19:27:09 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:16:53
+ * @Last Modified time: 2022-04-23 18:43:45
  */
 
 #include "timeslice.h"
@@ -16,11 +16,9 @@ void timeslice_exec()
     ListObj *node, *_node;
     TimesilceTaskObj *task;
 
-    list_for_each_safe(node, _node, &timeslice_task_list)
-    {
+    list_for_each_safe(node, _node, &timeslice_task_list) {
         task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
-        if(task->is_run == TASK_RUN)
-        {
+        if(task->is_run == TASK_RUN) {
             // func_start();
             task->task_hdl();
             task->is_run = TASK_STOP;
@@ -34,14 +32,11 @@ void timeslice_tick()
     ListObj* node;
     TimesilceTaskObj *task;
 
-    list_for_each(node, &timeslice_task_list)
-    {
+    list_for_each(node, &timeslice_task_list) {
         task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
-        if(task->timer != 0)
-        {
+        if(task->timer != 0) {
             task->timer --;
-            if(task->timer == 0)
-            {
+            if(task->timer == 0) {
                 task->is_run = TASK_RUN;
                 task->timer = task->timeslice_len;
             }
@@ -73,37 +68,33 @@ void timeslice_task_init(TimesilceTaskObj* task,
 
 int timeslice_task_add(TimesilceTaskObj* task)
 {
-    if(timeslice_del_task_isexist(task) == 1)
-    {
+    if(timeslice_del_task_isexist(task) == 1) {
         task->is_run = TASK_STOP;
         task->timer = task->timeslice_len;
         list_remove(&task->timeslice_task_node);
     }
 
-    if(timeslice_task_isexist(task) == 0)
-    {
+    if(timeslice_task_isexist(task) == 0) {
         list_insert_before(&timeslice_task_list, &task->timeslice_task_node);
         return 0;
     }
-    return 1;
+    return -1;
 }
 
 int timeslice_task_del(TimesilceTaskObj* task)
 {
-    if(timeslice_task_isexist(task) == 1)
-    {
+    if(timeslice_task_isexist(task) == 1){
         task->is_run = TASK_STOP;
         task->timer = task->timeslice_len;
         list_remove(&task->timeslice_task_node);
     }
 
-    if(timeslice_del_task_isexist(task) == 0)
-    {
+    if(timeslice_del_task_isexist(task) == 0){
         list_insert_before(&timeslice_task_del_list, &task->timeslice_task_node);
         return 0;
+    } else {
+        return -1;
     }
-    else 
-        return 1;
 }
 
 
@@ -112,13 +103,13 @@ int timeslice_task_isexist(TimesilceTaskObj* task)
     ListObj* node;
     TimesilceTaskObj *_task;
 
-    list_for_each(node, &timeslice_task_list)
-    {
+    list_for_each(node, &timeslice_task_list) {
         _task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
-        if(task->id == _task->id)
-            return 1;
-        else
+        if(task->id == _task->id) {
+            return -1;
+        } else {
             continue;
+        }
     }
     return 0;
 }
@@ -128,13 +119,13 @@ int timeslice_del_task_isexist(TimesilceTaskObj* task)
     ListObj* node;
     TimesilceTaskObj *_task;
 
-    list_for_each(node, &timeslice_task_del_list)
-    {
+    list_for_each(node, &timeslice_task_del_list) {
         _task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
-        if(task->id == _task->id)
-            return 1;
-        else
+        if(task->id == _task->id) {
+            return -1;
+        } else {
             continue;
+        }
     }
     return 0;
 }
@@ -153,8 +144,9 @@ TimesilceTaskObj* timeslice_obj_get(unsigned int task_id)
 {
     ListObj* node = &timeslice_task_list;
 
-    for(unsigned int i = task_id; i > 0; i--)
+    for(unsigned int i = task_id; i > 0; i--) {
         node = node->next;
+    }
 
     return list_entry(node, TimesilceTaskObj, timeslice_task_node);
 }
@@ -168,8 +160,9 @@ TimesilceTaskObj* timeslice_del_obj_get(unsigned int task_id)
 {
     ListObj* node = &timeslice_task_del_list;
 
-    for(unsigned int i = task_id; i > 0; i--)
+    for(unsigned int i = task_id; i > 0; i--) {
         node = node->next;
+    }
 
     return list_entry(node, TimesilceTaskObj, timeslice_task_node);
 }

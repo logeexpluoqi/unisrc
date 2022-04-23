@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-01-26 17:08:38 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 17:40:56
+ * @Last Modified time: 2022-04-23 18:50:22
  */
 
 #include <stdio.h>
@@ -24,11 +24,10 @@ void demo_qmath_init()
 
 unsigned char cmd_qmath_hdl(int argc, char* argv[])
 {
-    if(argc > 1)
-    {
+    if(argc > 1) {
         QSH(" #! parameter error !\r\n");
-        return 1;
+        return -1;
     }
-    printf(" qmath test: \r\n");
+    QSH(" qmath test: \r\n");
     return 0;
 }

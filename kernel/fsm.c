@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-13 09:59:48 
  * @Last Modified by: luoqi
- * @Last Modified time: 2021-05-19 18:11:51
+ * @Last Modified time: 2022-04-23 18:44:12
  */
 
 #include "fsm.h"
@@ -22,15 +22,13 @@ unsigned char fsm_exec(FsmObj* fsm)
     FsmStateObj* state;
 
     fsm->curr_state = fsm->next_state;
-    list_for_each(node, &fsm->fsm_list_head)
-    {
+    list_for_each(node, &fsm->fsm_list_head) {
         state = list_entry(node, FsmStateObj, fsm_state_list);
-        if (state->link_state == fsm->curr_state)
-        {
+        if (state->link_state == fsm->curr_state) {
             return state->fsm_state_task_hdl();
         }
     }
-    return 1;
+    return -1;
 }
 
 void fsm_change_state(FsmObj* fsm, int next_state)
@@ -47,8 +45,7 @@ void fsm_state_init(FsmStateObj* state, int link_state, unsigned char (*fsm_stat
 
 void fsm_state_add(FsmObj* fsm, FsmStateObj* state)
 {
-    if (state->id == 0)
-    {
+    if (state->id == 0) {
         fsm->fsm_state_id_base++;
         state->id = fsm->fsm_state_id_base;
     }
