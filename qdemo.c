@@ -70,6 +70,7 @@ void* thread_qsh_input_isr(void* param)
         } else {
             system("stty -raw echo");
             printf("\33[2K");
+            printf("\033[H\033[J");
             printf(" \r\n#! qsh input thread closed !\r\n\r\n");
             close_all = 1;
             pthread_cancel(tid_tasks);
