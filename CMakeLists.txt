@@ -11,6 +11,7 @@ add_subdirectory(solver)
 add_subdirectory(utils/key)
 add_subdirectory(filter)
 add_subdirectory(cv)
+add_subdirectory(sort)
 
 add_executable(qdemo qdemo.c)
 
@@ -22,3 +23,4 @@ target_link_libraries(qdemo demo_fsm)
 target_link_libraries(qdemo demo_qmath)
 target_link_libraries(qdemo demo_qkey)
 target_link_libraries(qdemo demo_filter)
+target_link_libraries(qdemo demo_sort)

@@ -24,9 +24,25 @@ typedef struct _kalman_filter_1dimension
     float g; // kalman gain
 } KF1DimObj;
 
-void kf_1dim_init(KF1DimObj* kf, float x_0, float a, float b, float h, float p_0, float q, float r);
+void kf_1dim_init(KF1DimObj *kf, float x_0, float a, float b, float h, float p_0, float q, float r);
 
-float kf_1dim_calcu(KF1DimObj* kf, float z);
+float kf_1dim_calcu(KF1DimObj *kf, float z);
+
+typedef struct  _kalman_filter_2dimension
+{
+    float X[2];
+    float A[2][2];
+    float B[2];
+    float H[2];
+    float P[2][2];
+    float Q[2];
+    float R[2];
+    float G[2];
+} KF2DimObj;
+
+void kf_2dim_init(KF2DimObj *kf);
+
+// float kf_2dim_calcu(KF2DimObj *kf, );
 
 #ifdef __cplusplus
  }

@@ -1,22 +1,31 @@
 
-include_directories(../${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(../console)
+include_directories(../kernel)
+include_directories(../qmath)
+include_directories(../filter)
+include_directories(../utils/key)
+include_directories(../sort)
 
 add_library(demo_qsh demo_qsh.c)
-add_library(demo_fsm demo_fsm.c)
-add_library(demo_timeslice demo_timeslice.c)
-add_library(demo_msg demo_msg.c)
-add_library(demo_qmath demo_qmath.c)
-add_library(demo_qkey demo_qkey.c)
-add_library(demo_filter demo_filter.c)
-
 target_link_libraries(demo_qsh qsh timeslice cmd)
-target_link_libraries(demo_timeslice qsh timeslice)
-target_link_libraries(demo_qmath qsh qcomplex qmath)
-target_link_libraries(demo_msg msg)
+
+add_library(demo_fsm demo_fsm.c)
 target_link_libraries(demo_fsm fsm qsh)
 
-target_link_libraries(demo_filter qsh -lm)
-target_link_libraries(demo_filter sliding_average_filter)
-target_link_libraries(demo_filter lpf_first_order)
-target_link_libraries(demo_filter kalman_filter)
+add_library(demo_timeslice demo_timeslice.c)
+target_link_libraries(demo_timeslice qsh timeslice)
+
+add_library(demo_msg demo_msg.c)
+target_link_libraries(demo_msg msg)
+
+add_library(demo_qmath demo_qmath.c)
+target_link_libraries(demo_qmath qsh qcomplex qmath)
+
+add_library(demo_qkey demo_qkey.c)
 target_link_libraries(demo_qkey qkey)
+
+add_library(demo_filter demo_filter.c)
+target_link_libraries(demo_filter qsh -lm sliding_average_filter lpf_first_order kalman_filter)
+
+add_library(demo_sort demo_sort.c)
+target_link_libraries(demo_sort qsh quick_sort)

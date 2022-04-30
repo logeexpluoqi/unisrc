@@ -16,7 +16,7 @@
 #include <string.h>
 #include "../kernel/cmd.h"
 
-#define QSH_HISTORY_MAX     10
+#define QSH_HISTORY_MAX             10
 
 #define QSH(...)                    printf(__VA_ARGS__)
 
@@ -32,10 +32,7 @@ void qsh_init(void);
 
 void qsh_task_exec(void);
 
-void qsh_cmd_init(QshCmd *qcmd,
-                  const char *name,
-                  int (*handle)(int, char**),
-                  const char* usage);
+void qsh_cmd_init(QshCmd *qcmd, const char *name, int (*handle)(int, char**), const char* usage);
 
 void qsh_cmd_add(QshCmd* qcmd);
 
