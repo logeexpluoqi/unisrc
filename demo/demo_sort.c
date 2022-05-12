@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-04-23 19:08:48 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 19:18:06
+ * @Last Modified time: 2022-04-30 23:26:37
  */
 
 #include <stdlib.h>
@@ -21,7 +21,7 @@ static void demo_quick_sort(void);
 int demo_sort_init()
 {
     for(int i = 0; i < DEMO_SORT_DATA_SIZE; i++) {
-        quicksortdata[i] = rand();
+        quicksortdata[i] = (float)rand() / RAND_MAX;
     }
 
     qsh_cmd_init(&cmd_sort, "sort", cmd_sort_hdl, "@ quick");
@@ -49,13 +49,14 @@ void demo_quick_sort()
 {
     QSH("org data: \r\n");
     for(int i = 0; i < DEMO_SORT_DATA_SIZE; i ++) {
-        QSH(" %f", quicksortdata[i]);
+        QSH(" %-6.6f,", quicksortdata[i]);
     }
     QSH("\r\n");
 
-    quick_sort(quicksortdata, DEMO_SORT_DATA_SIZE, 25, DEMO_SORT_DATA_SIZE);
+    quick_sort(quicksortdata, DEMO_SORT_DATA_SIZE);
     QSH("sort data: \r\n");
     for(int i = 0; i < DEMO_SORT_DATA_SIZE; i ++) {
-        QSH(" %f", quicksortdata[i]);
+        QSH(" %-6.6f,", quicksortdata[i]);
     }
+    QSH("\r\n");
 }
