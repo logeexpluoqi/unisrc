@@ -44,3 +44,32 @@ float qceil(float x)
 {
     return (float)((int)(x + 1));
 }
+
+float qmax_arr(float *data, int len)
+{
+    float max = data[0];
+    int i;
+    for(i = 1; i < len; i++){
+        if(max < data[i]){
+            max = data[i];
+        }else{
+            continue;
+        }
+    }
+    return max;
+}
+
+float qmin_arr(float *data, int len)
+{
+    
+    float min = data[0];
+    int i;
+    for(i = 1; i < len; i++){
+        if(min > data[i]){
+            min = data[i];
+        }else{
+            continue;
+        }
+    }
+    return min;
+}
