@@ -1,6 +1,6 @@
 
 include_directories(../console)
-include_directories(../kernel)
+include_directories(../frame)
 include_directories(../qmath)
 include_directories(../filter)
 include_directories(../utils/key)

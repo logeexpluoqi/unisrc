@@ -7,7 +7,7 @@
 
 #include <string.h>
 #include "demo_fsm.h"
-#include "../kernel/fsm.h"
+#include "../frame/fsm.h"
 #include "../console/qsh.h"
 
 static FsmObj fsm_1;

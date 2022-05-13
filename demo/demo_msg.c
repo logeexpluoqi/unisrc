@@ -6,7 +6,7 @@
  */
 
 #include "demo_msg.h"
-#include "../kernel/msg.h"
+#include "../frame/msg.h"
 
 int demo_msg_init()
 {

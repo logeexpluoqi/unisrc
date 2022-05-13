@@ -12,7 +12,7 @@
  extern "C" {
 #endif
 
-#include "../kernel/qlist.h"
+#include "../frame/qlist.h"
 
 typedef enum _fuzz_mf_var
 {

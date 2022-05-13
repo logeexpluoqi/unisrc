@@ -11,8 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "console/qsh.h"
-#include "kernel/fsm.h"
-#include "kernel/timeslice.h"
+#include "frame/timeslice.h"
 #include "demo/demo_qsh.h"
 #include "demo/demo_fsm.h"
 #include "demo/demo_timeslice.h"

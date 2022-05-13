@@ -8,7 +8,7 @@
 #include <string.h>
 #include "demo_qsh.h"
 #include "../console/qsh.h"
-#include "../kernel/timeslice.h"
+#include "../frame/timeslice.h"
 
 static QshCmd   qcmd1;
 static int q1_handle(int, char **);

@@ -14,7 +14,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "../kernel/cmd.h"
+#include "../frame/cmd.h"
 
 #define QSH_HISTORY_MAX             10
 
