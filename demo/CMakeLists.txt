@@ -28,4 +28,4 @@ add_library(demo_filter demo_filter.c)
 target_link_libraries(demo_filter qsh -lm sliding_average_filter lpf_first_order kalman_filter)
 
 add_library(demo_sort demo_sort.c)
-target_link_libraries(demo_sort qsh quick_sort)
+target_link_libraries(demo_sort qsh quick_sort bubble_sort)
