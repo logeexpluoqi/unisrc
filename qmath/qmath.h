@@ -22,7 +22,7 @@ float qmax_arr(float *data, int len);
 
 float qmin(float a, float b);
 
-float qmin_arr(float *data, int len)
+float qmin_arr(float *data, int len);
 
 float qfloor(float x);
 
