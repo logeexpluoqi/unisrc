@@ -2,36 +2,43 @@
  * @Author: luoqi 
  * @Date: 2022-04-23 18:05:44 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 18:36:30
+ * @Last Modified time: 2022-05-01 13:15:54
  */
-
+#include <stdint.h>
 #include "quick_sort.h"
 #include "sort_comm.h"
 
-int quick_sort(float *data, unsigned int len, unsigned int begin, unsigned int end) 
-{  
-    unsigned int i, j;  
-  
-    if(begin < end) {  
-        i = begin + 1; 
-        j = end - 1;
-            
-        while(i < j) {  
-            if(data[i] > data[begin]) {  
+static int _quick_short_recu(float *data, int len, int begin, int end);
+
+int quick_sort_recu(float *data, int len) 
+{
+    return (_quick_short_recu(data, len, 0, len - 1));
+}
+
+int _quick_short_recu(float *data, int len, int begin, int end)
+{
+    int i, j;
+    if(begin < end){
+            i = begin + 1;
+            j = end;
+        
+        while(i < j) {
+            if(data[i] > data[begin]) {
                 sort_swap(&data[i], &data[j]);
-                j--;  
+                j--; 
             } else {  
                 i++;
-            } 
+            }
         }
-  
-        if(data[i] >= data[begin]) {  
-            i--;  
-        }  
-  
-        sort_swap(&data[begin], &data[i]); 
-        quick_sort(data, len, begin, i);  
-        quick_sort(data, len, j, end - 1);  
+        if(data[i] >= data[begin]) { 
+            i--;
+        }
+        sort_swap(&data[begin], &data[i]);
+        _quick_short_recu(data, len, begin, i);
+        _quick_short_recu(data, len, j, end);
+    }else{
+        return 0;
     }
+    
     return 0;
 }
