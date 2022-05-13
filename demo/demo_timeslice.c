@@ -34,7 +34,7 @@ int demo_timeslice_init()
     timeslice_task_init(&task3, "task3", task3_hdl, 200, "timeslice task 3");
     timeslice_task_del(&task3);
 
-    qsh_cmd_init(&cmd_task, "task", cmd_task_hdl, "task control command <task run/stop 1/2/all/3>");
+    qsh_cmd_init(&cmd_task, "task", cmd_task_hdl, "@ task<run/stop<1/2/3/3>>");
     qsh_cmd_add(&cmd_task);
 
     return 0;

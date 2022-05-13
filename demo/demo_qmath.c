@@ -18,7 +18,7 @@ static int cmd_qmath_hdl(int, char**);
 
 void demo_qmath_init()
 {
-    qsh_cmd_init(&cmd_qmath, "qmath", cmd_qmath_hdl, "qmath test");
+    qsh_cmd_init(&cmd_qmath, "qmath", cmd_qmath_hdl, "@ test");
     qsh_cmd_add(&cmd_qmath);
 }
 int cmd_qmath_hdl(int argc, char* argv[])

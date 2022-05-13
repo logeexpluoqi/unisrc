@@ -32,7 +32,7 @@ static int cmd_fsm_hdl(int argc, char *argv[]);
 
 int demo_fsm_init()
 {
-    qsh_cmd_init(&cmd_fsm, "fsm", cmd_fsm_hdl, "<fsm run/stop>");
+    qsh_cmd_init(&cmd_fsm, "fsm", cmd_fsm_hdl, "@ fsm<run/stop>");
     qsh_cmd_add(&cmd_fsm);
     fsm_init(&fsm_1, "fsm 1", 0);
     fsm_init(&fsm_2, "fsm 2", 0);

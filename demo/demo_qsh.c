@@ -25,7 +25,7 @@ int demo_qsh_init()
     qsh_cmd_init(&qcmd2, "qcmd2", q2_handle, "qsh test 2");
     qsh_cmd_add(&qcmd2);
 
-    qsh_cmd_init(&cmd_ls, "ls", cmd_ls_hdl, "list items <task / dtask>");
+    qsh_cmd_init(&cmd_ls, "ls", cmd_ls_hdl, "@ task, dtask");
     qsh_cmd_add(&cmd_ls);
     return 0;
 }

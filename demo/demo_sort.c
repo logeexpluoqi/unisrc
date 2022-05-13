@@ -53,7 +53,7 @@ void demo_quick_sort()
     }
     QSH("\r\n");
 
-    quick_sort(quicksortdata, DEMO_SORT_DATA_SIZE);
+    quick_sort_recu(quicksortdata, DEMO_SORT_DATA_SIZE);
     QSH("sort data: \r\n");
     for(int i = 0; i < DEMO_SORT_DATA_SIZE; i ++) {
         QSH(" %-6.6f,", quicksortdata[i]);
