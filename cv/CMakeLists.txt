@@ -1,1 +1,1 @@
-# add_library(qcanny qcanny.c)
+add_library(qcanny qcanny.c)

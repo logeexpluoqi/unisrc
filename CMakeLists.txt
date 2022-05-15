@@ -11,7 +11,7 @@ add_subdirectory(solver)
 add_subdirectory(utils/key)
 add_subdirectory(filter)
 add_subdirectory(sort)
-# add_subdirectory(cv)
+add_subdirectory(cv)
 
 add_executable(qdemo qdemo.c)
 

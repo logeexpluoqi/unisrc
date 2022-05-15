@@ -11,7 +11,10 @@
  extern "C" {
 #endif
 
-int qcanny();
+#define QCANNY_IMG_XSIZE    100
+#define QCANNY_IMG_YSIZE    100
+
+int qcanny(int **img, float th_low, float th_high, int compensation);
 
 #ifdef __cplusplus
  }
