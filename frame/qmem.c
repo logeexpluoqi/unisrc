@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-02-12 17:08:41 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-02-12 17:17:31
+ * @Last Modified time: 2022-05-15 19:55:05
  */
 
 #include "qmem.h"
@@ -13,8 +13,7 @@ int qmem_init()
 {
     int i;
 
-    for(i = 0; i < QMEM_HEAP_SIZE; i++)
-    {
+    for(i = 0; i < QMEM_HEAP_SIZE; i++){
         qmem_heap[i] = 0;
     }
 

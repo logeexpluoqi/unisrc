@@ -3,7 +3,6 @@ add_library(fsm fsm.c)
 add_library(msg msg.c)
 add_library(timeslice timeslice.c)
 add_library(qlist qlist.c)
-
 add_library(qmem qmem.c)
 
 target_link_libraries(cmd qlist)

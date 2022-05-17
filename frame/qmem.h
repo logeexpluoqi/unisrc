@@ -12,7 +12,7 @@
  extern "C" {
 #endif
 
-#define QMEM_HEAP_SIZE    1000
+#define QMEM_HEAP_SIZE    1024 * 1024
 #define QMEM_NULL         (void*)0
 
 int qmem_init(void);

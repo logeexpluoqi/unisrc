@@ -29,3 +29,6 @@ target_link_libraries(demo_filter qsh -lm sliding_average_filter lpf_first_order
 
 add_library(demo_sort demo_sort.c)
 target_link_libraries(demo_sort qsh quick_sort bubble_sort)
+
+add_library(demo_qmem demo_qmem.c)
+target_link_libraries(demo_qmem qsh qmem)
