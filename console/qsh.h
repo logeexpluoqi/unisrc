@@ -12,6 +12,11 @@
  extern "C" {
 #endif
 
+#define QSH_USING_LIBC    1
+
+#ifdef QSH_USING_LIBC
+#include <stdlib.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include "../frame/cmd.h"
@@ -28,11 +33,15 @@ typedef CmdObj  QshCmd;
 
 void qsh_get_char(char recv_byte);
 
+#ifdef QSH_USING_LIBC
+int qsh_export(const char *name, int (*handle)(int, char**), const char *usage);
+#endif
+
 void qsh_init(void);
 
 void qsh_task_exec(void);
 
-void qsh_cmd_init(QshCmd *qcmd, const char *name, int (*handle)(int, char**), const char* usage);
+void qsh_cmd_init(QshCmd *qcmd, const char *name, int (*handle)(int, char**), const char *usage);
 
 void qsh_cmd_add(QshCmd* qcmd);
 
