@@ -12,28 +12,72 @@
  extern "C" {
 #endif
 
+#define QMAT_USING_LIBC     1
+
+typedef enum _qmat_err
+{
+    QMAT_ERR_NONE,
+    QMAT_ERR_DIM,
+    QMAT_ERR_CALC,
+}QMatErr;
+
 typedef struct _qmatrix
 {
     unsigned int row;
     unsigned int col;
-    float *elem[];
-} QMatrix;
+    float **elem;
+    QMatErr err;
+} QMat;
 
-void qmatrix_init(QMatrix *mat, float *elem[], unsigned int row, unsigned int col);
+#ifdef QMAT_USING_LIBC
+QMat qmatc(int row, int col);
 
-float qmatrix_elem(QMatrix *mat, unsigned int row, unsigned int col);
+QMat qmatc_zeros(int row, int col);
 
-QMatrix qmatrix_mul(QMatrix *A, QMatrix *B);
+QMat qmatc_ones(int row, int col);
 
-QMatrix qmatrix_dotmul(QMatrix *A, QMatrix *B);
+QMat qmatc_eyes(int row, int col);
+#endif
 
-QMatrix qmatrix_add(QMatrix *A, QMatrix *B);
+void qmat_init(QMat *mat, float **elem, int row, int col);
 
-QMatrix qmatrix_div(QMatrix *A, QMatrix *B);
+void qmat_zeros(QMat *mat);
 
-QMatrix qmatrix_dotdiv(QMatrix *A, QMatrix *B);
+void qmat_ones(QMat *mat);
 
-QMatrix qmatrix_sub(QMatrix *A, QMatrix *B);
+void qmat_eyes(QMat *mat);
+
+float qmat_elem(QMat *mat, int row, int col);
+
+/* A + B */
+int qmat_mul(QMat *A, QMat *B, QMat *result);
+
+/* A + b */
+int qmat_muln(QMat *A, float b, QMat *result);
+
+/* A .* B */
+int qmat_dotmul(QMat *A, QMat *B, QMat *result);
+
+/* A + B */
+int qmat_add(QMat *A, QMat *B, QMat *result);
+
+/* A + b */
+int qmat_addn(QMat *A, float b, QMat *result);
+
+/* A / B */
+int qmat_div(QMat *A, QMat *B, QMat *result);
+
+/* A / b */
+int qmat_divn(QMat *A, float b, QMat *result);
+
+/* A ./ B */
+int qmat_dotdiv(QMat *A, QMat *B, QMat *result);
+
+/* A - B */
+int qmat_sub(QMat *A, QMat *B, QMat *result);
+
+/* A - b */
+int qmat_subn(QMat *A, float b, QMat *result);
 
 #ifdef __cplusplus
  }
