@@ -117,6 +117,7 @@ int qmat_sub(QMat *A, QMat *B, QMat *result);
 /* A - b */
 int qmat_subn(QMat *A, float b, QMat *result);
 
+/* 1 / A */
 int qmat_inv(QMat *A, QMat *result);
 
 #ifdef __cplusplus
