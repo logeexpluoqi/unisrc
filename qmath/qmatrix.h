@@ -30,13 +30,51 @@ typedef struct _qmatrix
 } QMat;
 
 #ifdef QMAT_USING_LIBC
+/* creat a matrix */
 QMat qmatc(int row, int col);
 
+/* zeros */
 QMat qmatc_zeros(int row, int col);
 
+/* ones */
 QMat qmatc_ones(int row, int col);
 
+/* eyes */
 QMat qmatc_eyes(int row, int col);
+
+/* A * B */
+QMat qmatc_mul(QMat A, QMat B);
+
+/* A * b */
+QMat qmatc_muln(QMat A, float b);
+
+/* A .* B */
+QMat qmatc_dotmul(QMat A, QMat B);
+
+/* A + B */
+QMat qmatc_add(QMat A, QMat B);
+
+/* A + b */
+QMat qmatc_addn(QMat A, float b);
+
+/* A - B */
+QMat qmatc_sub(QMat A, QMat B);
+
+/* A - b */
+QMat qmatc_subn(QMat A, float b);
+
+/* A / b */
+QMat qmatc_div(QMat A, QMat B);
+
+/* A / b */
+QMat qmatc_divn(QMat A, float b);
+
+/* A ./ b */
+QMat qmatc_dotdiv(QMat A, QMat B);
+
+/* 1 / A */
+QMat qmatc_inv(QMat A);
+
 #endif
 
 void qmat_init(QMat *mat, float **elem, int row, int col);
@@ -78,6 +116,8 @@ int qmat_sub(QMat *A, QMat *B, QMat *result);
 
 /* A - b */
 int qmat_subn(QMat *A, float b, QMat *result);
+
+int qmat_inv(QMat *A, QMat *result);
 
 #ifdef __cplusplus
  }
