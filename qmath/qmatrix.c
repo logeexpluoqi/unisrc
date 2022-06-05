@@ -76,7 +76,8 @@ QMat qmatc_eyes(int row, int col)
 
 QMat qmatc_mul(QMat A, QMat B)
 {
-    int i, j;
+    int i, j, m;
+    float tmp = 0.0;
     QMat mat = qmatc(A.row, B.col);
     if(A.row != B.col && A.col != B.row){
         mat.err = QMAT_ERR_DIM;
@@ -84,7 +85,11 @@ QMat qmatc_mul(QMat A, QMat B)
     }
     for(i = 0; i < mat.row; i++){
         for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] * B.elem[j][i];
+            for(m = 0; m < A.row; m++){
+                tmp += A.elem[i][m] * B.elem[m][i];
+            }
+            mat.elem[i][j] = tmp;
+            tmp = 0.0;
         }
     }
 
@@ -263,12 +268,16 @@ float qmat_elem(QMat *mat, int row, int col)
 
 int qmat_mul(QMat *A, QMat *B, QMat *result) 
 {
-    int i, j;
-
+    int i, j, m;
+    float tmp = 0.0;
     if(A->row == B->col && A->row == result->row && A->col == B->row && B->col == result->col){
         for(i = 0; i < A->row; i++){
             for(j = 0; j < A->col; j++){
-                result->elem[i][j] = A->elem[i][j] * B->elem[j][i];
+                for(m = 0; m < A->row; m++){
+                    tmp += A->elem[i][m] * B->elem[m][i];
+                }
+                result->elem[i][j] = tmp;
+                tmp = 0.0;
             }
         }
         result->err = QMAT_ERR_NONE;
