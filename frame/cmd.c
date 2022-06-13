@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 00:29:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 19:19:54
+ * @Last Modified time: 2022-06-13 22:12:19
  */
 
 #include "cmd.h"
@@ -14,7 +14,7 @@ static unsigned int cmd_id = 1;
 
 static unsigned char cmd_strcmp(const char* s1, const char* s2);
 
-CmdErrType cmd_exec(char* cmd_msg)
+CmdErrType cmd_exec(char* args)
 {
     ListObj* node;
     CmdObj* cmd;
@@ -26,11 +26,11 @@ CmdErrType cmd_exec(char* cmd_msg)
     /* cmd parser */
     do{
         if (i < 1) {
-            argv[argn] = &cmd_msg[i];
+            argv[argn] = &args[i];
         }
-        else if(cmd_msg[i] == ASCII_SPACE) {
-            argv[++argn] = &cmd_msg[i + 1];
-            cmd_msg[i] = 0;
+        else if(args[i] == ASCII_SPACE) {
+            argv[++argn] = &args[i + 1];
+            args[i] = 0;
         }
         i++;
 
@@ -42,7 +42,7 @@ CmdErrType cmd_exec(char* cmd_msg)
             return CMD_NUM_OUT;
         }
         
-    } while(cmd_msg[i] != 0);
+    } while(args[i] != 0);
 
     argc = argn + 1; // add 1 because there is no space key value front of the first argv
     /* End of dismantling input command string */
