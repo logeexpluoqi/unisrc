@@ -122,31 +122,30 @@ void qsh_save_history(char* save_cmd, int size)
 void qsh_recv_enter()
 {
     int i = 1, h_index;
-    if(cmd_recv_size != 0)
-    {
-        for( ; cmd_buf[cmd_recv_size - i] == '\x20'; i++)
+    if(cmd_recv_size != 0) {
+        for( ; cmd_buf[cmd_recv_size - i] == '\x20'; i++) {
             cmd_buf[cmd_recv_size - i] = 0;
+        }
         
-        if(strcmp(cmd_buf, "hs") != 0)
-        {
+        if(strcmp(cmd_buf, "hs") != 0) {
             h_index = (hs_index + QSH_HISTORY_MAX - 1) % QSH_HISTORY_MAX;
-            if(strcmp(cmd_buf, hs_buf[h_index]) != 0)
+            if(strcmp(cmd_buf, hs_buf[h_index]) != 0) {
                 qsh_save_history(cmd_buf, sizeof(cmd_buf));
+            }
         }
         
-        if(hs_recall_status == -1)
-        {
-            if(hs_recall_times != hs_num)
+        if(hs_recall_status == -1) {
+            if(hs_recall_times != hs_num) {
                 hs_recall_times --;
-            else
+            } else {
                 hs_recall_times = hs_num;
-        }
-        else if(hs_recall_status == 1)
-        {
-            if(hs_recall_times != 0)
+            }
+        } else if(hs_recall_status == 1) {
+            if(hs_recall_times != 0) {
                 hs_recall_times ++;
-            else
+            } else {
                 hs_recall_times = 0;
+            }
         }
 
         hs_recall_pos = hs_index;
@@ -166,13 +165,12 @@ void qsh_recv_enter()
 void qsh_recall_prev_history()
 {
     hs_recall_status = 1;
-    if(hs_recall_times  < hs_num)
-    {
+    if(hs_recall_times  < hs_num) {
         hs_recall_pos  = (hs_recall_pos - 1 + QSH_HISTORY_MAX) % QSH_HISTORY_MAX;
         hs_recall_times ++;
-    }
-    else
+    } else {
         hs_recall_times = hs_num;
+    }
     memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
     cmd_recv_size = strlen(cmd_buf);
 }
@@ -180,15 +178,12 @@ void qsh_recall_prev_history()
 void qsh_recall_next_history()
 {
     hs_recall_status = -1;
-    if(hs_recall_times > 0)
-    {
+    if(hs_recall_times > 0) {
         hs_recall_pos = (hs_recall_pos + 1) % QSH_HISTORY_MAX;
         memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
         cmd_recv_size = strlen(cmd_buf);
         hs_recall_times --;
-    }
-    else
-    {
+    } else {
         hs_recall_times = 0;
         qsh_cmd_reset();
     }
@@ -211,15 +206,12 @@ void qsh_recv_backspace()
 
 void qsh_recv_up()
 {
-    if(hs_num > 0)
-    {
+    if(hs_num > 0) {
         qsh_clear_line();
         qsh_input_logo();
         qsh_recall_prev_history();
         QSH_PRINTF("%s", cmd_buf);
-    }
-    else
-    {
+    } else {
         qsh_clear_line();
         qsh_input_logo();
     }
@@ -227,15 +219,12 @@ void qsh_recv_up()
 
 void qsh_recv_down()
 {
-    if(hs_num > 0)
-    {
+    if(hs_num > 0) {
         qsh_clear_line();
         qsh_input_logo();
         qsh_recall_next_history();
         QSH_PRINTF("%s", cmd_buf);
-    }
-    else
-    {
+    } else {
         qsh_clear_line();
         qsh_input_logo();
     }
@@ -254,36 +243,33 @@ void qsh_recv_left()
 int qsh_recv_spec(char recv_byte)
 {
     if(recv_byte == '\x1b' || recv_byte == '\x5b' 
-        || recv_byte == '\x41' // up-key 
-        || recv_byte == '\x42' // down-key
-        || recv_byte == '\x43' // right-key
-        || recv_byte == '\x44') // left-key
-    {
+        || recv_byte == '\x41'      // up-key 
+        || recv_byte == '\x42'      // down-key
+        || recv_byte == '\x43'      // right-key
+        || recv_byte == '\x44') {   // left-key
         if(recv_byte == '\x5b' 
-            || recv_byte == '\x41' 
-            || recv_byte == '\x42'
-            || recv_byte == '\x43'
-            || recv_byte == '\x44')
-        {
-            if(recv_byte == '\x41') // up-key
+           || recv_byte == '\x41' 
+           || recv_byte == '\x42'
+           || recv_byte == '\x43'
+           || recv_byte == '\x44') {
+            if(recv_byte == '\x41') {// up-key
                 return 1;
-            else if(recv_byte == '\x42') // down-key
+            } else if(recv_byte == '\x42') {    // down-key
                 return 2;
-            else if(recv_byte == '\x43') // right -key
+            } else if(recv_byte == '\x43') {    // right -key
                 return 3;
-            else if(recv_byte == '\x44') // left-key
+            } else if(recv_byte == '\x44') {    // left-key
                 return 4;
-            else 
-            {
+            } else {
                 memset(cmd_buf, 0, sizeof(cmd_buf));
                 return 0;
             }
-        }
-        else 
+        } else {
             return 0;
-    }
-    else
+        }
+    } else {
         return 0;
+    }
 }
 
 void qsh_get_char(char recv_byte)
