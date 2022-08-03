@@ -35,8 +35,7 @@ int demo_sort_init()
 int cmd_sort_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
-        QSH(QSH_MSG_PARAM_ERR);
-        return -1;
+        return CMD_PARAM_LESS;
     }
 
     if(QSH_ISARG(argv[1], "quick")){
@@ -44,7 +43,7 @@ int cmd_sort_hdl(int argc, char **argv)
     } else if(QSH_ISARG(argv[1], "bub")){
         demo_bubbule_sort();
     }else {
-        QSH(QSH_MSG_PARAM_ERR);
+        return CMD_PARAM_ERR;
     }
     return 0;
 }

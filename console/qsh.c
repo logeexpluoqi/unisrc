@@ -29,6 +29,7 @@ static char hs_num = 0;
 static char hs_recall_pos = 0;
 static char hs_recall_times = 0;
 static char hs_recall_status = 0;
+static char *cursor_pos;
 static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
 static unsigned int cmd_recv_size = 0;
 static unsigned int cmd_index = 0;
@@ -71,6 +72,7 @@ void qsh_init()
     qsh_recv_state = QSH_RECV_NOCMD;
     cmd_recv_size = 0;
     cmd_index = 0;
+    cursor_pos = cmd_buf;
 
     cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
@@ -154,8 +156,7 @@ void qsh_recv_enter()
         cmd_index = 0;
         QSH_PRINTF("\r\n");
         qsh_recv_state = QSH_RECV_FINISHED;
-    }else 
-    {
+    } else {
         QSH_PRINTF("\r\n");
         qsh_input_logo();
     }
@@ -203,7 +204,6 @@ void qsh_recv_backspace()
     QSH_PRINTF("%s", cmd_buf);
 }
 
-
 void qsh_recv_up()
 {
     if(hs_num > 0) {
@@ -232,12 +232,14 @@ void qsh_recv_down()
 
 void qsh_recv_right()
 {
-
+    QSH_PRINTF("\033[1C");
+    cursor_pos --;
 }
 
 void qsh_recv_left()
 {
-
+    QSH_PRINTF("\033[1D");
+    cursor_pos --;
 }
 
 int qsh_recv_spec(char recv_byte)
@@ -303,33 +305,36 @@ void qsh_task_exec()
 {
     if(qsh_recv_state == QSH_RECV_FINISHED) {
         switch(cmd_exec(qsh_cmd())){
-        case CMD_NO_ERR: break;
-        case CMD_LEN_OUT: 
-            QSH_PRINTF(" #! command length exceed !\r\n");
-            break;
-        
-        case CMD_NUM_OUT:
-            QSH_PRINTF(" #! command quantity exceed !\r\n");
-            break;
-        
-        case CMD_NO_CMD:
-            QSH_PRINTF(" #! command not found !\r\n");
-            break;
-        
-        case CMD_PARAM_EXCEED:
-            QSH_PRINTF(" #! parameter exceed !\r\n");
-            break;
-        
-        case CMD_PARAM_LESS: 
-            QSH_PRINTF(" #! parameter short !\r\n");
-            break;
-        
-        case CMD_EXEC_ERR:
-            QSH_PRINTF(" #! command execute error !\r\n");
-            break;
-        
-        default:
-            break;
+            case CMD_NO_ERR: break;
+            case CMD_LEN_OUT: 
+                QSH_PRINTF(" #! command length exceed !\r\n");
+                break;
+            
+            case CMD_NUM_OUT:
+                QSH_PRINTF(" #! command quantity exceed !\r\n");
+                break;
+            
+            case CMD_NO_CMD:
+                QSH_PRINTF(" #! command not found !\r\n");
+                break;
+            
+            case CMD_PARAM_EXCEED:
+                QSH_PRINTF(" #! parameter exceed !\r\n");
+                break;
+            
+            case CMD_PARAM_LESS: 
+                QSH_PRINTF(" #! parameter short !\r\n");
+                break;
+            
+            case CMD_EXEC_ERR:
+                QSH_PRINTF(" #! command execute error !\r\n");
+                break;
+            case CMD_PARAM_ERR:
+                QSH_PRINTF(" #! command parameter error !\r\n");
+                break;
+
+            default:
+                break;
         }
         cmd_recv_size = 0;
         QSH_PRINTF(QSH_INPUT_LOGO);

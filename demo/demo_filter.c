@@ -49,8 +49,7 @@ void demo_filter_init()
 int cmd_filter_hdl(int argc, char *argv[])
 {
     if(argc <= 1) {
-        QSH(" #! parameter error !\r\n");
-        return -1;
+        return CMD_PARAM_LESS;
     }
     
     if(QSH_ISARG(argv[1], "nsig")) {
@@ -62,7 +61,7 @@ int cmd_filter_hdl(int argc, char *argv[])
     } else if(QSH_ISARG(argv[1], "kf1dim")) {
         demo_kf_1dim();
     } else {
-        QSH(" #! parameter error !\r\n");
+        return CMD_PARAM_ERR;
     }
 
     return 0;

@@ -44,8 +44,7 @@ int demo_fsm_init()
 int cmd_fsm_hdl(int argc, char *argv[])
 {
     if(argc <= 1) {
-        QSH(" #! parameter error !\r\n");
-        return -1;
+        return CMD_PARAM_LESS;
     }
 
     if(strcmp(argv[1], "run") == 0) {
@@ -55,7 +54,7 @@ int cmd_fsm_hdl(int argc, char *argv[])
 
         QSH(">> fsm stopped\r\n");
     } else {
-        QSH(" #! parameter error !\r\n");
+        return CMD_PARAM_ERR;
     }
     return 0;
 }

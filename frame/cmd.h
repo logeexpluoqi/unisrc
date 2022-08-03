@@ -18,13 +18,14 @@
 
 typedef enum cmd_err
 {
-    CMD_NO_ERR = 0,
-    CMD_LEN_OUT,
-    CMD_NUM_OUT,
-    CMD_NO_CMD,
-    CMD_PARAM_EXCEED,
-    CMD_PARAM_LESS,
-    CMD_EXEC_ERR
+    CMD_PARAM_ERR       = -1,
+    CMD_NO_ERR          = 0,
+    CMD_LEN_OUT         = 1,
+    CMD_NUM_OUT         = 2,
+    CMD_NO_CMD          = 3,
+    CMD_PARAM_EXCEED    = 4,
+    CMD_PARAM_LESS      = 5,
+    CMD_EXEC_ERR        = 6
 } CmdErrType;
 
 typedef struct cmd_object

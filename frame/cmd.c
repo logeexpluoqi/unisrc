@@ -57,17 +57,9 @@ CmdErrType cmd_exec(char* args)
                     return CMD_PARAM_EXCEED;
                 }
 
-                if (cmd->cmd_hdl(argc, argv) < 0) {
-                    return CMD_EXEC_ERR;
-                } else {
-                    return CMD_NO_ERR;
-                }
+                return cmd->cmd_hdl(argc, argv);
             } else {
-                if(cmd->cmd_hdl(argc, argv) < 0) {
-                    return CMD_EXEC_ERR;
-                } else {
-                    return CMD_NO_ERR;
-                }
+                return cmd->cmd_hdl(argc, argv);
             }
         }
     }

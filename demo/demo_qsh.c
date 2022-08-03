@@ -33,8 +33,7 @@ int demo_qsh_init()
 int q1_handle(int argc, char* argv[])
 {
     if(argc > 1) {
-        QSH(QSH_MSG_PARAM_ERR);
-        return -1;
+        return CMD_PARAM_ERR;
     }
     QSH(">> qsh test 1\r\n");
     return 0;
@@ -43,8 +42,7 @@ int q1_handle(int argc, char* argv[])
 int q2_handle(int argc, char* argv[])
 {
     if(argc > 1) {
-        QSH(QSH_MSG_PARAM_ERR);
-        return -1;
+        return CMD_PARAM_ERR;
     }
     QSH(">> qsh test 2\r\n");
     return 0;
@@ -53,8 +51,7 @@ int q2_handle(int argc, char* argv[])
 int cmd_ls_hdl(int argc, char *argv[])
 {
     if(argc <= 1) {
-        QSH(QSH_MSG_PARAM_ERR);
-        return 0;
+        return CMD_PARAM_LESS;;
     } else {
         if(QSH_ISARG(argv[1], "task")) {
             TimesilceTaskObj *task;
@@ -82,7 +79,7 @@ int cmd_ls_hdl(int argc, char *argv[])
             }
         }
         else {
-            QSH(QSH_MSG_PARAM_ERR);
+            return CMD_PARAM_ERR;
         }
     }
     return 0;
