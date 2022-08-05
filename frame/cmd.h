@@ -26,12 +26,13 @@ typedef enum cmd_err
     CMD_PARAM_EXCEED    = 4,
     CMD_PARAM_LESS      = 5,
     CMD_EXEC_ERR        = 6
-} CmdErrType;
+} CmdErr;
 
 typedef struct cmd_object
 {
     const char* name;
-    /* id auto increase from 1, if return id is 0 means that there is no target command */
+    /* id auto increased from 1, 
+    if return id is 0 means that there is no target command */
     unsigned int id;
     /* parameter number, max 255 */
     unsigned char param_num;
@@ -40,25 +41,25 @@ typedef struct cmd_object
     ListObj cmd_list;
 } CmdObj;
 
-CmdErrType cmd_exec(char* cmd_msg);
+CmdErr cmd_exec(char* cmd_msg);
 
-void cmd_init(CmdObj* cmd,
+int cmd_init(CmdObj* cmd,
               const char* name,
               unsigned char param_num, // if this value is 0xff, means that no arg number limit
               int(*cmd_hdl)(int, char* []),
               const char* usage);
 
-void cmd_add(CmdObj* cmd);
+int cmd_add(CmdObj* cmd);
 
-void cmd_del(CmdObj* cmd);
+int cmd_del(CmdObj* cmd);
 
-unsigned char cmd_isexist(CmdObj* cmd);
+int cmd_isexist(CmdObj* cmd);
 
 unsigned int cmd_get_id(CmdObj* cmd);
 
 unsigned int cmd_num(void);
 
-CmdObj* cmd_obj_get(unsigned int cmd_id);
+CmdObj* cmd_obj(unsigned int cmd_id);
 
 #ifdef __cplusplus
  }

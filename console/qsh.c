@@ -404,7 +404,7 @@ int cmd_help_hdl(int argc, char* argv[])
     QSH_PRINTF(" [Commands]     [Usage]\r\n");
     QSH_PRINTF(" ----------     -------\r\n");
     for(i = num; i > 0; i--) {
-        cmd = cmd_obj_get(i);
+        cmd = cmd_obj(i);
         QSH_PRINTF("  -%-9s     %s\r\n", cmd->name, cmd->usage);
     }
     QSH_PRINTF("\r\n");

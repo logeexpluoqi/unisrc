@@ -7,33 +7,34 @@
 
 #include "cmd.h"
 
-#define ASCII_SPACE 0x20
+#define ASCII_SPACE     0x20
+#define ASCII_DOT       0x2c
 static LIST_HEAD(cmd_list);
 
 static unsigned int cmd_id = 1;
 
-static unsigned char cmd_strcmp(const char* s1, const char* s2);
+static int cmd_strcmp(const char* s1, const char* s2);
 
-CmdErrType cmd_exec(char* args)
+CmdErr cmd_exec(char* args)
 {
     ListObj* node;
     CmdObj* cmd;
-    unsigned int argc;
-    char* argv[CMD_MAX_NUM + 1];
-    unsigned int argn = 0;
-    unsigned char i = 0;
+    char* argv[CMD_MAX_NUM + 1] = {0};
+    int argc = 0;
+    int argn = 0;
+    int i = 0;
     
     /* cmd parser */
     do{
-        if (i < 1) {
+        if (i == 0) {
             argv[argn] = &args[i];
-        }
-        else if(args[i] == ASCII_SPACE) {
-            argv[++argn] = &args[i + 1];
+        } else if (args[i] == ASCII_SPACE || args[i] == ASCII_DOT) {
             args[i] = 0;
+            if(args[i + 1] != ASCII_SPACE && args[i + 1] != ASCII_DOT){
+                argv[++argn] = &args[i + 1];
+            }
         }
         i++;
-
         if (i > CMD_MAX_LEN - 1) {
             return CMD_LEN_OUT;
         }
@@ -43,10 +44,9 @@ CmdErrType cmd_exec(char* args)
         }
         
     } while(args[i] != 0);
-
-    argc = argn + 1; // add 1 because there is no space key value front of the first argv
     /* End of dismantling input command string */
-
+    /* add 1 because there is no space key value front of the first argv */
+    argc = argn + 1; 
     list_for_each(node, &cmd_list){
         cmd = list_entry(node, CmdObj, cmd_list);
         if (cmd_strcmp(cmd->name, argv[0]) == 0) {
@@ -56,7 +56,6 @@ CmdErrType cmd_exec(char* args)
                 } else if (cmd->param_num < argc - 1) {
                     return CMD_PARAM_EXCEED;
                 }
-
                 return cmd->cmd_hdl(argc, argv);
             } else {
                 return cmd->cmd_hdl(argc, argv);
@@ -66,7 +65,7 @@ CmdErrType cmd_exec(char* args)
     return CMD_NO_CMD;
 }
 
-void cmd_init(CmdObj* cmd, const char* name, unsigned char param_num, int (*cmd_hdl)(int, char* []), const char* usage)
+int cmd_init(CmdObj* cmd, const char* name, unsigned char param_num, int (*cmd_hdl)(int, char* []), const char* usage)
 {
     cmd->name = name;
     cmd->param_num = param_num;
@@ -74,27 +73,30 @@ void cmd_init(CmdObj* cmd, const char* name, unsigned char param_num, int (*cmd_
     cmd->cmd_hdl = cmd_hdl;
     cmd->usage = usage;
     cmd_id++;
+    return 0;
 }
 
-void cmd_add(CmdObj* cmd)
+int cmd_add(CmdObj* cmd)
 {
     if(cmd_isexist(cmd) == 0) {
         list_insert_before(&cmd_list, &cmd->cmd_list);
+        return 0;
     } else {
-        return;
+        return -1;
     }
 }
 
-void cmd_del(CmdObj* cmd)
+int cmd_del(CmdObj* cmd)
 {
     if(cmd_isexist(cmd)) {
         list_remove(&cmd->cmd_list);
+        return 0;
     } else {
-        return;
+        return -1;
     }
 }
 
-unsigned char cmd_isexist(CmdObj* cmd)
+int cmd_isexist(CmdObj* cmd)
 {
     unsigned char isexist = 0;
     ListObj* node;
@@ -103,13 +105,12 @@ unsigned char cmd_isexist(CmdObj* cmd)
     list_for_each(node, &cmd_list) {
         _cmd = list_entry(node, CmdObj, cmd_list);
         if(cmd->id == _cmd->id) {
-            isexist = 1;
+            return 1;
         } else {
             continue;
         }
     }
-
-    return isexist;
+    return 0;
 }
 
 unsigned int cmd_get_id(CmdObj* cmd)
@@ -122,7 +123,7 @@ unsigned int cmd_num()
     return list_len(&cmd_list);
 }
 
-unsigned char cmd_strcmp(const char* s1, const char* s2)
+int cmd_strcmp(const char* s1, const char* s2)
 {
     unsigned int i = 0;
 
@@ -137,7 +138,7 @@ unsigned char cmd_strcmp(const char* s1, const char* s2)
     return 0;
 }
 
-CmdObj* cmd_obj_get(unsigned int cmd_id)
+CmdObj* cmd_obj(unsigned int cmd_id)
 {
     ListObj* node = &cmd_list;
 
