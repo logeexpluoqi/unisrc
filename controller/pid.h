@@ -19,21 +19,15 @@ typedef struct pid_structure {
     float delta_u_k;
 } PidObj;
 
-typedef enum {
-    KP,
-    KI,
-    KD
-} PidParam;
-
 void pid_init(PidObj* pid, float kp, float ki, float kd);
 
 void pid_param_set(PidObj* pid, float kp, float ki, float kd);
 
 void pid_param_get(PidObj* pid, float* kp, float* ki, float* kd);
 
-float pid_ctrl_calcu(PidObj* pid, float err);
+float pid_calcu(PidObj* pid, float err);
 
-float pid_ctrl_ki_separation_calcu(PidObj* pid, float err, float seplimit);
+float pid_ki_isolate_calcu(PidObj* pid, float err, float seplimit);
 
 void pid_uk_clear(PidObj* pid);
 

@@ -34,7 +34,7 @@ void pid_param_get(PidObj *pid, float *kp, float *ki, float *kd)
     *kd = pid->kd;
 }
 
-float pid_ctrl_calcu(PidObj *pid, float err)
+float pid_calcu(PidObj *pid, float err)
 {
     pid->err_k2 = pid->err_k1;
     pid->err_k1 = pid->err_k;
@@ -59,7 +59,7 @@ void pid_uk_clear(PidObj* pid)
     pid->err_k2 = 0;
 }
 
-float pid_ctrl_ki_separation_calcu(PidObj* pid, float err, float seplimit)
+float pid_ki_isolate_calcu(PidObj* pid, float err, float seplimit)
 {
     unsigned char beta = err > seplimit ? 0 : 1;
 
