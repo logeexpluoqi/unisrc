@@ -1,3 +1,6 @@
-add_library(sliding_average_filter sliding_average_filter.c)
-add_library(lpf_first_order lpf_first_order.c)
-add_library(kalman_filter kalman_filter.c)
+add_library(sliding_average_filter 
+        sliding_average_filter.c)
+add_library(lpf_first_order 
+        lpf_first_order.c)
+add_library(kalman_filter 
+        kalman_filter.c)

@@ -13,14 +13,15 @@ add_subdirectory(filter)
 add_subdirectory(sort)
 add_subdirectory(cv)
 
-add_executable(qdemo qdemo.c)
-
-target_link_libraries(qdemo -lpthread)
-target_link_libraries(qdemo demo_qsh)
-target_link_libraries(qdemo demo_timeslice)
-target_link_libraries(qdemo demo_msg)
-target_link_libraries(qdemo demo_fsm)
-target_link_libraries(qdemo demo_qmath)
-target_link_libraries(qdemo demo_qkey)
-target_link_libraries(qdemo demo_filter)
-target_link_libraries(qdemo demo_sort)
+add_executable(qdemo 
+        qdemo.c)
+target_link_libraries(qdemo 
+        -lpthread
+        demo_qsh
+        demo_timeslice
+        demo_msg
+        demo_fsm
+        demo_qmath
+        demo_qkey
+        demo_filter
+        demo_sort)
