@@ -3,7 +3,7 @@ include_directories(../console)
 include_directories(../frame)
 include_directories(../qmath)
 include_directories(../filter)
-include_directories(../utils/key)
+include_directories(../utils)
 include_directories(../sort)
 include_directories(../solver)
 
@@ -22,7 +22,7 @@ add_library(demo
 target_link_libraries(demo
         qsh
         qmath
-        qkey
+        utils
         filter
         sort
         ode

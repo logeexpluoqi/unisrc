@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:33 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 19:23:21
+ * @Last Modified time: 2022-08-13 23:18:44
  */
 
 #ifndef _QSH_H
@@ -24,8 +24,6 @@
 #define QSH_HISTORY_MAX             10
 
 #define QSH(...)                    printf(__VA_ARGS__)
-
-#define QSH_MSG_PARAM_ERR           " #! parameter error !\r\n"
 
 #define QSH_ISARG(str1, str2)       (strcmp(str1, str2) == 0)
 
