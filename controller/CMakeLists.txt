@@ -1,4 +1,4 @@
-add_library(pid 
-        pid.c)
-add_library(fuzzy 
-        fuzzy.c)
+add_library(controller 
+        pid.c
+        fuzzy.c
+)

@@ -14,14 +14,9 @@ add_subdirectory(sort)
 add_subdirectory(cv)
 
 add_executable(qdemo 
-        qdemo.c)
+        qdemo.c
+)
 target_link_libraries(qdemo 
+        demo
         -lpthread
-        demo_qsh
-        demo_timeslice
-        demo_msg
-        demo_fsm
-        demo_qmath
-        demo_qkey
-        demo_filter
-        demo_sort)
+)

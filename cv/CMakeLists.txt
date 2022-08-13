@@ -1,2 +1,2 @@
-add_library(qcanny 
+add_library(cv 
         qcanny.c)
