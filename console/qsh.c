@@ -24,11 +24,11 @@ typedef enum
 
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
-static char hs_index = 0;
-static char hs_num = 0;
-static char hs_recall_pos = 0;
-static char hs_recall_times = 0;
-static char hs_recall_status = 0;
+static int hs_index = 0;
+static int hs_num = 0;
+static int hs_recall_pos = 0;
+static int hs_recall_times = 0;
+static int hs_recall_status = 0;
 static char *cursor_pos;
 static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
 static unsigned int cmd_recv_size = 0;
@@ -106,7 +106,7 @@ void qsh_cmd_reset()
     memset(cmd_buf, 0, sizeof(cmd_buf));
 }
 
-char* qsh_cmd()
+char* qsh_args()
 {
     if(qsh_recv_state == QSH_RECV_FINISHED)
         return cmd_buf;
@@ -304,7 +304,7 @@ void qsh_get_char(char recv_byte)
 void qsh_task_exec()
 {
     if(qsh_recv_state == QSH_RECV_FINISHED) {
-        switch(cmd_exec(qsh_cmd())){
+        switch(cmd_exec(qsh_args())){
             case CMD_NO_ERR: break;
             case CMD_LEN_OUT: 
                 QSH_PRINTF(" #! command length exceed !\r\n");
