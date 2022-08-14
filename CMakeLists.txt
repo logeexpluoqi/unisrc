@@ -12,6 +12,7 @@ add_subdirectory(utils/key)
 add_subdirectory(filter)
 add_subdirectory(sort)
 add_subdirectory(cv)
+add_subdirectory(ransac)
 
 add_executable(qdemo 
         qdemo.c
