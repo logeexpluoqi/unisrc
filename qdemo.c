@@ -20,6 +20,7 @@
 #include "demo/demo_qkey.h"
 #include "demo/demo_filter.h"
 #include "demo/demo_sort.h"
+#include "demo/demo_ransac.h"
 
 static pthread_t tid_qsh_isr;
 static void* thread_qsh_input_isr(void*);
@@ -44,7 +45,7 @@ int main()
     demo_qkey_init();
     demo_filter_init();
     demo_sort_init();
-
+    //  demo_ransac_init();
     for(;;) {
         if(close_all == 0) {
             qsh_task_exec();
