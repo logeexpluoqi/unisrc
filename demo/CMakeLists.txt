@@ -8,7 +8,7 @@ include_directories(../sort)
 include_directories(../solver)
 
 add_library(demo
-	demo_ransac.cc
+	# demo_ransac.cc
         demo_qsh.c
         demo_fsm.c
         demo_timeslice.c
@@ -18,7 +18,7 @@ add_library(demo
         demo_filter.c
         demo_sort.c
         demo_qmem.c
-	#demo_solver.c
+	demo_solver.c
 )
 target_link_libraries(demo
         qsh

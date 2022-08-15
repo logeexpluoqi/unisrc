@@ -1,8 +1,8 @@
 #pragma once
-#include "vector"
-#include "algorithm"
-#include "iostream"
-#include "cmath"
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <cmath>
 namespace ransac {
 class Ransac {
 public:

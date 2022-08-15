@@ -2,6 +2,7 @@
 namespace ransac {
 Ransac::Ransac(){
 }
+
 void Ransac::TestDemo(const std::vector<float>& plane) {
 	std::cout << "The ground truth of plane is:"
 		<< plane[0] << ' ' << plane[1] << ' ' << plane[2] << ' ' << plane[3] << std::endl;
@@ -13,6 +14,7 @@ void Ransac::TestDemo(const std::vector<float>& plane) {
 		<< ' ' << plane[0] * out[2] / out[0] 
 		<< ' ' << plane[0] *  out[3] / out[0] << std::endl;
 }
+
 std::vector<std::vector<float>> Ransac::SamplePoints(const std::vector<float>& plane, int n) {
 	std::vector<std::vector<float>> out;
 	for (int i = 0; i < n; i++) {
@@ -26,6 +28,7 @@ std::vector<std::vector<float>> Ransac::SamplePoints(const std::vector<float>& p
 	}
 	return out;
 }
+
 std::vector<float> Ransac::VecSubtraction(const std::vector<float>& vec1, const std::vector<float>& vec2) {
 	std::vector<float> out;
 	for (int i = 0; i < vec1.size(); i++) {
@@ -46,6 +49,7 @@ std::vector<float> Ransac::VecCross(const std::vector<float>& vec1, const std::v
 	}
 	return out;
 }
+
 float Ransac::VecDot(const std::vector<float>& vec1, const std::vector<float>& vec2) {
 	float out = 0.0;
 	for (int i = 0; i < vec1.size(); i++) {
@@ -64,10 +68,11 @@ int Ransac::CountPoint(const std::vector<std::vector<float>>& points,
 	for (int i = 0; i < n; i++) {
 		std::vector<float>f = VecSubtraction(points[i], point);
 		d = fabs(VecDot(f, N) / norm);
-		if (d <= sigma)num++;
-		return num;
+		if (d <= sigma) num++;
 	}
+	return num;
 }
+
 std::vector<int > Ransac::VecRandperm(int n){
 	std::vector<int>out(3, 0);
 	int tmp = 0;
@@ -87,6 +92,7 @@ std::vector<int > Ransac::VecRandperm(int n){
 	out[2] = int(float(out[2])*scale);
 	return out;
 }
+
 std::vector<float> Ransac::CalPlane(const std::vector<std::vector<float>>& points) {
 	float best_a = 0.0;
 	float best_b = 0.0;
@@ -128,4 +134,5 @@ std::vector<float> Ransac::CalPlane(const std::vector<std::vector<float>>& point
 	}
 	return std::vector<float>{best_a, best_b, best_c, best_d};
 }
+
 }
