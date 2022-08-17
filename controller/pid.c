@@ -7,7 +7,7 @@
 
 #include "pid.h"
 
-void pid_init(PidObj* pid, float kp, float ki, float kd)
+void pid_init(PidObj* pid, float kp, float ki, float kd, float olimit)
 {
     pid->delta_u_k  = 0.0f;
     pid->err_k2     = 0.0f;
@@ -18,6 +18,7 @@ void pid_init(PidObj* pid, float kp, float ki, float kd)
     pid->kp         = kp;
     pid->ki         = ki;
     pid->kd         = kd;
+    pid->olimit     = olimit;
 }
 
 void pid_param_set(PidObj *pid, float kp, float ki, float kd)
@@ -46,7 +47,19 @@ float pid_calcu(PidObj *pid, float err)
                      pid->kd * (pid->err_k - 2 * pid->err_k1 + pid->err_k2);
 
     pid->u_k = pid->u_k1 + pid->delta_u_k;
-    return pid->u_k;
+    if(pid->olimit == 0.0){
+        return pid->u_k;
+    }else{
+        if(pid->u_k > pid->olimit){
+            pid->u_k = pid->olimit;
+            return pid->u_k;
+        }else if(pid->u_k < -pid->olimit){
+            pid->u_k = -pid->olimit;
+            return pid->u_k;
+        }else{
+            return pid->u_k;
+        }
+    }
 }
 
 void pid_uk_clear(PidObj* pid)
@@ -73,5 +86,17 @@ float pid_ki_isolate_calcu(PidObj* pid, float err, float seplimit)
                      pid->kd * (pid->err_k - 2 * pid->err_k1 + pid->err_k2);
 
     pid->u_k = pid->u_k1 + pid->delta_u_k;
-    return pid->u_k;
+    if(pid->olimit == 0.0){
+        return pid->u_k;
+    }else{
+        if(pid->u_k > pid->olimit){
+            pid->u_k = pid->olimit;
+            return pid->u_k;
+        }else if(pid->u_k < -pid->olimit){
+            pid->u_k = -pid->olimit;
+            return pid->u_k;
+        }else{
+            return pid->u_k;
+        }
+    }
 }

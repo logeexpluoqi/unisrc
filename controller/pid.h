@@ -17,9 +17,10 @@ typedef struct pid_structure {
     float err_k, err_k1, err_k2;
     float u_k, u_k1;
     float delta_u_k;
+    float olimit;
 } PidObj;
 
-void pid_init(PidObj* pid, float kp, float ki, float kd);
+void pid_init(PidObj* pid, float kp, float ki, float kd, float olimit);
 
 void pid_param_set(PidObj* pid, float kp, float ki, float kd);
 
