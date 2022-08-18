@@ -30,7 +30,7 @@ static float dy(float t)
 static int demo_euler_solver()
 {
     float yt[TSPAN_SIZE] = {0};
-    ode_euler(yt, dy, 0.01, 0, 0.5, TSPAN_SIZE);
+    ode_euler(yt, dy, 0.01, 0, 0, TSPAN_SIZE);
     for(int i = 0; i < TSPAN_SIZE; i++){
         if(i % 10 == 0){
             printf("\r\n");
