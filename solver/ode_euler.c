@@ -7,11 +7,11 @@
 
 #include "ode_euler.h"
 
-int ode_euler(float *yt, float (*dy)(float t), float h, float y0, float *tspan, unsigned int len)
+int ode_euler(float *yt, float (*dy)(float t), float h, float y0, float t_start, unsigned int len)
 {
-    yt[0] = y0;
-    for(unsigned int i = 0; i < (len - 1); i++){
-        yt[i+1] = yt[i] + h * dy(tspan[i+1]);
+    yt[0] = dy(t_start);
+    for(unsigned int i = 0; i < (len - 1); i ++){
+        yt[i+1] = yt[i] + h * dy(i * h + t_start);
     }
     return 0;
 }

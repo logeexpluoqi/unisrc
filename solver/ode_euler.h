@@ -12,7 +12,7 @@
  extern "C" {
 #endif
 
-int ode_euler(float *yt, float (*dy)(float t), float h, float y0, float *tspan, unsigned int len);
+int ode_euler(float *yt, float (*dy)(float t), float h, float y0, float t_start, unsigned int len);
 
 #ifdef __cplusplus
  }
