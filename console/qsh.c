@@ -34,19 +34,19 @@ static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
 static unsigned int cmd_recv_size = 0;
 static unsigned int cmd_index = 0;
 
-static void qsh_clear_line(void);
-static inline void qsh_cmd_reset(void);
-static void qsh_save_history(char* save_cmd, int size);
-static void qsh_recall_prev_history(void);
-static void qsh_recall_next_history(void);
-static int qsh_recv_spec(char recv_byte);
-static void qsh_recv_buf(char recv_byte);
-static void qsh_recv_backspace(void);
-static void qsh_recv_enter(void);
-static void qsh_recv_up(void);
-static void qsh_recv_down(void);
-static void qsh_recv_right(void);
-static void qsh_recv_left(void);
+static void clear_line(void);
+static inline void cmd_reset(void);
+static void save_history(char* save_cmd, int size);
+static void recall_prev_history(void);
+static void recall_next_history(void);
+static int recv_spec(char recv_byte);
+static void recv_buf(char recv_byte);
+static void recv_backspace(void);
+static void recv_enter(void);
+static void recv_up(void);
+static void recv_down(void);
+static void recv_right(void);
+static void recv_left(void);
 void qsh_input_logo(void);
 
 static CmdObj cmd_reboot;
@@ -94,13 +94,13 @@ void qsh_input_logo()
     QSH_PRINTF(QSH_INPUT_LOGO);
 }
 
-void qsh_clear_line()
+void clear_line()
 {
     QSH_PRINTF("\r");
     QSH_PRINTF("\x1b[K");
 }
 
-void qsh_cmd_reset()
+void cmd_reset()
 {
     cmd_recv_size = 0;
     memset(cmd_buf, 0, sizeof(cmd_buf));
@@ -108,20 +108,21 @@ void qsh_cmd_reset()
 
 char* qsh_args()
 {
-    if(qsh_recv_state == QSH_RECV_FINISHED)
+    if(qsh_recv_state == QSH_RECV_FINISHED){
         return cmd_buf;
-    else 
+    }else {
         return NULL;
+    }
 }
 
-void qsh_save_history(char* save_cmd, int size)
+void save_history(char* save_cmd, int size)
 {
     memcpy(hs_buf[hs_index], save_cmd, size);
     hs_index = (hs_index + 1) % QSH_HISTORY_MAX;
     hs_num = (hs_num + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_num + 1);
 }
 
-void qsh_recv_enter()
+void recv_enter()
 {
     int i = 1, h_index;
     if(cmd_recv_size != 0) {
@@ -132,7 +133,7 @@ void qsh_recv_enter()
         if(strcmp(cmd_buf, "hs") != 0) {
             h_index = (hs_index + QSH_HISTORY_MAX - 1) % QSH_HISTORY_MAX;
             if(strcmp(cmd_buf, hs_buf[h_index]) != 0) {
-                qsh_save_history(cmd_buf, sizeof(cmd_buf));
+                save_history(cmd_buf, sizeof(cmd_buf));
             }
         }
         
@@ -163,7 +164,7 @@ void qsh_recv_enter()
     hs_recall_status = 0;
 }
 
-void qsh_recall_prev_history()
+void recall_prev_history()
 {
     hs_recall_status = 1;
     if(hs_recall_times  < hs_num) {
@@ -176,7 +177,7 @@ void qsh_recall_prev_history()
     cmd_recv_size = strlen(cmd_buf);
 }
 
-void qsh_recall_next_history()
+void recall_next_history()
 {
     hs_recall_status = -1;
     if(hs_recall_times > 0) {
@@ -186,17 +187,17 @@ void qsh_recall_next_history()
         hs_recall_times --;
     } else {
         hs_recall_times = 0;
-        qsh_cmd_reset();
+        cmd_reset();
     }
 }
 
-void qsh_recv_buf(char recv_byte)
+void recv_buf(char recv_byte)
 {
     cmd_buf[cmd_recv_size++] = recv_byte;
     QSH_PRINTF("%c", recv_byte);
 }
 
-void qsh_recv_backspace()
+void recv_backspace()
 {
     QSH_PRINTF("\b ");
     cmd_buf[--cmd_recv_size] = 0;
@@ -204,45 +205,45 @@ void qsh_recv_backspace()
     QSH_PRINTF("%s", cmd_buf);
 }
 
-void qsh_recv_up()
+void recv_up()
 {
     if(hs_num > 0) {
-        qsh_clear_line();
+        clear_line();
         qsh_input_logo();
-        qsh_recall_prev_history();
+        recall_prev_history();
         QSH_PRINTF("%s", cmd_buf);
     } else {
-        qsh_clear_line();
+        clear_line();
         qsh_input_logo();
     }
 }
 
-void qsh_recv_down()
+void recv_down()
 {
     if(hs_num > 0) {
-        qsh_clear_line();
+        clear_line();
         qsh_input_logo();
-        qsh_recall_next_history();
+        recall_next_history();
         QSH_PRINTF("%s", cmd_buf);
     } else {
-        qsh_clear_line();
+        clear_line();
         qsh_input_logo();
     }
 }
 
-void qsh_recv_right()
+void recv_right()
 {
     QSH_PRINTF("\033[1C");
     cursor_pos --;
 }
 
-void qsh_recv_left()
+void recv_left()
 {
     QSH_PRINTF("\033[1D");
     cursor_pos --;
 }
 
-int qsh_recv_spec(char recv_byte)
+int recv_spec(char recv_byte)
 {
     if(recv_byte == '\x1b' || recv_byte == '\x5b' 
         || recv_byte == '\x41'      // up-key 
@@ -276,28 +277,28 @@ int qsh_recv_spec(char recv_byte)
 
 void qsh_get_char(char recv_byte)
 {
-    int spec = qsh_recv_spec(recv_byte);
+    int spec = recv_spec(recv_byte);
     if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_recv_size  <  CMD_MAX_LEN) {
-        qsh_recv_buf(recv_byte);
+        recv_buf(recv_byte);
     } else if(recv_byte == '\b' && cmd_recv_size > 0) {// backspace charactor
-        qsh_recv_backspace();
+        recv_backspace();
     } else if(recv_byte == '\r') { // enter key value
-        qsh_recv_enter();
+        recv_enter();
     } else if(spec == 1) {
-        qsh_recv_up();
+        recv_up();
     } else if(spec == 2) {
-        qsh_recv_down();
+        recv_down();
     } else if(spec == 3) {
-        qsh_recv_right();
+        recv_right();
     } else if(spec == 4) {
-        qsh_recv_left();
+        recv_left();
     } else if(cmd_recv_size > CMD_MAX_LEN) {
         QSH_PRINTF("\r\n>> #! Command buffer overflow !\r\n");
         qsh_input_logo();
-        qsh_cmd_reset();
+        cmd_reset();
     } else {
         qsh_input_logo();
-        qsh_cmd_reset();
+        cmd_reset();
     }
 }
 
@@ -329,6 +330,7 @@ void qsh_task_exec()
             case CMD_EXEC_ERR:
                 QSH_PRINTF(" #! command execute error !\r\n");
                 break;
+                
             case CMD_PARAM_ERR:
                 QSH_PRINTF(" #! command parameter error !\r\n");
                 break;
@@ -339,7 +341,7 @@ void qsh_task_exec()
         cmd_recv_size = 0;
         QSH_PRINTF(QSH_INPUT_LOGO);
         memset(cmd_buf, 0, sizeof(cmd_buf));
-        qsh_cmd_reset();
+        cmd_reset();
         qsh_recv_state = QSH_RECV_NOCMD;
     }
 }
