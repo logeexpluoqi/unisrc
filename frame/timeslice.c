@@ -68,7 +68,7 @@ void timeslice_task_init(TimesilceTaskObj* task,
 
 int timeslice_task_add(TimesilceTaskObj* task)
 {
-    if(timeslice_del_task_isexist(task) == 1) {
+    if(timeslice_dtask_isexist(task) == 1) {
         task->is_run = TASK_STOP;
         task->timer = task->timeslice_len;
         list_remove(&task->timeslice_task_node);
@@ -89,7 +89,7 @@ int timeslice_task_del(TimesilceTaskObj* task)
         list_remove(&task->timeslice_task_node);
     }
 
-    if(timeslice_del_task_isexist(task) == 0){
+    if(timeslice_dtask_isexist(task) == 0){
         list_insert_before(&timeslice_task_del_list, &task->timeslice_task_node);
         return 0;
     } else {
@@ -114,7 +114,7 @@ int timeslice_task_isexist(TimesilceTaskObj* task)
     return 0;
 }
 
-int timeslice_del_task_isexist(TimesilceTaskObj* task)
+int timeslice_dtask_isexist(TimesilceTaskObj* task)
 {
     ListObj* node;
     TimesilceTaskObj *_task;
@@ -151,12 +151,12 @@ TimesilceTaskObj* timeslice_obj_get(unsigned int task_id)
     return list_entry(node, TimesilceTaskObj, timeslice_task_node);
 }
 
-unsigned int timeslice_del_task_num_get()
+unsigned int timeslice_dtask_num_get()
 {
     return list_len(&timeslice_task_del_list);
 }
 
-TimesilceTaskObj* timeslice_del_obj_get(unsigned int task_id)
+TimesilceTaskObj* timeslice_dobj_get(unsigned int task_id)
 {
     ListObj* node = &timeslice_task_del_list;
 

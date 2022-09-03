@@ -54,13 +54,13 @@ unsigned int timeslice_task_num_get(void);
 
 int timeslice_task_isexist(TimesilceTaskObj* task);
 
-int timeslice_del_task_isexist(TimesilceTaskObj* task);
+int timeslice_dtask_isexist(TimesilceTaskObj* task);
 
 TimesilceTaskObj* timeslice_obj_get(unsigned int task_id);
 
-unsigned int timeslice_del_task_num_get(void);
+unsigned int timeslice_dtask_num_get(void);
 
-TimesilceTaskObj* timeslice_del_obj_get(unsigned int task_id);
+TimesilceTaskObj* timeslice_dobj_get(unsigned int task_id);
 
 #ifdef __cplusplus
  }

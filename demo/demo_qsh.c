@@ -68,12 +68,12 @@ int cmd_ls_hdl(int argc, char *argv[])
         } else if(QSH_ISARG(argv[1], "dtask")) {
             TimesilceTaskObj *task;
             unsigned int i;
-            unsigned int num = timeslice_del_task_num_get();
+            unsigned int num = timeslice_dtask_num_get();
             QSH(" TASK NUM %u\r\n", num);
             QSH(" [Task name]      [Task ID]   [Run time]      [Timeslice]      [Usage]\r\n");
             QSH(" -----------      ---------   ----------      -----------      -------\r\n");
             for(i = num; i > 0; i--) {
-                task = timeslice_del_obj_get(i);
+                task = timeslice_dobj_get(i);
                 QSH("  %-15s  %-3u         %-6lld          %-6u           %s\r\n",
                        task->name, task->id, task->run_time, task->timeslice_len, task->usage);
             }
