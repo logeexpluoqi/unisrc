@@ -95,6 +95,7 @@ int mthread_start(MThread *mthread)
         list_remove(&mthread->mnode);
     }
     if(mthread_isexist(mthread) == 0){
+        list_insert_after(&mthread_list, &mthread->mnode);
         if(pthread_attr_init(&attr) != 0){
             printf(" #! thread %s, id %d attr init error !\r\n", mthread->name, mthread->mid);
         }
@@ -112,7 +113,6 @@ int mthread_start(MThread *mthread)
         }
         ret = pthread_create(&mthread->thread, &attr, mthread->func, NULL);
         pthread_detach(mthread->thread);
-        list_insert_after(&mthread_list, &mthread->mnode);
     }
     return ret;
 }
@@ -147,9 +147,10 @@ int mthread_isexist(MThread *mthread)
         if(mthread->mid == _mthread->mid){
             return 1;
         }else{
-            return 0;
+            continue;
         }
     }
+    return 0;
 }
 
 int mthread_del_isexist(MThread *mthread)
@@ -160,9 +161,10 @@ int mthread_del_isexist(MThread *mthread)
         if(mthread->mid == _mthread->mid){
             return 1;
         }else{
-            return 0;
+            continue;
         }
     }
+    return 0;
 }
 
 int cmd_mls_hdl(int argc, char **argv)
@@ -176,7 +178,7 @@ int cmd_mls_hdl(int argc, char **argv)
         list_for_each_safe(node, _node, &mthread_list){
             MThread *_mthread = list_entry(node, MThread, mnode);
             if(_mthread != NULL){
-                printf(" %15s    %-5u    %-9u      %010.3f       %011.3f       %-3u           %-s\r\n",
+                printf(" %-15s    %-5u    %-9u      %010.3f       %011.3f       %-3u           %-s\r\n",
                 _mthread->name, _mthread->mid, _mthread->period_us, (float)(_mthread->runtime) / 1000,
                 (float)(_mthread->calltime)  / 1000, _mthread->priority, _mthread->usage);
             }else{
@@ -194,7 +196,7 @@ int cmd_mls_hdl(int argc, char **argv)
             list_for_each_safe(node, _node, &mthread_del_list){
                 MThread *_mthread = list_entry(node, MThread, mnode);
                 if(_mthread != NULL){
-                    printf(" %15s    %-5u    %-9u      %010.3f       %011.3f       %-3u           %-s\r\n",
+                    printf(" %-15s    %-5u    %-9u      %010.3f       %011.3f       %-3u           %-s\r\n",
                     _mthread->name, _mthread->mid, _mthread->period_us, (float)(_mthread->runtime) / 1000,
                     (float)(_mthread->calltime)  / 1000, _mthread->priority, _mthread->usage);
                 }else{
