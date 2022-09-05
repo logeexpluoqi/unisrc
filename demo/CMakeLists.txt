@@ -21,6 +21,7 @@ add_library(demo
         demo_qmem.c
 	demo_solver.c
         demo_mthread.c
+        demo_udp_server.c
 )
 target_link_libraries(demo
         qsh

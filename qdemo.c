@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:09:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-09-03 23:41:26
+ * @Last Modified time: 2022-09-05 11:29:56
  */
 
 #include <stdio.h>
@@ -22,6 +22,7 @@
 #include "demo/demo_sort.h"
 #include "demo/demo_solver.h"
 #include "demo/demo_mthread.h"
+#include "demo/demo_udp_server.h"
 
 static pthread_t tid_qsh_isr;
 static void* thread_qsh_input_isr(void*);
@@ -48,6 +49,7 @@ int main()
     demo_sort_init();
     demo_solver_init();
     demo_mthread_init();
+    demo_udp_server_init();
 
     for(;;) {
         if(close_all == 0) {
