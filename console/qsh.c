@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 19:23:02
+ * @Last Modified time: 2022-09-05 11:21:46
  */
 
 #include <stdlib.h>
@@ -355,6 +355,7 @@ int qsh_export(const char *name, int (*handle)(int, char**), const char *usage)
 {
     CmdObj *qcmd = (CmdObj*)malloc(sizeof(CmdObj));
     cmd_init((CmdObj*)qcmd, name, 0xff, handle, usage);
+    cmd_add(qcmd);
 }
 
 void qsh_cmd_add(QshCmd* qcmd)
