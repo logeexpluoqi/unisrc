@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-09-02 15:37:05 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-09-02 15:41:26
+ * @Last Modified time: 2022-09-03 23:55:56
  */
 
 #include <stdlib.h>
@@ -38,7 +38,7 @@ int mthread_period_set(MThread *mthread, uint32_t per)
     return 0;
 }
 
-int mthread_periority_set(MThread *mthread, uint32_t per)
+int mthread_periority_set(MThread *mthread, uint32_t pri)
 {
     mthread->priority = pri;
     return 0;
@@ -136,7 +136,7 @@ int mthread_detach(MThread *mthread)
 
 int mthread_jion(MThread *mthread)
 {
-    return pthread_join(mthread->thread);
+    return pthread_join(mthread->thread, NULL);
 }
 
 int mthread_isexist(MThread *mthread)

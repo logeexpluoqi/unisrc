@@ -2,10 +2,10 @@
  * @Author: luoqi 
  * @Date: 2022-09-02 15:20:22 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-09-02 15:29:38
+ * @Last Modified time: 2022-09-03 23:51:21
  */
 
-#ifndef _MTHERAD_H
+#ifndef _MTHREAD_H
 #define _MTHREAD_H
 
 #ifdef __cplusplus
@@ -55,4 +55,6 @@ int mthread_jion(MThread *mthread);
 
 #ifdef __cplusplus
  }
+#endif
+
 #endif

@@ -6,6 +6,7 @@ include_directories(../filter)
 include_directories(../utils)
 include_directories(../sort)
 include_directories(../solver)
+include_directories(../linuxbase)
 
 add_library(demo
 	# demo_ransac.cc
@@ -19,6 +20,7 @@ add_library(demo
         demo_sort.c
         demo_qmem.c
 	demo_solver.c
+        demo_mthread.c
 )
 target_link_libraries(demo
         qsh
@@ -27,5 +29,6 @@ target_link_libraries(demo
         filter
         sort
         ode
+        linuxbase 
         -lm
 )

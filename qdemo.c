@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:09:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-08-15 23:02:04
+ * @Last Modified time: 2022-09-03 23:41:26
  */
 
 #include <stdio.h>
@@ -21,6 +21,7 @@
 #include "demo/demo_filter.h"
 #include "demo/demo_sort.h"
 #include "demo/demo_solver.h"
+#include "demo/demo_mthread.h"
 
 static pthread_t tid_qsh_isr;
 static void* thread_qsh_input_isr(void*);
@@ -46,6 +47,7 @@ int main()
     demo_filter_init();
     demo_sort_init();
     demo_solver_init();
+    demo_mthread_init();
 
     for(;;) {
         if(close_all == 0) {
