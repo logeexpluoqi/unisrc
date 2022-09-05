@@ -111,7 +111,11 @@ int mthread_start(MThread *mthread)
         if(pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED) != 0){
             printf(" #! thread %s, id %d attr setinheritsched error !\r\n", mthread->name, mthread->mid);
         }
-        ret = pthread_create(&mthread->thread, &attr, mthread->func, NULL);
+        if(LINUX_USING_RTKEERNEL){
+            ret = pthread_create(&mthread->thread, &attr, mthread->func, NULL);
+        }else{
+            ret = pthread_create(&mthread->thread, NULL, mthread->func, NULL);
+        }
         pthread_detach(mthread->thread);
     }
     return ret;
