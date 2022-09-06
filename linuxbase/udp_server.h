@@ -14,8 +14,8 @@ int udp_server_creat(char *ip, int port);
 
 int udp_server_delete(int fd);
 
-int udp_send(int fd, void *msg, int msg_size, struct sockaddr *dst, socklen_t dst_len);
+int udp_server_send(int fd, void *msg, int msg_size, struct sockaddr *dst, socklen_t dst_len);
 
-int udp_recv(int fd, void *buf, int buf_size, struct sockaddr *src, socklen_t *src_len, int wait_usec);
+int udp_server_recv(int fd, void *buf, int buf_size, struct sockaddr *src, socklen_t *src_len, int wait_usec);
 
 #endif

@@ -38,12 +38,12 @@ int udp_server_delete(int fd)
     return close(fd);
 }
 
-int udp_send(int fd, void *msg, int msg_size, struct sockaddr *dst, socklen_t dst_len)
+int udp_server_send(int fd, void *msg, int msg_size, struct sockaddr *dst, socklen_t dst_len)
 {
     return sendto(fd, msg, msg_size, 0, dst, dst_len);
 }
 
-int udp_recv(int fd, void *buf, int buf_size, struct sockaddr *src, socklen_t *src_len, int wait_usec)
+int udp_server_recv(int fd, void *buf, int buf_size, struct sockaddr *src, socklen_t* src_len, int wait_usec)
 {
     struct timeval timeout;
     fd_set readfds;
