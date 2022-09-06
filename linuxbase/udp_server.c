@@ -13,12 +13,13 @@
 #include "udp_server.h"
 
 
-int udp_server_creat(char *ip, int port)
+int udp_server_creat(int port)
 {
     struct sockaddr_in addr;
+    bzero(&addr, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_port = port;
-    addr.sin_addr.s_addr = inet_addr(ip);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
     int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if(fd < 0){
         perror(" udp server socket creat");

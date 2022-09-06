@@ -10,7 +10,7 @@
 
 #include "sys/socket.h"
 
-int udp_server_creat(char *ip, int port);
+int udp_server_creat(int port);
 
 int udp_server_delete(int fd);
 
