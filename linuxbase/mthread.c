@@ -61,9 +61,9 @@ int mthread_task_end(MThread *mthread)
     struct timespec tv;
     int ret = clock_gettime(CLOCK_MONOTONIC, &tv);
     if(tv.tv_sec == mthread->time_k1.tv_sec){
-        mthread->calltime = tv.tv_nsec - mthread->time_k1.tv_nsec;
+        mthread->runtime = tv.tv_nsec - mthread->time_k1.tv_nsec;
     }else{
-        mthread->calltime = (uint64_t)(tv.tv_sec - mthread->time_k1.tv_sec) * 1000000000 + tv.tv_nsec - mthread->time_k1.tv_nsec;
+        mthread->runtime = (uint64_t)(tv.tv_sec - mthread->time_k1.tv_sec) * 1000000000 + tv.tv_nsec - mthread->time_k1.tv_nsec;
     }
     usleep(mthread->period_us);
     mthread->time_k1 = mthread->time;
