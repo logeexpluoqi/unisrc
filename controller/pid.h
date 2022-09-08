@@ -20,17 +20,17 @@ typedef struct pid_structure {
     float olimit;
 } PidObj;
 
-void pid_init(PidObj* pid, float kp, float ki, float kd, float olimit);
+int pid_init(PidObj* pid, float kp, float ki, float kd, float olimit);
 
-void pid_param_set(PidObj* pid, float kp, float ki, float kd);
+int pid_param_set(PidObj* pid, float kp, float ki, float kd);
 
-void pid_param_get(PidObj* pid, float* kp, float* ki, float* kd);
+int pid_param_get(PidObj* pid, float* kp, float* ki, float* kd);
 
 float pid_calcu(PidObj* pid, float err);
 
 float pid_ki_isolate_calcu(PidObj* pid, float err, float seplimit);
 
-void pid_uk_clear(PidObj* pid);
+int pid_uk_clear(PidObj* pid);
 
 #ifdef __cplusplus
  }
