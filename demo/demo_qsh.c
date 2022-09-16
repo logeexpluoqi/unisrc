@@ -25,7 +25,7 @@ int demo_qsh_init()
     qsh_cmd_init(&qcmd2, "qcmd2", q2_handle, "qsh test 2");
     qsh_cmd_add(&qcmd2);
 
-    qsh_cmd_init(&cmd_ls, "ls", cmd_ls_hdl, "@ task, dtask");
+    qsh_cmd_init(&cmd_ls, "ls", cmd_ls_hdl, "@ -d");
     qsh_cmd_add(&cmd_ls);
     return 0;
 }
@@ -51,10 +51,7 @@ int q2_handle(int argc, char* argv[])
 int cmd_ls_hdl(int argc, char *argv[])
 {
     if(argc <= 1) {
-        return CMD_PARAM_LESS;;
-    } else {
-        if(QSH_ISARG(argv[1], "task")) {
-            TimesilceTaskObj *task;
+        TimesilceTaskObj *task;
             unsigned int i;
             unsigned int num = timeslice_task_num_get();
             QSH(" TASK NUM %u\r\n", num);
@@ -65,7 +62,9 @@ int cmd_ls_hdl(int argc, char *argv[])
                 QSH("  %-15s  %-3u         %-6lld          %-6u           %s\r\n",
                        task->name, task->id, task->run_time, task->timeslice_len, task->usage);
             }
-        } else if(QSH_ISARG(argv[1], "dtask")) {
+            return 0;
+    } else {
+        if(QSH_ISARG(argv[1], "-d")) {
             TimesilceTaskObj *task;
             unsigned int i;
             unsigned int num = timeslice_dtask_num_get();
