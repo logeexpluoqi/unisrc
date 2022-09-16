@@ -140,7 +140,7 @@ int mthread_detach(MThread *mthread)
     return pthread_detach(mthread->thread);
 }
 
-int mthread_jion(MThread *mthread)
+int mthread_join(MThread *mthread)
 {
     return pthread_join(mthread->thread, NULL);
 }

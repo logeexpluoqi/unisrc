@@ -52,7 +52,7 @@ int mthread_stop(MThread *mthread);
 
 int mthread_detach(MThread *mthread);
 
-int mthread_jion(MThread *mthread);
+int mthread_join(MThread *mthread);
 
 #ifdef __cplusplus
  }
