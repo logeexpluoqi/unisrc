@@ -94,6 +94,7 @@ int mthread_start(MThread *mthread)
     if(mthread_del_isexist(mthread)){
         list_remove(&mthread->mnode);
     }
+#ifndef LINUX_USING_RTKERNEL
     if(mthread_isexist(mthread) == 0){
         list_insert_after(&mthread_list, &mthread->mnode);
         if(pthread_attr_init(&attr) != 0){
@@ -111,13 +112,14 @@ int mthread_start(MThread *mthread)
         if(pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED) != 0){
             printf(" #! thread %s, id %d attr setinheritsched error !\r\n", mthread->name, mthread->mid);
         }
-        if(LINUX_USING_RTKEERNEL){
-            ret = pthread_create(&mthread->thread, &attr, mthread->func, NULL);
-        }else{
-            ret = pthread_create(&mthread->thread, NULL, mthread->func, NULL);
-        }
+        ret = pthread_create(&mthread->thread, &attr, mthread->func, NULL);
         pthread_detach(mthread->thread);
     }
+#else
+    list_insert_after(&mthread_list, &mthread->mnode);
+    ret = pthread_create(&mthread->thread, NULL, mthread->func, NULL);
+    pthread_detach(mthread->thread);
+#endif
     return ret;
 }
 

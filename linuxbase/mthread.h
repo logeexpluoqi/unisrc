@@ -17,7 +17,7 @@
 #include <time.h>
 #include "../frame/qlist.h"
 
-#define LINUX_USING_RTKEERNEL 0
+#define LINUX_USING_RTKERNEL
 typedef struct mthread
 {
     const char          *name;
