@@ -71,7 +71,7 @@ void* thread_qsh_input_isr(void* param)
         ch = getchar();
         ch = (ch == 127) ? 8 : ch;
         if(ch != 3) {
-            qsh_get_char(ch);
+            qsh_recv(ch);
         } else {
             system("stty -raw echo");
             printf("\33[2K");

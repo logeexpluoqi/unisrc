@@ -12,53 +12,53 @@
 
 typedef enum
 {
-    QSH_RECV_SPEC,
-    QSH_RECV_UNFINISH,
-    QSH_RECV_NOCMD,
-    QSH_RECV_FINISHED
-} QshRecvState;
+    RECV_SPEC,
+    RECV_UNFINISH,
+    RECV_NOCMD,
+    RECV_FINISHED
+} RecvState;
 
-#define QSH_INPUT_LOGO      "luoqi>$ "
+#define QLOGO      "luoqi>$ "
 
-#define QSH_PRINTF(...)     printf(__VA_ARGS__);
+#define QPRINTF(...)     printf(__VA_ARGS__);
 
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
-static int hs_index = 0;
-static int hs_num = 0;
-static int hs_recall_pos = 0;
-static int hs_recall_times = 0;
-static int hs_recall_status = 0;
 static char *cursor_pos;
-static QshRecvState qsh_recv_state = QSH_RECV_NOCMD;
-static unsigned int cmd_recv_size = 0;
+static unsigned int hs_index = 0;
+static unsigned int hs_num = 0;
+static unsigned int hs_recall_pos = 0;
+static unsigned int hs_recall_times = 0;
+static unsigned int hs_recall_status = 0;
+static unsigned int recv_size = 0;
 static unsigned int cmd_index = 0;
+static RecvState recv_state = RECV_NOCMD;
 
-static void clear_line(void);
+static inline void clear_line(void);
 static inline void cmd_reset(void);
-static void save_history(char* save_cmd, int size);
-static void recall_prev_history(void);
-static void recall_next_history(void);
-static int recv_spec(char recv_byte);
-static void recv_buf(char recv_byte);
-static void recv_backspace(void);
-static void recv_enter(void);
-static void recv_up(void);
-static void recv_down(void);
-static void recv_right(void);
-static void recv_left(void);
-void qsh_input_logo(void);
+static inline void qlogo(void);
+static inline void save_history(char* cmd, int size);
+static inline void recall_prev_history(void);
+static inline void recall_next_history(void);
+static inline void recv_buf(char recv);
+static inline void recv_backspace(void);
+static inline void recv_enter(void);
+static inline void recv_up(void);
+static inline void recv_down(void);
+static inline void recv_right(void);
+static inline void recv_left(void);
+static inline int recv_spec(char recv);
 
 static CmdObj cmd_reboot;
 static CmdObj cmd_help;
 static CmdObj cmd_hs;
 static CmdObj cmd_clear;
 
-static int cmd_reboot_hdl(int argc, char* argv[]);
-static int cmd_help_hdl(int argc, char* argv[]);
-static int cmd_hs_hdl(int argc, char* argv[]);
-static int cmd_clear_hdl(int argc, char* argv[]);
-static int cmd_ls_hdl(int argc, char* argv[]);
+static int cmd_reboot_hdl(int argc, char **argv);
+static int cmd_help_hdl(int argc, char **argv);
+static int cmd_hs_hdl(int argc, char **argv);
+static int cmd_clear_hdl(int argc, char **argv);
+static int cmd_ls_hdl(int argc, char **argv);
 
 void qsh_init()
 {
@@ -69,8 +69,8 @@ void qsh_init()
     hs_recall_pos = 0;
     hs_recall_times = 0;
     hs_recall_status = 0;
-    qsh_recv_state = QSH_RECV_NOCMD;
-    cmd_recv_size = 0;
+    recv_state = RECV_NOCMD;
+    recv_size = 0;
     cmd_index = 0;
     cursor_pos = cmd_buf;
 
@@ -83,41 +83,41 @@ void qsh_init()
     cmd_add(&cmd_help);
     cmd_add(&cmd_reboot);
     cmd_add(&cmd_clear);
-    QSH_PRINTF("\033[H\033[J");
-    QSH_PRINTF("======== QSH by luoqi ========\r\n");
-    qsh_input_logo();
+    QPRINTF("\033[H\033[J");
+    QPRINTF("======== QSH by luoqi ========\r\n");
+    qlogo();
 }
 
-void qsh_input_logo()
+void qlogo()
 {
-    QSH_PRINTF("\r");
-    QSH_PRINTF(QSH_INPUT_LOGO);
+    QPRINTF("\r");
+    QPRINTF(QLOGO);
 }
 
 void clear_line()
 {
-    QSH_PRINTF("\r");
-    QSH_PRINTF("\x1b[K");
+    QPRINTF("\x1b[K");
+    QPRINTF("\r");
 }
 
 void cmd_reset()
 {
-    cmd_recv_size = 0;
+    recv_size = 0;
     memset(cmd_buf, 0, sizeof(cmd_buf));
 }
 
-char* qsh_args()
+char* args()
 {
-    if(qsh_recv_state == QSH_RECV_FINISHED){
+    if(recv_state == RECV_FINISHED){
         return cmd_buf;
     }else {
         return NULL;
     }
 }
 
-void save_history(char* save_cmd, int size)
+void save_history(char *cmd, int size)
 {
-    memcpy(hs_buf[hs_index], save_cmd, size);
+    memcpy(hs_buf[hs_index], cmd, size);
     hs_index = (hs_index + 1) % QSH_HISTORY_MAX;
     hs_num = (hs_num + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_num + 1);
 }
@@ -125,9 +125,9 @@ void save_history(char* save_cmd, int size)
 void recv_enter()
 {
     int i = 1, h_index;
-    if(cmd_recv_size != 0) {
-        for( ; cmd_buf[cmd_recv_size - i] == '\x20'; i++) {
-            cmd_buf[cmd_recv_size - i] = 0;
+    if(recv_size != 0) {
+        for( ; cmd_buf[recv_size - i] == '\x20'; i++) {
+            cmd_buf[recv_size - i] = 0;
         }
         
         if(strcmp(cmd_buf, "hs") != 0) {
@@ -153,13 +153,13 @@ void recv_enter()
 
         hs_recall_pos = hs_index;
         hs_recall_times = 0;
-        cmd_recv_size = 0;
+        recv_size = 0;
         cmd_index = 0;
-        QSH_PRINTF("\r\n");
-        qsh_recv_state = QSH_RECV_FINISHED;
+        QPRINTF("\r\n");
+        recv_state = RECV_FINISHED;
     } else {
-        QSH_PRINTF("\r\n");
-        qsh_input_logo();
+        QPRINTF("\r\n");
+        qlogo();
     }
     hs_recall_status = 0;
 }
@@ -174,7 +174,7 @@ void recall_prev_history()
         hs_recall_times = hs_num;
     }
     memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
-    cmd_recv_size = strlen(cmd_buf);
+    recv_size = strlen(cmd_buf);
 }
 
 void recall_next_history()
@@ -183,7 +183,7 @@ void recall_next_history()
     if(hs_recall_times > 0) {
         hs_recall_pos = (hs_recall_pos + 1) % QSH_HISTORY_MAX;
         memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
-        cmd_recv_size = strlen(cmd_buf);
+        recv_size = strlen(cmd_buf);
         hs_recall_times --;
     } else {
         hs_recall_times = 0;
@@ -191,30 +191,30 @@ void recall_next_history()
     }
 }
 
-void recv_buf(char recv_byte)
+void recv_buf(char recv)
 {
-    cmd_buf[cmd_recv_size++] = recv_byte;
-    QSH_PRINTF("%c", recv_byte);
+    cmd_buf[recv_size++] = recv;
+    QPRINTF("%c", recv);
 }
 
 void recv_backspace()
 {
-    QSH_PRINTF("\b ");
-    cmd_buf[--cmd_recv_size] = 0;
-    qsh_input_logo();
-    QSH_PRINTF("%s", cmd_buf);
+    QPRINTF("\b ");
+    cmd_buf[--recv_size] = 0;
+    qlogo();
+    QPRINTF("%s", cmd_buf);
 }
 
 void recv_up()
 {
     if(hs_num > 0) {
         clear_line();
-        qsh_input_logo();
+        qlogo();
         recall_prev_history();
-        QSH_PRINTF("%s", cmd_buf);
+        QPRINTF("%s", cmd_buf);
     } else {
         clear_line();
-        qsh_input_logo();
+        qlogo();
     }
 }
 
@@ -222,46 +222,46 @@ void recv_down()
 {
     if(hs_num > 0) {
         clear_line();
-        qsh_input_logo();
+        qlogo();
         recall_next_history();
-        QSH_PRINTF("%s", cmd_buf);
+        QPRINTF("%s", cmd_buf);
     } else {
         clear_line();
-        qsh_input_logo();
+        qlogo();
     }
 }
 
 void recv_right()
 {
-    QSH_PRINTF("\033[1C");
-    cursor_pos --;
+    QPRINTF("\033[1C");
+    cursor_pos ++;
 }
 
 void recv_left()
 {
-    QSH_PRINTF("\033[1D");
+    QPRINTF("\033[1D");
     cursor_pos --;
 }
 
-int recv_spec(char recv_byte)
+int recv_spec(char recv)
 {
-    if(recv_byte == '\x1b' || recv_byte == '\x5b' 
-        || recv_byte == '\x41'      // up-key 
-        || recv_byte == '\x42'      // down-key
-        || recv_byte == '\x43'      // right-key
-        || recv_byte == '\x44') {   // left-key
-        if(recv_byte == '\x5b' 
-           || recv_byte == '\x41' 
-           || recv_byte == '\x42'
-           || recv_byte == '\x43'
-           || recv_byte == '\x44') {
-            if(recv_byte == '\x41') {// up-key
+    if(recv == '\x1b' || recv == '\x5b' 
+        || recv == '\x41'      // up-key 
+        || recv == '\x42'      // down-key
+        || recv == '\x43'      // right-key
+        || recv == '\x44') {   // left-key
+        if(recv == '\x5b' 
+           || recv == '\x41' 
+           || recv == '\x42'
+           || recv == '\x43'
+           || recv == '\x44') {
+            if(recv == '\x41') {// up-key
                 return 1;
-            } else if(recv_byte == '\x42') {    // down-key
+            } else if(recv == '\x42') {    // down-key
                 return 2;
-            } else if(recv_byte == '\x43') {    // right -key
+            } else if(recv == '\x43') {    // right -key
                 return 3;
-            } else if(recv_byte == '\x44') {    // left-key
+            } else if(recv == '\x44') {    // left-key
                 return 4;
             } else {
                 memset(cmd_buf, 0, sizeof(cmd_buf));
@@ -275,14 +275,14 @@ int recv_spec(char recv_byte)
     }
 }
 
-void qsh_get_char(char recv_byte)
+void qsh_recv(char recv)
 {
-    int spec = recv_spec(recv_byte);
-    if(recv_byte != '\r' && recv_byte != '\b' && spec == 0 && cmd_recv_size  <  CMD_MAX_LEN) {
-        recv_buf(recv_byte);
-    } else if(recv_byte == '\b' && cmd_recv_size > 0) {// backspace charactor
+    int spec = recv_spec(recv);
+    if(recv != '\r' && recv != '\b' && spec == 0 && recv_size  <  CMD_MAX_LEN) {
+        recv_buf(recv);
+    } else if(recv == '\b' && recv_size > 0) {// backspace charactor
         recv_backspace();
-    } else if(recv_byte == '\r') { // enter key value
+    } else if(recv == '\r') { // enter key value
         recv_enter();
     } else if(spec == 1) {
         recv_up();
@@ -292,57 +292,57 @@ void qsh_get_char(char recv_byte)
         recv_right();
     } else if(spec == 4) {
         recv_left();
-    } else if(cmd_recv_size > CMD_MAX_LEN) {
-        QSH_PRINTF("\r\n>> #! Command buffer overflow !\r\n");
-        qsh_input_logo();
+    } else if(recv_size > CMD_MAX_LEN) {
+        QPRINTF("\r\n>> #! Command buffer overflow !\r\n");
+        qlogo();
         cmd_reset();
     } else {
-        qsh_input_logo();
+        qlogo();
         cmd_reset();
     }
 }
 
 void qsh_task_exec()
 {
-    if(qsh_recv_state == QSH_RECV_FINISHED) {
-        switch(cmd_exec(qsh_args())){
+    if(recv_state == RECV_FINISHED) {
+        switch(cmd_exec(args())){
             case CMD_NO_ERR: break;
             case CMD_LEN_OUT: 
-                QSH_PRINTF(" #! command length exceed !\r\n");
+                QPRINTF(" #! command length exceed !\r\n");
                 break;
             
             case CMD_NUM_OUT:
-                QSH_PRINTF(" #! command quantity exceed !\r\n");
+                QPRINTF(" #! command quantity exceed !\r\n");
                 break;
             
             case CMD_NO_CMD:
-                QSH_PRINTF(" #! command not found !\r\n");
+                QPRINTF(" #! command not found !\r\n");
                 break;
             
             case CMD_PARAM_EXCEED:
-                QSH_PRINTF(" #! parameter exceed !\r\n");
+                QPRINTF(" #! parameter exceed !\r\n");
                 break;
             
             case CMD_PARAM_LESS: 
-                QSH_PRINTF(" #! parameter short !\r\n");
+                QPRINTF(" #! parameter short !\r\n");
                 break;
             
             case CMD_EXEC_ERR:
-                QSH_PRINTF(" #! command execute error !\r\n");
+                QPRINTF(" #! command execute error !\r\n");
                 break;
                 
             case CMD_PARAM_ERR:
-                QSH_PRINTF(" #! command parameter error !\r\n");
+                QPRINTF(" #! command parameter error !\r\n");
                 break;
 
             default:
                 break;
         }
-        cmd_recv_size = 0;
-        QSH_PRINTF(QSH_INPUT_LOGO);
+        recv_size = 0;
+        QPRINTF(QLOGO);
         memset(cmd_buf, 0, sizeof(cmd_buf));
         cmd_reset();
-        qsh_recv_state = QSH_RECV_NOCMD;
+        recv_state = RECV_NOCMD;
     }
 }
 
@@ -378,7 +378,7 @@ int cmd_hs_hdl(int argc, char* argv[])
     }
     
     for(int i = 0; i < hs_num; i++) {
-        QSH_PRINTF(" %2d: %s\r\n", hs_num - i, hs_buf[(hs_pos + i) % QSH_HISTORY_MAX]);
+        QPRINTF(" %2d: %s\r\n", hs_num - i, hs_buf[(hs_pos + i) % QSH_HISTORY_MAX]);
     }
     return 0;
 }
@@ -392,7 +392,7 @@ int cmd_reboot_hdl(int argc, char* argv[])
 
 int cmd_clear_hdl(int argc, char* argv[])
 {
-    QSH_PRINTF("\033[H\033[J");
+    QPRINTF("\033[H\033[J");
 
     return 0;
 }
@@ -403,13 +403,13 @@ int cmd_help_hdl(int argc, char* argv[])
     unsigned int i;
 
     unsigned int num = cmd_num(); // except cmd_list head
-    QSH_PRINTF(" Commands: <%d>\r\n", num);
-    QSH_PRINTF(" [Commands]     [Usage]\r\n");
-    QSH_PRINTF(" ----------     -------\r\n");
+    QPRINTF(" Commands: <%d>\r\n", num);
+    QPRINTF(" [Commands]     [Usage]\r\n");
+    QPRINTF(" ----------     -------\r\n");
     for(i = num; i > 0; i--) {
         cmd = cmd_obj(i);
-        QSH_PRINTF("  -%-9s     %s\r\n", cmd->name, cmd->usage);
+        QPRINTF("  -%-9s     %s\r\n", cmd->name, cmd->usage);
     }
-    QSH_PRINTF("\r\n");
+    QPRINTF("\r\n");
     return 0;
 }

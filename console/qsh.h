@@ -29,7 +29,7 @@
 
 typedef CmdObj  QshCmd;
 
-void qsh_get_char(char recv_byte);
+void qsh_recv(char recv);
 
 #ifdef QSH_USING_LIBC
 int qsh_export(const char *name, int (*handle)(int, char**), const char *usage);
