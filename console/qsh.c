@@ -27,9 +27,9 @@ static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
 static char *cursor_pos;
 static unsigned int hs_index = 0;
 static unsigned int hs_num = 0;
-static unsigned int hs_recall_pos = 0;
-static unsigned int hs_recall_times = 0;
-static unsigned int hs_recall_status = 0;
+static unsigned int recall_pos = 0;
+static unsigned int recall_times = 0;
+static unsigned int recall_status = 0;
 static unsigned int recv_size = 0;
 static unsigned int cmd_index = 0;
 static RecvState recv_state = RECV_NOCMD;
@@ -47,7 +47,7 @@ static inline void recv_up(void);
 static inline void recv_down(void);
 static inline void recv_right(void);
 static inline void recv_left(void);
-static inline int recv_spec(char recv);
+static int recv_spec(char recv);
 
 static CmdObj cmd_reboot;
 static CmdObj cmd_help;
@@ -66,9 +66,9 @@ void qsh_init()
     memset(hs_buf, 0, sizeof(hs_buf));
     hs_index = 0;
     hs_num = 0;
-    hs_recall_pos = 0;
-    hs_recall_times = 0;
-    hs_recall_status = 0;
+    recall_pos = 0;
+    recall_times = 0;
+    recall_status = 0;
     recv_state = RECV_NOCMD;
     recv_size = 0;
     cmd_index = 0;
@@ -96,8 +96,8 @@ void qlogo()
 
 void clear_line()
 {
-    QPRINTF("\x1b[K");
     QPRINTF("\r");
+    QPRINTF("\x1b[K");
 }
 
 void cmd_reset()
@@ -137,22 +137,22 @@ void recv_enter()
             }
         }
         
-        if(hs_recall_status == -1) {
-            if(hs_recall_times != hs_num) {
-                hs_recall_times --;
+        if(recall_status == -1) {
+            if(recall_times != hs_num) {
+                recall_times --;
             } else {
-                hs_recall_times = hs_num;
+                recall_times = hs_num;
             }
-        } else if(hs_recall_status == 1) {
-            if(hs_recall_times != 0) {
-                hs_recall_times ++;
+        } else if(recall_status == 1) {
+            if(recall_times != 0) {
+                recall_times ++;
             } else {
-                hs_recall_times = 0;
+                recall_times = 0;
             }
         }
 
-        hs_recall_pos = hs_index;
-        hs_recall_times = 0;
+        recall_pos = hs_index;
+        recall_times = 0;
         recv_size = 0;
         cmd_index = 0;
         QPRINTF("\r\n");
@@ -161,32 +161,32 @@ void recv_enter()
         QPRINTF("\r\n");
         qlogo();
     }
-    hs_recall_status = 0;
+    recall_status = 0;
 }
 
 void recall_prev_history()
 {
-    hs_recall_status = 1;
-    if(hs_recall_times  < hs_num) {
-        hs_recall_pos  = (hs_recall_pos - 1 + QSH_HISTORY_MAX) % QSH_HISTORY_MAX;
-        hs_recall_times ++;
+    recall_status = 1;
+    if(recall_times  < hs_num) {
+        recall_pos  = (recall_pos - 1 + QSH_HISTORY_MAX) % QSH_HISTORY_MAX;
+        recall_times ++;
     } else {
-        hs_recall_times = hs_num;
+        recall_times = hs_num;
     }
-    memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
+    memcpy(cmd_buf, hs_buf[recall_pos], sizeof(hs_buf[recall_pos]));
     recv_size = strlen(cmd_buf);
 }
 
 void recall_next_history()
 {
-    hs_recall_status = -1;
-    if(hs_recall_times > 0) {
-        hs_recall_pos = (hs_recall_pos + 1) % QSH_HISTORY_MAX;
-        memcpy(cmd_buf, hs_buf[hs_recall_pos], sizeof(hs_buf[hs_recall_pos]));
+    recall_status = -1;
+    if(recall_times > 0) {
+        recall_pos = (recall_pos + 1) % QSH_HISTORY_MAX;
+        memcpy(cmd_buf, hs_buf[recall_pos], sizeof(hs_buf[recall_pos]));
         recv_size = strlen(cmd_buf);
-        hs_recall_times --;
+        recall_times --;
     } else {
-        hs_recall_times = 0;
+        recall_times = 0;
         cmd_reset();
     }
 }
