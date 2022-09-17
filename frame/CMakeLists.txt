@@ -5,5 +5,4 @@ add_library(frame
         timeslice.c
         qlist.c
         qmem.c
-        ctrl.c
 )
