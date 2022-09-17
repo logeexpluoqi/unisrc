@@ -100,13 +100,13 @@ int timeslice_task_del(TimesilceTaskObj* task)
 
 int timeslice_task_isexist(TimesilceTaskObj* task)
 {
-    ListObj* node;
+    ListObj *node, *_node;
     TimesilceTaskObj *_task;
 
-    list_for_each(node, &timeslice_task_list) {
+    list_for_each_safe(node, _node, &timeslice_task_list) {
         _task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
         if(task->id == _task->id) {
-            return -1;
+            return 1;
         } else {
             continue;
         }
@@ -116,13 +116,13 @@ int timeslice_task_isexist(TimesilceTaskObj* task)
 
 int timeslice_dtask_isexist(TimesilceTaskObj* task)
 {
-    ListObj* node;
+    ListObj *node, *_node;
     TimesilceTaskObj *_task;
 
-    list_for_each(node, &timeslice_task_del_list) {
+    list_for_each_safe(node, _node, &timeslice_task_del_list) {
         _task = list_entry(node, TimesilceTaskObj, timeslice_task_node);
         if(task->id == _task->id) {
-            return -1;
+            return 1;
         } else {
             continue;
         }
