@@ -11,7 +11,7 @@
 #include "demo_qmath.h"
 #include "../qmath/qmath.h"
 #include "../qmath/qcomplex.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 
 static QshCmd cmd_qmath;
 static int cmd_qmath_hdl(int, char**);

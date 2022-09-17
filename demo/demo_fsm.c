@@ -8,7 +8,7 @@
 #include <string.h>
 #include "demo_fsm.h"
 #include "../frame/fsm.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 
 static FsmObj fsm_1;
 static FsmStateObj state_1, state_2, state_3, state_4;

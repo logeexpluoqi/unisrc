@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include "demo_timeslice.h"
 #include "../frame/timeslice.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 
 static TimesilceTaskObj task1;
 static TimesilceTaskObj task2;

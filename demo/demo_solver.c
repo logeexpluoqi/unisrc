@@ -8,7 +8,7 @@
 #include <math.h>
 #include "demo_solver.h"
 #include "../solver/ode_euler.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 
 static CmdObj cmd_ode;
 static int cmd_ode_hdl(int argc, char **argv);

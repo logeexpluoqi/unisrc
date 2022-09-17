@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "demo_filter.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 #include "../filter/sliding_average_filter.h"
 #include "../filter/lpf_first_order.h"
 #include "../filter/kalman_filter.h"

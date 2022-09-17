@@ -53,6 +53,7 @@ static CmdObj cmd_reboot;
 static CmdObj cmd_help;
 static CmdObj cmd_hs;
 static CmdObj cmd_clear;
+static CmdObj cmd_help_alis;
 
 static int cmd_reboot_hdl(int argc, char **argv);
 static int cmd_help_hdl(int argc, char **argv);
@@ -76,13 +77,15 @@ void qsh_init()
 
     cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
+    cmd_init(&cmd_help_alis, "?", 0, cmd_help_hdl, "list all commands");
     cmd_init(&cmd_reboot, "reboot", 0, cmd_reboot_hdl, "reboot system");
     cmd_init(&cmd_clear, "clear", 0, cmd_clear_hdl, "clear window");
 
-    cmd_add(&cmd_hs);
+    cmd_add(&cmd_help_alis);
     cmd_add(&cmd_help);
-    cmd_add(&cmd_reboot);
+    cmd_add(&cmd_hs);
     cmd_add(&cmd_clear);
+    cmd_add(&cmd_reboot);
     QPRINTF("\033[H\033[J");
     QPRINTF("======== QSH by luoqi ========\r\n");
     qlogo();
@@ -106,7 +109,7 @@ void cmd_reset()
     memset(cmd_buf, 0, sizeof(cmd_buf));
 }
 
-char* args()
+char *args()
 {
     if(recv_state == RECV_FINISHED){
         return cmd_buf;
@@ -302,7 +305,7 @@ void qsh_recv(char recv)
     }
 }
 
-void qsh_task_exec()
+void qsh_exec()
 {
     if(recv_state == RECV_FINISHED) {
         switch(cmd_exec(args())){
@@ -339,9 +342,9 @@ void qsh_task_exec()
                 break;
         }
         recv_size = 0;
-        QPRINTF(QLOGO);
         memset(cmd_buf, 0, sizeof(cmd_buf));
         cmd_reset();
+        QPRINTF(QLOGO);
         recv_state = RECV_NOCMD;
     }
 }
@@ -399,16 +402,16 @@ int cmd_clear_hdl(int argc, char* argv[])
 
 int cmd_help_hdl(int argc, char* argv[])
 {
-    CmdObj* cmd;
+    CmdObj* _cmd;
     unsigned int i;
 
-    unsigned int num = cmd_num(); // except cmd_list head
+    unsigned int num = cmd_num();
     QPRINTF(" Commands: <%d>\r\n", num);
     QPRINTF(" [Commands]     [Usage]\r\n");
     QPRINTF(" ----------     -------\r\n");
     for(i = num; i > 0; i--) {
-        cmd = cmd_obj(i);
-        QPRINTF("  -%-9s     %s\r\n", cmd->name, cmd->usage);
+        _cmd = cmd_obj(i);
+        QPRINTF("  -%-9s     %s\r\n", _cmd->name, _cmd->usage);
     }
     QPRINTF("\r\n");
     return 0;

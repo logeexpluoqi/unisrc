@@ -10,7 +10,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include "mthread.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 
 static LIST_HEAD(mthread_list);
 static LIST_HEAD(mthread_del_list);

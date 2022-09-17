@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#include "console/qsh.h"
+#include "qshell/qsh.h"
 #include "frame/timeslice.h"
 #include "demo/demo_qsh.h"
 #include "demo/demo_fsm.h"
@@ -53,7 +53,7 @@ int main()
 
     for(;;) {
         if(close_all == 0) {
-            qsh_task_exec();
+            qsh_exec();
             timeslice_exec();
             usleep(10);
         } else {

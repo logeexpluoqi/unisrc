@@ -6,7 +6,7 @@
  */
 
 #include "demo_qmem.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 #include "../frame/qmem.h"
 
 int demo_qmem_init(void)

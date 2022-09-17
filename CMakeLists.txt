@@ -3,7 +3,7 @@ project(unisrc)
 set(CMAKE_C_STANDARD 11)
 
 add_subdirectory(demo)
-add_subdirectory(console)
+add_subdirectory(qshell)
 add_subdirectory(controller)
 add_subdirectory(frame)
 add_subdirectory(qmath)

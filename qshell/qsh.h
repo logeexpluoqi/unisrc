@@ -37,7 +37,7 @@ int qsh_export(const char *name, int (*handle)(int, char**), const char *usage);
 
 void qsh_init(void);
 
-void qsh_task_exec(void);
+void qsh_exec(void);
 
 void qsh_cmd_init(QshCmd *qcmd, const char *name, int (*handle)(int, char**), const char *usage);
 

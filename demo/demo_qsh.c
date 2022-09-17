@@ -7,7 +7,7 @@
 
 #include <string.h>
 #include "demo_qsh.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 #include "../frame/timeslice.h"
 
 static QshCmd   qcmd1;

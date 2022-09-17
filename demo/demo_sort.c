@@ -9,7 +9,7 @@
 #include "demo_sort.h"
 #include "../sort/quick_sort.h"
 #include "../sort/bubble_sort.h"
-#include "../console/qsh.h"
+#include "../qshell/qsh.h"
 
 #define DEMO_SORT_DATA_SIZE     50
 

@@ -1,5 +1,5 @@
 
-include_directories(../console)
+include_directories(../qshell)
 include_directories(../frame)
 include_directories(../qmath)
 include_directories(../filter)
