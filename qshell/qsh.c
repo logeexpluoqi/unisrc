@@ -22,9 +22,12 @@ typedef enum
 
 #define QPRINTF(...)     printf(__VA_ARGS__);
 
+#define QSH_BACKSPACE   '\b'
+#define QSH_ENTER       '\r'
+#define QSH_SPACE       '\20'
+
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
-static char *cursor_pos;
 static unsigned int hs_index = 0;
 static unsigned int hs_num = 0;
 static unsigned int recall_pos = 0;
@@ -49,13 +52,11 @@ static inline void recv_right(void);
 static inline void recv_left(void);
 static int recv_spec(char recv);
 
-static CmdObj cmd_reboot;
-static CmdObj cmd_help;
 static CmdObj cmd_hs;
 static CmdObj cmd_clear;
+static CmdObj cmd_help;
 static CmdObj cmd_help_alis;
 
-static int cmd_reboot_hdl(int argc, char **argv);
 static int cmd_help_hdl(int argc, char **argv);
 static int cmd_hs_hdl(int argc, char **argv);
 static int cmd_clear_hdl(int argc, char **argv);
@@ -73,19 +74,16 @@ void qsh_init()
     recv_state = RECV_NOCMD;
     recv_size = 0;
     cmd_index = 0;
-    cursor_pos = cmd_buf;
 
     cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
     cmd_init(&cmd_help_alis, "?", 0, cmd_help_hdl, "list all commands");
-    cmd_init(&cmd_reboot, "reboot", 0, cmd_reboot_hdl, "reboot system");
     cmd_init(&cmd_clear, "clear", 0, cmd_clear_hdl, "clear window");
 
     cmd_add(&cmd_help_alis);
     cmd_add(&cmd_help);
     cmd_add(&cmd_hs);
     cmd_add(&cmd_clear);
-    cmd_add(&cmd_reboot);
     QPRINTF("\033[H\033[J");
     QPRINTF("======== QSH by luoqi ========\r\n");
     qlogo();
@@ -129,11 +127,11 @@ void recv_enter()
 {
     int i = 1, h_index;
     if(recv_size != 0) {
-        for( ; cmd_buf[recv_size - i] == '\x20'; i++) {
+        for( ; cmd_buf[recv_size - i] == QSH_SPACE; i++) {
             cmd_buf[recv_size - i] = 0;
         }
         
-        if(strcmp(cmd_buf, "hs") != 0) {
+        if(strcmp(cmd_buf, "hs") != 0) { 
             h_index = (hs_index + QSH_HISTORY_MAX - 1) % QSH_HISTORY_MAX;
             if(strcmp(cmd_buf, hs_buf[h_index]) != 0) {
                 save_history(cmd_buf, sizeof(cmd_buf));
@@ -236,14 +234,12 @@ void recv_down()
 
 void recv_right()
 {
-    QPRINTF("\033[1C");
-    cursor_pos ++;
+
 }
 
 void recv_left()
 {
-    QPRINTF("\033[1D");
-    cursor_pos --;
+
 }
 
 int recv_spec(char recv)
@@ -280,12 +276,18 @@ int recv_spec(char recv)
 
 void qsh_recv(char recv)
 {
-    int spec = recv_spec(recv);
-    if(recv != '\r' && recv != '\b' && spec == 0 && recv_size  <  CMD_MAX_LEN) {
+    int spec = 0;
+    if(recv_size > CMD_MAX_LEN) {
+        qlogo();
+        cmd_reset();
+        QPRINTF("\r\n>> #! Command buffer overflow !\r\n");
+    }
+    spec = recv_spec(recv);
+    if((recv != QSH_ENTER) && (recv != QSH_BACKSPACE) && (spec == 0) && (recv_size  <  CMD_MAX_LEN)) {
         recv_buf(recv);
-    } else if(recv == '\b' && recv_size > 0) {// backspace charactor
+    } else if(recv == QSH_BACKSPACE && recv_size > 0) {// backspace charactor
         recv_backspace();
-    } else if(recv == '\r') { // enter key value
+    } else if(recv == QSH_ENTER) {
         recv_enter();
     } else if(spec == 1) {
         recv_up();
@@ -295,10 +297,6 @@ void qsh_recv(char recv)
         recv_right();
     } else if(spec == 4) {
         recv_left();
-    } else if(recv_size > CMD_MAX_LEN) {
-        QPRINTF("\r\n>> #! Command buffer overflow !\r\n");
-        qlogo();
-        cmd_reset();
     } else {
         qlogo();
         cmd_reset();
@@ -383,13 +381,6 @@ int cmd_hs_hdl(int argc, char* argv[])
     for(int i = 0; i < hs_num; i++) {
         QPRINTF(" %2d: %s\r\n", hs_num - i, hs_buf[(hs_pos + i) % QSH_HISTORY_MAX]);
     }
-    return 0;
-}
-
-int cmd_reboot_hdl(int argc, char* argv[])
-{
-    // device software reset fucntion
-
     return 0;
 }
 
