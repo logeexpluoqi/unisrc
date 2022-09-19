@@ -32,13 +32,13 @@ typedef struct _qkey_obj
     const unsigned char* name;
     int (*callback)(void);
     int (*getkey)(void);
-    int key_id;
-    QKeyState key_state;
+    int id;
+    QKeyState state;
     QKeyTrigDef trig;
-    unsigned int debounce_time;
-    unsigned int debounce_cnt;
-    unsigned char debounce_start;
-    ListObj qkey_internal_list;
+    unsigned int dtime;     // debounce time
+    unsigned int dcnt;      // debounce counter
+    unsigned char dstart;   // debounce start
+    ListObj qkey_node;
 } QKeyObj;
 
 void qkey_init(QKeyObj* key,
@@ -46,7 +46,7 @@ void qkey_init(QKeyObj* key,
                QKeyTrigDef trig,
                int (*getkey)(void),
                int (*callback)(void),
-               unsigned int debounce_time);
+               unsigned int dtime);
 
 void qkey_exec(void);
 
