@@ -277,11 +277,6 @@ int recv_spec(char recv)
 void qsh_recv(char recv)
 {
     int spec = 0;
-    if(recv_size > CMD_MAX_LEN) {
-        qlogo();
-        cmd_reset();
-        QPRINTF("\r\n>> #! Command buffer overflow !\r\n");
-    }
     spec = recv_spec(recv);
     if((recv != QSH_ENTER) && (recv != QSH_BACKSPACE) && (spec == 0) && (recv_size  <  CMD_MAX_LEN)) {
         recv_buf(recv);
@@ -298,8 +293,11 @@ void qsh_recv(char recv)
     } else if(spec == 4) {
         recv_left();
     } else {
+        if(recv_size > 0) {
+            cmd_reset();
+            QPRINTF("\r\n>> #! Command buffer overflow !\r\n");
+        }
         qlogo();
-        cmd_reset();
     }
 }
 
