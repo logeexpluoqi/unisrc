@@ -193,7 +193,7 @@ int cmd_mls_hdl(int argc, char **argv)
         }
         printf("\r\n");
     }else{
-        if(QSH_ISARG(argv[1], "-d")){
+        if(ISARG(argv[1], "-d")){
             ListObj *node, *_node;
             uint32_t len = list_len(&mthread_list);
             printf(" Threads <%u>\r\n", len);

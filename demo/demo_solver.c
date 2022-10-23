@@ -46,7 +46,7 @@ int cmd_ode_hdl(int argc, char **argv)
         return CMD_PARAM_LESS;
     }
 
-    if(QSH_ISARG(argv[1], "euler")){
+    if(ISARG(argv[1], "euler")){
         demo_euler_solver();
     }else{
         return CMD_PARAM_ERR;

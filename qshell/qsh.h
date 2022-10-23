@@ -15,7 +15,7 @@
 #define QSH_USING_LIBC    1
 
 #ifdef QSH_USING_LIBC
-#include <stdlib.h>
+ #include <stdlib.h>
 #endif
 #include <stdio.h>
 #include <string.h>
@@ -23,9 +23,9 @@
 
 #define QSH_HISTORY_MAX             10
 
-#define QSH(...)                    printf(__VA_ARGS__)
+#define QSH(...)                printf(__VA_ARGS__)
 
-#define QSH_ISARG(str1, str2)       (strcmp(str1, str2) == 0)
+#define ISARG(str1, str2)       (strcmp(str1, str2) == 0)
 
 typedef CmdObj  QshCmd;
 

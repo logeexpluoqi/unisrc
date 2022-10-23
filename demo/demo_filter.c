@@ -52,13 +52,13 @@ int cmd_filter_hdl(int argc, char *argv[])
         return CMD_PARAM_LESS;
     }
     
-    if(QSH_ISARG(argv[1], "nsig")) {
+    if(ISARG(argv[1], "nsig")) {
         nsig_show();
-    } else if(QSH_ISARG(argv[1], "sldave")) {
+    } else if(ISARG(argv[1], "sldave")) {
         demo_filter_sliding_average();
-    } else if(QSH_ISARG(argv[1], "lpf1st")) {
+    } else if(ISARG(argv[1], "lpf1st")) {
         demo_lpf_1st();
-    } else if(QSH_ISARG(argv[1], "kf1dim")) {
+    } else if(ISARG(argv[1], "kf1dim")) {
         demo_kf_1dim();
     } else {
         return CMD_PARAM_ERR;

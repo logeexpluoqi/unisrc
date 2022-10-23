@@ -62,26 +62,26 @@ int cmd_task_hdl(int argc, char* argv[])
         return CMD_PARAM_ERR;
     }
     
-    if(QSH_ISARG(argv[1], "run")){
-        if(QSH_ISARG(argv[2], "1")){
+    if(ISARG(argv[1], "run")){
+        if(ISARG(argv[2], "1")){
             timeslice_task_add(&task1);
-        }else if(QSH_ISARG(argv[2], "2")){
+        }else if(ISARG(argv[2], "2")){
             timeslice_task_add(&task2);
-        }else if(QSH_ISARG(argv[2], "all")){
+        }else if(ISARG(argv[2], "all")){
             timeslice_task_add(&task1);
             timeslice_task_add(&task2);
         }
-        else if(QSH_ISARG(argv[2], "3")){
+        else if(ISARG(argv[2], "3")){
             timeslice_task_add(&task3);
         }else{
             return CMD_PARAM_ERR;
         }
-    }else if(QSH_ISARG(argv[1], "stop")){
-        if(QSH_ISARG(argv[2], "1")){
+    }else if(ISARG(argv[1], "stop")){
+        if(ISARG(argv[2], "1")){
             timeslice_task_del(&task1);
-        }else if(QSH_ISARG(argv[2], "2")){
+        }else if(ISARG(argv[2], "2")){
             timeslice_task_del(&task2);
-        }else if(QSH_ISARG(argv[2], "all")){
+        }else if(ISARG(argv[2], "all")){
             timeslice_task_del(&task1);
             timeslice_task_del(&task2);
         }else{

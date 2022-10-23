@@ -48,21 +48,21 @@ int cmd_udps_hdl(int argc, char **argv)
     if(argc <= 1){
         return CMD_PARAM_LESS;
     }
-    if(QSH_ISARG(argv[1], "port")){
+    if(ISARG(argv[1], "port")){
         fd = udp_server_creat(atoi(argv[2]));
         if(fd < 0){
             QSH(" #! udp server creat faild !\r\n");
         }else{
             QSH(" udp server port: %d, fd: %d\r\n", atoi(argv[2]), fd);
         }
-    }else if(QSH_ISARG(argv[1], "send")){
+    }else if(ISARG(argv[1], "send")){
         if(fd > 0){
             int ret = udp_server_send(fd, argv[2], strlen(argv[2]), (struct sockaddr*)&addr, (socklen_t)addr_len);
             QSH(" send data return: %d\r\n", ret);
         }else{
             QSH(" #! udp server not created !\r\n");
         }
-    }else if(QSH_ISARG(argv[1], "recv")){
+    }else if(ISARG(argv[1], "recv")){
         char buf[10] = {0}; 
         int ret = udp_server_recv(fd, buf, 10, (struct sockaddr*)&addr, &addr_len, 5000);
         if(ret > 0){
@@ -70,7 +70,7 @@ int cmd_udps_hdl(int argc, char **argv)
         }else{
             QSH(" #! recv error !\r\n");
         }
-    }else if(QSH_ISARG(argv[1], "del")){
+    }else if(ISARG(argv[1], "del")){
         int ret = udp_server_delete(atoi(argv[2]));
         QSH(" closed udp server return: %d, issuccess: %d\r\n", atoi(argv[2]), ret);
     }else{

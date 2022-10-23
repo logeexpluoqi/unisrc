@@ -30,15 +30,15 @@ typedef enum cmd_err
 
 typedef struct cmd_object
 {
-    const char* name;
+    const char*     name;
     /* id auto increased from 1, 
     if return id is 0 means that there is no target command */
-    unsigned int id;
+    unsigned int    id;
     /* parameter number, max 255 */
-    unsigned char param_num;
-    int (*cmd_hdl)(int, char* []);
-    const char* usage;
-    ListObj cmd_list;
+    unsigned char   param_num;
+    int             (*cmd_hdl)(int, char* []);
+    const char*     usage;
+    ListObj         cmd_list;
 } CmdObj;
 
 CmdErr cmd_exec(char* cmd_msg);
@@ -55,11 +55,11 @@ int cmd_del(CmdObj* cmd);
 
 int cmd_isexist(CmdObj* cmd);
 
-unsigned int cmd_get_id(CmdObj* cmd);
+unsigned int cmd_id(CmdObj* cmd);
 
 unsigned int cmd_num(void);
 
-CmdObj* cmd_obj(unsigned int cmd_id);
+CmdObj* cmd_obj(unsigned int id);
 
 #ifdef __cplusplus
  }

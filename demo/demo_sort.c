@@ -38,9 +38,9 @@ int cmd_sort_hdl(int argc, char **argv)
         return CMD_PARAM_LESS;
     }
 
-    if(QSH_ISARG(argv[1], "quick")){
+    if(ISARG(argv[1], "quick")){
         demo_quick_sort();
-    } else if(QSH_ISARG(argv[1], "bub")){
+    } else if(ISARG(argv[1], "bub")){
         demo_bubbule_sort();
     }else {
         return CMD_PARAM_ERR;

@@ -64,7 +64,7 @@ int cmd_ls_hdl(int argc, char *argv[])
             }
             return 0;
     } else {
-        if(QSH_ISARG(argv[1], "-d")) {
+        if(ISARG(argv[1], "-d")) {
             TimesilceTaskObj *task;
             unsigned int i;
             unsigned int num = timeslice_dtask_num_get();
