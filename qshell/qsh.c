@@ -367,7 +367,7 @@ void qcmd_del(CmdObj* qcmd)
     cmd_del((CmdObj *)qcmd);
 }
 
-int cmd_hs_hdl(int argc, char* argv[])
+int cmd_hs_hdl(int argc, char **argv)
 {
     char hs_pos;
     if((hs_index - hs_num) >= 0) {
@@ -382,14 +382,14 @@ int cmd_hs_hdl(int argc, char* argv[])
     return 0;
 }
 
-int cmd_clear_hdl(int argc, char* argv[])
+int cmd_clear_hdl(int argc, char **argv)
 {
     QPRINTF("\033[H\033[J");
 
     return 0;
 }
 
-int cmd_help_hdl(int argc, char* argv[])
+int cmd_help_hdl(int argc, char **argv)
 {
     CmdObj* _cmd;
     unsigned int i;

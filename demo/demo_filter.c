@@ -24,7 +24,7 @@ LpfFirstOderObj lpf_1st;
 static void demo_lpf_1st(void);
 
 static CmdObj cmd_filter;
-static int cmd_filter_hdl(int argc, char *argv[]);
+static int cmd_filter_hdl(int argc, char **argv);
 
 static KF1DimObj kf_1dim;
 static void demo_kf_1dim(void);
@@ -46,7 +46,7 @@ void demo_filter_init()
     qcmd_add(&cmd_filter);
 }
 
-int cmd_filter_hdl(int argc, char *argv[])
+int cmd_filter_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
         return CMD_PARAM_LESS;

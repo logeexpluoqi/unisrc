@@ -56,7 +56,7 @@ void task3_hdl()
     QSH("\r>> task 3 executed\r\n");
 }
 
-int cmd_task_hdl(int argc, char* argv[])
+int cmd_task_hdl(int argc, char **argv)
 {
     if(argc <= 1){
         return CMD_PARAM_ERR;

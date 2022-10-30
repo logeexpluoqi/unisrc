@@ -30,7 +30,7 @@ int demo_qsh_init()
     return 0;
 }
 
-int q1_handle(int argc, char* argv[])
+int q1_handle(int argc, char **argv)
 {
     if(argc > 1) {
         return CMD_PARAM_ERR;
@@ -39,7 +39,7 @@ int q1_handle(int argc, char* argv[])
     return 0;
 }
 
-int q2_handle(int argc, char* argv[])
+int q2_handle(int argc, char **argv)
 {
     if(argc > 1) {
         return CMD_PARAM_ERR;
@@ -48,7 +48,7 @@ int q2_handle(int argc, char* argv[])
     return 0;
 }
 
-int cmd_ls_hdl(int argc, char *argv[])
+int cmd_ls_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
         QTaskObj *task;

@@ -21,7 +21,7 @@ void demo_qmath_init()
     qcmd_init(&cmd_qmath, "qmath", cmd_qmath_hdl, "@ test");
     qcmd_add(&cmd_qmath);
 }
-int cmd_qmath_hdl(int argc, char* argv[])
+int cmd_qmath_hdl(int argc, char **argv)
 {
     if(argc > 1) {
         return CMD_PARAM_EXCEED;

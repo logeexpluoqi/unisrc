@@ -28,7 +28,7 @@ FsmStateObj state_idle;
 static int state_idle_hdl(void);
 
 static CmdObj cmd_fsm;
-static int cmd_fsm_hdl(int argc, char *argv[]);
+static int cmd_fsm_hdl(int argc, char **argv);
 
 int demo_fsm_init()
 {
@@ -41,7 +41,7 @@ int demo_fsm_init()
     return 0;
 }
 
-int cmd_fsm_hdl(int argc, char *argv[])
+int cmd_fsm_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
         return CMD_PARAM_LESS;
