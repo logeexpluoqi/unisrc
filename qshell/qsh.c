@@ -18,7 +18,7 @@ typedef enum
     RECV_FINISHED
 } RecvState;
 
-#define QLOGO      "luoqi>$ "
+#define QLOGO      "/>$ "
 
 #define QPRINTF(...)     printf(__VA_ARGS__);
 
@@ -85,7 +85,7 @@ void qsh_init()
     cmd_add(&cmd_hs);
     cmd_add(&cmd_clear);
     QPRINTF("\033[H\033[J");
-    QPRINTF("======== QSH by luoqi ========\r\n");
+    QPRINTF("========== QSH BY LUOQI ==========\r\n");
     qlogo();
 }
 

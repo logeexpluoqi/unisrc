@@ -12,7 +12,6 @@ add_subdirectory(utils)
 add_subdirectory(filter)
 add_subdirectory(sort)
 add_subdirectory(cv)
-add_subdirectory(ransac)
 add_subdirectory(linuxbase)
 
 add_executable(qdemo 
