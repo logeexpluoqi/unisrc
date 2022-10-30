@@ -34,7 +34,7 @@ void *udpserver_hdl(void *args)
         mthread_task_begin(&udpserver);
         char buf[20] = {0};
         if(fd > 0){
-            int ret = udp_server_recv(fd, buf, 20, (struct sockaddr*)&addr, &addr_len, 10000);
+            int ret = udp_server_recv(fd, buf, 20, (struct sockaddr*)&addr, (socklen_t*)&addr_len, 10000);
             if(ret > 0){
                 QSH(" recv: %s\r\n", buf);
             }
@@ -64,7 +64,7 @@ int cmd_udps_hdl(int argc, char **argv)
         }
     }else if(ISARG(argv[1], "recv")){
         char buf[10] = {0}; 
-        int ret = udp_server_recv(fd, buf, 10, (struct sockaddr*)&addr, &addr_len, 5000);
+        int ret = udp_server_recv(fd, buf, 10, (struct sockaddr*)&addr, (socklen_t*)&addr_len, 5000);
         if(ret > 0){
             QSH(" recv: %s\r\n", buf);
         }else{

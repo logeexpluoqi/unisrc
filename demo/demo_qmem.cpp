@@ -11,5 +11,5 @@
 
 int demo_qmem_init(void)
 {
-    
+    return 0;
 }

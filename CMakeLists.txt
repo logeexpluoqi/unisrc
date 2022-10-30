@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.7)
 project(unisrc)
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CPP_STANDARD 11)
 
 add_subdirectory(demo)
 add_subdirectory(qshell)
@@ -16,7 +16,7 @@ add_subdirectory(ransac)
 add_subdirectory(linuxbase)
 
 add_executable(qdemo 
-        qdemo.c
+        qdemo.cpp
 )
 target_link_libraries(qdemo 
         demo

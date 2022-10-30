@@ -20,6 +20,7 @@ int demo_solver_init()
 {
     qsh_cmd_init(&cmd_ode, "ode", cmd_ode_hdl, "@ euler");
     qsh_cmd_add(&cmd_ode);
+    return 0;
 }
 
 static float dy(float t)
@@ -38,6 +39,7 @@ static int demo_euler_solver()
         printf(" %f", yt[i]);
     }
     printf("\r\n");
+    return 0;
 }
 
 int cmd_ode_hdl(int argc, char **argv)

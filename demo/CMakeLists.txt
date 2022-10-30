@@ -10,18 +10,19 @@ include_directories(../linuxbase)
 
 add_library(demo
 	# demo_ransac.cc
-        demo_qsh.c
-        demo_fsm.c
-        demo_timeslice.c
-        demo_msg.c
-        demo_qmath.c
-        demo_qkey.c
-        demo_filter.c
-        demo_sort.c
-        demo_qmem.c
-	demo_solver.c
-        demo_mthread.c
-        demo_udp_server.c
+        demo_qsh.cpp
+        demo_fsm.cpp
+        demo_timeslice.cpp
+        demo_msg.cpp
+        demo_qmath.cpp
+        demo_qkey.cpp
+        demo_filter.cpp
+        demo_sort.cpp
+        demo_qmem.cpp
+	demo_solver.cpp
+        demo_mthread.cpp
+        demo_udp_server.cpp
+        demo_ransac.cc
 )
 target_link_libraries(demo
         qsh
