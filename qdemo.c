@@ -11,10 +11,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include "qshell/qsh.h"
-#include "frame/timeslice.h"
+#include "frame/qtask.h"
 #include "demo/demo_qsh.h"
 #include "demo/demo_fsm.h"
-#include "demo/demo_timeslice.h"
+#include "demo/demo_qtask.h"
 #include "demo/demo_msg.h"
 #include "demo/demo_qmath.h"
 #include "demo/demo_qkey.h"
@@ -40,7 +40,7 @@ int main()
     qsh_init();
 
     demo_fsm_init();
-    demo_timeslice_init();
+    demo_qtask_init();
     demo_msg_init();
     demo_qsh_init();
     demo_qmath_init();
@@ -54,7 +54,7 @@ int main()
     for(;;) {
         if(close_all == 0) {
             qsh_exec();
-            timeslice_exec();
+            qtask_exec();
             usleep(10);
         } else {
             return 0;
@@ -88,7 +88,7 @@ void* thread_qsh_input_isr(void* param)
 void* thread_tasks(void* param)
 {
     for(;;) {
-        timeslice_tick();
+        qtask_tick();
         usleep(1e3);
     }
 }

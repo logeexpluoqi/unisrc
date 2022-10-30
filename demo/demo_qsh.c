@@ -8,7 +8,7 @@
 #include <string.h>
 #include "demo_qsh.h"
 #include "../qshell/qsh.h"
-#include "../frame/timeslice.h"
+#include "../frame/qtask.h"
 
 static QshCmd   qcmd1;
 static int q1_handle(int, char **);
@@ -51,30 +51,30 @@ int q2_handle(int argc, char* argv[])
 int cmd_ls_hdl(int argc, char *argv[])
 {
     if(argc <= 1) {
-        TimesilceTaskObj *task;
+        QTaskObj *task;
             unsigned int i;
-            unsigned int num = timeslice_task_num_get();
+            unsigned int num = qtask_num_get();
             QSH(" TASK NUM %u\r\n", num);
             QSH(" [Task name]      [Task ID]   [Run time]      [Timeslice]      [Usage]\r\n");
             QSH(" -----------      ---------   ----------      -----------      -------\r\n");
             for(i = num; i > 0; i--) {
-                task = timeslice_obj_get(i);
+                task = qtask_get(i);
                 QSH("  %-15s  %-3u         %-6lld          %-6u           %s\r\n",
-                       task->name, task->id, task->run_time, task->timeslice_len, task->usage);
+                       task->name, task->id, task->run_time, task->timeslice, task->usage);
             }
             return 0;
     } else {
         if(ISARG(argv[1], "-d")) {
-            TimesilceTaskObj *task;
+            QTaskObj *task;
             unsigned int i;
-            unsigned int num = timeslice_dtask_num_get();
+            unsigned int num = qdtask_num_get();
             QSH(" TASK NUM %u\r\n", num);
             QSH(" [Task name]      [Task ID]   [Run time]      [Timeslice]      [Usage]\r\n");
             QSH(" -----------      ---------   ----------      -----------      -------\r\n");
             for(i = num; i > 0; i--) {
-                task = timeslice_dobj_get(i);
+                task = qdtask_get(i);
                 QSH("  %-15s  %-3u         %-6lld          %-6u           %s\r\n",
-                       task->name, task->id, task->run_time, task->timeslice_len, task->usage);
+                       task->name, task->id, task->run_time, task->timeslice, task->usage);
             }
         }
         else {

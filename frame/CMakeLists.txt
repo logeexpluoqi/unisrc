@@ -2,7 +2,7 @@ add_library(frame
         cmd.c
         fsm.c
         msg.c
-        timeslice.c
+        qtask.c
         qlist.c
         qmem.c
 )

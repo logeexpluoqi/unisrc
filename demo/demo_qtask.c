@@ -8,13 +8,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "demo_timeslice.h"
-#include "../frame/timeslice.h"
+#include "demo_qtask.h"
+#include "../frame/qtask.h"
 #include "../qshell/qsh.h"
 
-static TimesilceTaskObj task1;
-static TimesilceTaskObj task2;
-static TimesilceTaskObj task3;
+static QTaskObj task1;
+static QTaskObj task2;
+static QTaskObj task3;
 
 void task1_hdl(void);
 void task2_hdl(void);
@@ -23,16 +23,16 @@ void task3_hdl(void);
 static QshCmd cmd_task;
 static int cmd_task_hdl(int , char**);
 
-int demo_timeslice_init()
+int demo_qtask_init()
 {
-    timeslice_task_init(&task1, "task1", task1_hdl, 1000, "timeslice task 1");
-    timeslice_task_del(&task1);
+    qtask_init(&task1, "task1", task1_hdl, 1000, "timeslice task 1");
+    qtask_del(&task1);
 
-    timeslice_task_init(&task2, "task2", task2_hdl, 5000, "timeslice task 1");
-    timeslice_task_del(&task2);
+    qtask_init(&task2, "task2", task2_hdl, 5000, "timeslice task 1");
+    qtask_del(&task2);
 
-    timeslice_task_init(&task3, "task3", task3_hdl, 200, "timeslice task 3");
-    timeslice_task_del(&task3);
+    qtask_init(&task3, "task3", task3_hdl, 200, "timeslice task 3");
+    qtask_del(&task3);
 
     qsh_cmd_init(&cmd_task, "task", cmd_task_hdl, "@ task<run/stop<1/2/3/3>>");
     qsh_cmd_add(&cmd_task);
@@ -52,7 +52,7 @@ void task2_hdl()
 
 void task3_hdl()
 {
-    timeslice_task_del(&task3);
+    qtask_del(&task3);
     QSH("\r>> task 3 executed\r\n");
 }
 
@@ -64,26 +64,26 @@ int cmd_task_hdl(int argc, char* argv[])
     
     if(ISARG(argv[1], "run")){
         if(ISARG(argv[2], "1")){
-            timeslice_task_add(&task1);
+            qtask_add(&task1);
         }else if(ISARG(argv[2], "2")){
-            timeslice_task_add(&task2);
+            qtask_add(&task2);
         }else if(ISARG(argv[2], "all")){
-            timeslice_task_add(&task1);
-            timeslice_task_add(&task2);
+            qtask_add(&task1);
+            qtask_add(&task2);
         }
         else if(ISARG(argv[2], "3")){
-            timeslice_task_add(&task3);
+            qtask_add(&task3);
         }else{
             return CMD_PARAM_ERR;
         }
     }else if(ISARG(argv[1], "stop")){
         if(ISARG(argv[2], "1")){
-            timeslice_task_del(&task1);
+            qtask_del(&task1);
         }else if(ISARG(argv[2], "2")){
-            timeslice_task_del(&task2);
+            qtask_del(&task2);
         }else if(ISARG(argv[2], "all")){
-            timeslice_task_del(&task1);
-            timeslice_task_del(&task2);
+            qtask_del(&task1);
+            qtask_del(&task2);
         }else{
             return CMD_PARAM_ERR;
         }

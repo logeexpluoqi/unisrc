@@ -5,9 +5,9 @@
  * @Last Modified time: 2021-08-31 17:06:49
  */
 
-#ifndef _DEMO_TIMESLICE_H
-#define _DEMO_TIMESLICE_H
+#ifndef _DEMO_QTASK_H
+#define _DEMO_QTASK_H
 
-int demo_timeslice_init(void);
+int demo_qtask_init(void);
 
 #endif
