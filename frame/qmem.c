@@ -7,14 +7,14 @@
 
 #include "qmem.h"
 
-static char qmem_heap[QMEM_HEAP_SIZE];
+static char mheap[QMEM_HEAP_SIZE];
 
 int qmem_init()
 {
     int i;
 
     for(i = 0; i < QMEM_HEAP_SIZE; i++){
-        qmem_heap[i] = 0;
+        mheap[i] = 0;
     }
 
     return 0;

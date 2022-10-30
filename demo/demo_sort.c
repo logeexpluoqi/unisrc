@@ -13,7 +13,7 @@
 
 #define DEMO_SORT_DATA_SIZE     50
 
-static QshCmd cmd_sort;
+static CmdObj cmd_sort;
 static int cmd_sort_hdl(int, char **);
 static float quicksortdata[DEMO_SORT_DATA_SIZE];
 
@@ -26,8 +26,8 @@ int demo_sort_init()
         quicksortdata[i] = (float)rand() / RAND_MAX;
     }
 
-    qsh_cmd_init(&cmd_sort, "sort", cmd_sort_hdl, "@ quick, bub");
-    qsh_cmd_add(&cmd_sort);
+    qcmd_init(&cmd_sort, "sort", cmd_sort_hdl, "@ quick, bub");
+    qcmd_add(&cmd_sort);
 
     return 0;
 }

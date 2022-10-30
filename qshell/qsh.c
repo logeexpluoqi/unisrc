@@ -345,24 +345,24 @@ void qsh_exec()
     }
 }
 
-void qsh_cmd_init(QshCmd* qcmd, const char* name, int (*handle)(int, char**), const char* usage)
+void qcmd_init(CmdObj* qcmd, const char* name, int (*handle)(int, char**), const char* usage)
 {
     cmd_init((CmdObj*)qcmd, name, 0xff, handle, usage);
 }
 
-int qsh_export(const char *name, int (*handle)(int, char**), const char *usage)
+int qcmd_export(const char *name, int (*handle)(int, char**), const char *usage)
 {
     CmdObj *qcmd = (CmdObj*)malloc(sizeof(CmdObj));
     cmd_init((CmdObj*)qcmd, name, 0xff, handle, usage);
     cmd_add(qcmd);
 }
 
-void qsh_cmd_add(QshCmd* qcmd)
+void qcmd_add(CmdObj* qcmd)
 {
     cmd_add((CmdObj *)qcmd);
 }
 
-void qsh_cmd_del(QshCmd* qcmd)
+void qcmd_del(CmdObj* qcmd)
 {
     cmd_del((CmdObj *)qcmd);
 }

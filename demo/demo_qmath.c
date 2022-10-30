@@ -13,13 +13,13 @@
 #include "../qmath/qcomplex.h"
 #include "../qshell/qsh.h"
 
-static QshCmd cmd_qmath;
+static CmdObj cmd_qmath;
 static int cmd_qmath_hdl(int, char**);
 
 void demo_qmath_init()
 {
-    qsh_cmd_init(&cmd_qmath, "qmath", cmd_qmath_hdl, "@ test");
-    qsh_cmd_add(&cmd_qmath);
+    qcmd_init(&cmd_qmath, "qmath", cmd_qmath_hdl, "@ test");
+    qcmd_add(&cmd_qmath);
 }
 int cmd_qmath_hdl(int argc, char* argv[])
 {

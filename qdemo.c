@@ -25,7 +25,7 @@
 #include "demo/demo_udp_server.h"
 
 static pthread_t tid_qsh_isr;
-static void* thread_qsh_input_isr(void*);
+static void* task_qsh_recv(void*);
 
 static pthread_t tid_tasks;
 static void* thread_tasks(void*);
@@ -34,7 +34,7 @@ static int close_all = 0;
 
 int main()
 {
-    pthread_create(&tid_qsh_isr, NULL, thread_qsh_input_isr, NULL);
+    pthread_create(&tid_qsh_isr, NULL, task_qsh_recv, NULL);
     pthread_create(&tid_tasks, NULL, thread_tasks, NULL);
 
     qsh_init();
@@ -63,7 +63,7 @@ int main()
     return 0;
 }
 
-void* thread_qsh_input_isr(void* param)
+void* task_qsh_recv(void* param)
 {
     char ch;
     for(;;) {

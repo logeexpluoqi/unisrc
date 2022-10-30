@@ -23,7 +23,7 @@ static void demo_filter_sliding_average(void);
 LpfFirstOderObj lpf_1st;
 static void demo_lpf_1st(void);
 
-static QshCmd cmd_filter;
+static CmdObj cmd_filter;
 static int cmd_filter_hdl(int argc, char *argv[]);
 
 static KF1DimObj kf_1dim;
@@ -42,8 +42,8 @@ void demo_filter_init()
     lpf_first_order_init(&lpf_1st, 0.01);
     kf_1dim_init(&kf_1dim, 0, 1, 0, 1, 0, 0.002, 0.5);
 
-    qsh_cmd_init(&cmd_filter, "filter", cmd_filter_hdl, "@ nsig, sldave, lpf1st, kf1dim");
-    qsh_cmd_add(&cmd_filter);
+    qcmd_init(&cmd_filter, "filter", cmd_filter_hdl, "@ nsig, sldave, lpf1st, kf1dim");
+    qcmd_add(&cmd_filter);
 }
 
 int cmd_filter_hdl(int argc, char *argv[])

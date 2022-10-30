@@ -26,9 +26,9 @@ static int cmd_mr_hdl(int, char **);
 int mthread_basic_init(void)
 {
     thread_mid = 0;
-    qsh_export("mls", cmd_mls_hdl, "list all mthread info @ /-d");
-    qsh_export("mk", cmd_mk_hdl, "kill mthread @ mid");
-    qsh_export("mr", cmd_mr_hdl, "restart mthread @ mid");
+    qcmd_export("mls", cmd_mls_hdl, "list all mthread info @ /-d");
+    qcmd_export("mk", cmd_mk_hdl, "kill mthread @ mid");
+    qcmd_export("mr", cmd_mr_hdl, "restart mthread @ mid");
     return 0;
 }
 

@@ -10,23 +10,23 @@
 #include "../qshell/qsh.h"
 #include "../frame/qtask.h"
 
-static QshCmd   qcmd1;
+static CmdObj   qcmd1;
 static int q1_handle(int, char **);
-static QshCmd   qcmd2;
+static CmdObj   qcmd2;
 static int q2_handle(int, char **);
-static QshCmd   cmd_ls;
+static CmdObj   cmd_ls;
 static int cmd_ls_hdl(int, char **);
 
 int demo_qsh_init()
 {
-    qsh_cmd_init(&qcmd1, "qcmd1", q1_handle, "qsh test 1");
-    qsh_cmd_add(&qcmd1);
+    qcmd_init(&qcmd1, "qcmd1", q1_handle, "qsh test 1");
+    qcmd_add(&qcmd1);
     
-    qsh_cmd_init(&qcmd2, "qcmd2", q2_handle, "qsh test 2");
-    qsh_cmd_add(&qcmd2);
+    qcmd_init(&qcmd2, "qcmd2", q2_handle, "qsh test 2");
+    qcmd_add(&qcmd2);
 
-    qsh_cmd_init(&cmd_ls, "ls", cmd_ls_hdl, "@ -d");
-    qsh_cmd_add(&cmd_ls);
+    qcmd_init(&cmd_ls, "ls", cmd_ls_hdl, "@ -d");
+    qcmd_add(&cmd_ls);
     return 0;
 }
 

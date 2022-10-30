@@ -9,7 +9,6 @@ include_directories(../solver)
 include_directories(../linuxbase)
 
 add_library(demo
-	# demo_ransac.cc
         demo_qsh.c
         demo_fsm.c
         demo_qtask.c
