@@ -35,7 +35,7 @@ static int close_all = 0;
 
 int main()
 {
-    mthread_init(&task_qsh, "task_qsh", 50, 1000, task_qsh_hdl, "qtasks_tick");
+    mthread_init(&task_qsh, "task_qsh", 50, 1000, task_qsh_hdl, "qsh task");
     mthread_start(&task_qsh);
     mthread_init(&qtasks_tick, "qtasks_tick", 10, 1000, qtasks_tick_hdl, "qtasks_tick");
     mthread_start(&qtasks_tick);
