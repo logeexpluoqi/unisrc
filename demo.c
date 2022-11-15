@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include "linuxbase/mthread.h"
 #include "qshell/qsh.h"
 #include "frame/qtask.h"
 #include "qdemo/demo_qsh.h"
@@ -24,18 +25,20 @@
 #include "qdemo/demo_mthread.h"
 #include "qdemo/demo_udp_server.h"
 
-static pthread_t tid_qsh_isr;
-static void* task_qsh_recv(void*);
+static MThread task_qsh;
+static void* task_qsh_hdl(void*);
 
-static pthread_t tid_tasks;
-static void* thread_tasks(void*);
+static MThread qtasks_tick;
+static void* qtasks_tick_hdl(void*);
 
 static int close_all = 0;
 
 int main()
 {
-    pthread_create(&tid_qsh_isr, NULL, task_qsh_recv, NULL);
-    pthread_create(&tid_tasks, NULL, thread_tasks, NULL);
+    mthread_init(&task_qsh, "task_qsh", 50, 1000, task_qsh_hdl, "qtasks_tick");
+    mthread_start(&task_qsh);
+    mthread_init(&qtasks_tick, "qtasks_tick", 10, 1000, qtasks_tick_hdl, "qtasks_tick");
+    mthread_start(&qtasks_tick);
 
     qsh_init();
 
@@ -63,10 +66,11 @@ int main()
     return 0;
 }
 
-void* task_qsh_recv(void* param)
+void* task_qsh_hdl(void* param)
 {
     char ch;
     for(;;) {
+        mthread_task_begin(&task_qsh);
         system("stty raw -echo");
         ch = getchar();
         ch = (ch == 127) ? 8 : ch;
@@ -78,18 +82,20 @@ void* task_qsh_recv(void* param)
             printf("\033[H\033[J");
             printf(" \r\n#! qsh input thread closed !\r\n\r\n");
             close_all = 1;
-            pthread_cancel(tid_tasks);
-            pthread_cancel(tid_qsh_isr);
+            mthread_stop(&task_qsh);
         }
-        usleep(1e4);
+        mthread_task_end(&task_qsh);
     }
 }
 
-void* thread_tasks(void* param)
+void* qtasks_tick_hdl(void* param)
 {
     for(;;) {
+        mthread_task_begin(&qtasks_tick);
+
         qtask_tick();
-        usleep(1e3);
+        
+        mthread_task_end(&qtasks_tick);
     }
 }
 
