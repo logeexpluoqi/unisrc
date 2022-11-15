@@ -12,5 +12,5 @@
 2. 进入build目录: cd build
 3. 输入 cmake ..
 4. 生成执行文件: 输入 make
-5. 编译完成后输入 ./qdemo
+5. 编译完成后输入 ./demo
 6. 输入 help, 查看指令
