@@ -8,7 +8,7 @@ include_directories(../sort)
 include_directories(../solver)
 include_directories(../linuxbase)
 
-add_library(demo
+add_library(qdemo
         demo_qsh.c
         demo_fsm.c
         demo_qtask.c
@@ -22,7 +22,7 @@ add_library(demo
         demo_mthread.c
         demo_udp_server.c
 )
-target_link_libraries(demo
+target_link_libraries(qdemo
         qsh
         qmath
         utils

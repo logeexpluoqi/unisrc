@@ -13,15 +13,15 @@
 #include "../qmath/qcomplex.h"
 #include "../qshell/qsh.h"
 
-static CmdObj cmd_qmath;
-static int cmd_qmath_hdl(int, char**);
+static CmdObj cmd_qmat;
+static int cmd_qmat_hdl(int, char**);
 
 void demo_qmath_init()
 {
-    qcmd_init(&cmd_qmath, "qmath", cmd_qmath_hdl, "@ test");
-    qcmd_add(&cmd_qmath);
+    qcmd_init(&cmd_qmat, "qmat", cmd_qmat_hdl, "@ add<A B>, addn<A, b>, mul<A B>, muln<A b>, sub<A B>, subn<A b>, div<A B>, divn<A b>, dotdiv<A b>, inv<A>");
+    qcmd_add(&cmd_qmat);
 }
-int cmd_qmath_hdl(int argc, char **argv)
+int cmd_qmat_hdl(int argc, char **argv)
 {
     if(argc > 1) {
         return CMD_PARAM_EXCEED;

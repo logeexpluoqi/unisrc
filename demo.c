@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:09:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-09-05 11:29:56
+ * @Last Modified time: 2022-11-08 21:36:30
  */
 
 #include <stdio.h>
@@ -12,17 +12,17 @@
 #include <stdlib.h>
 #include "qshell/qsh.h"
 #include "frame/qtask.h"
-#include "demo/demo_qsh.h"
-#include "demo/demo_fsm.h"
-#include "demo/demo_qtask.h"
-#include "demo/demo_msg.h"
-#include "demo/demo_qmath.h"
-#include "demo/demo_qkey.h"
-#include "demo/demo_filter.h"
-#include "demo/demo_sort.h"
-#include "demo/demo_solver.h"
-#include "demo/demo_mthread.h"
-#include "demo/demo_udp_server.h"
+#include "qdemo/demo_qsh.h"
+#include "qdemo/demo_fsm.h"
+#include "qdemo/demo_qtask.h"
+#include "qdemo/demo_msg.h"
+#include "qdemo/demo_qmath.h"
+#include "qdemo/demo_qkey.h"
+#include "qdemo/demo_filter.h"
+#include "qdemo/demo_sort.h"
+#include "qdemo/demo_solver.h"
+#include "qdemo/demo_mthread.h"
+#include "qdemo/demo_udp_server.h"
 
 static pthread_t tid_qsh_isr;
 static void* task_qsh_recv(void*);
