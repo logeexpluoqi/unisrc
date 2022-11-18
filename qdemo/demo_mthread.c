@@ -13,7 +13,6 @@ static void *thread_hdl(void *args);
 
 int demo_mthread_init()
 {
-    mthread_basic_init();
     mthread_init(&thread, "mthread_demo", 50, 500000, thread_hdl, "mthread demo");
     mthread_start(&thread);
     return 0;

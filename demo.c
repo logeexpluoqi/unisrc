@@ -41,7 +41,7 @@ int main()
     mthread_start(&qtasks_tick);
 
     qsh_init();
-
+    mthread_basic_init();
     demo_fsm_init();
     demo_qtask_init();
     demo_msg_init();
