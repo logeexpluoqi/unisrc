@@ -77,7 +77,7 @@ void qsh_init()
 
     cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
     cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
-    cmd_init(&cmd_help_alis, "?", 0, cmd_help_hdl, "list all commands");
+    cmd_init(&cmd_help_alis, "?", 0, cmd_help_hdl, "do help");
     cmd_init(&cmd_clear, "clear", 0, cmd_clear_hdl, "clear window");
 
     cmd_add(&cmd_help_alis);
