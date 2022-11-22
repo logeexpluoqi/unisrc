@@ -9,6 +9,7 @@ include_directories(../solver)
 include_directories(../linuxbase)
 
 add_library(qdemo
+        qdemo.c
         demo_qsh.c
         demo_fsm.c
         demo_qtask.c
@@ -21,6 +22,7 @@ add_library(qdemo
 	demo_solver.c
         demo_mthread.c
         demo_udp_server.c
+        demo_qtrigf.c
 )
 target_link_libraries(qdemo
         qsh

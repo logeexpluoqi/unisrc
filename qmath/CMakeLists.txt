@@ -3,4 +3,5 @@ add_library(qmath
         qmatrix.c
         qcomplex.c
         qconv.c
+        qtrigf.c
 )

@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:09:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-11-08 21:36:30
+ * @Last Modified time: 2022-11-22 22:56:28
  */
 
 #include <stdio.h>
@@ -13,17 +13,7 @@
 #include "linuxbase/mthread.h"
 #include "qshell/qsh.h"
 #include "frame/qtask.h"
-#include "qdemo/demo_qsh.h"
-#include "qdemo/demo_fsm.h"
-#include "qdemo/demo_qtask.h"
-#include "qdemo/demo_msg.h"
-#include "qdemo/demo_qmath.h"
-#include "qdemo/demo_qkey.h"
-#include "qdemo/demo_filter.h"
-#include "qdemo/demo_sort.h"
-#include "qdemo/demo_solver.h"
-#include "qdemo/demo_mthread.h"
-#include "qdemo/demo_udp_server.h"
+#include "qdemo/qdemo.h"
 
 static MThread task_qsh;
 static void* task_qsh_hdl(void*);
@@ -42,17 +32,7 @@ int main()
     mthread_start(&qtasks_tick);
 
     qsh_init();
-    demo_fsm_init();
-    demo_qtask_init();
-    demo_msg_init();
-    demo_qsh_init();
-    demo_qmath_init();
-    demo_qkey_init();
-    demo_filter_init();
-    demo_sort_init();
-    demo_solver_init();
-    demo_mthread_init();
-    demo_udp_server_init();
+    qdemo_init();
 
     for(;;) {
         if(close_all == 0) {
