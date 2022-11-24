@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 14:45:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 19:22:14
+ * @Last Modified time: 2022-11-24 23:45:25
  */
 
 #include <string.h>
@@ -10,41 +10,13 @@
 #include "../qshell/qsh.h"
 #include "../frame/qtask.h"
 
-static CmdObj   qcmd1;
-static int q1_handle(int, char **);
-static CmdObj   qcmd2;
-static int q2_handle(int, char **);
 static CmdObj   cmd_ls;
 static int cmd_ls_hdl(int, char **);
 
 int demo_qsh_init()
 {
-    qcmd_init(&qcmd1, "qcmd1", q1_handle, "qsh test 1");
-    qcmd_add(&qcmd1);
-    
-    qcmd_init(&qcmd2, "qcmd2", q2_handle, "qsh test 2");
-    qcmd_add(&qcmd2);
-
-    qcmd_init(&cmd_ls, "ls", cmd_ls_hdl, "@ -d");
+    qcmd_init(&cmd_ls, "ls", cmd_ls_hdl, "@ /-d");
     qcmd_add(&cmd_ls);
-    return 0;
-}
-
-int q1_handle(int argc, char **argv)
-{
-    if(argc > 1) {
-        return CMD_PARAM_ERR;
-    }
-    QSH(">> qsh test 1\r\n");
-    return 0;
-}
-
-int q2_handle(int argc, char **argv)
-{
-    if(argc > 1) {
-        return CMD_PARAM_ERR;
-    }
-    QSH(">> qsh test 2\r\n");
     return 0;
 }
 

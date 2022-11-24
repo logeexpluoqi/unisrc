@@ -12,6 +12,17 @@
  extern "C" {
 #endif
 
+typedef struct ode_rk
+{
+    int order;
+    float (*dy)(float k);
+    float y_k1;
+} OdeRKx;
+
+int ode_rkx_k_init(OdeRKx *solver, float (*dy)(float k), int order);
+
+float ode_rkx_k_calcu(OdeRKx *solver);
+
 #ifdef __cplusplus
  }
 #endif
