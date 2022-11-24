@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-11-25 00:38:27
+ * @Last Modified time: 2022-11-25 00:40:28
  */
 
 #include <stdlib.h>
@@ -414,7 +414,7 @@ int cmd_help_hdl(int argc, char **argv)
             
             for(j = 0; j <= k; j++){
                 if(j == 0){
-                    QPRINTF("%-60.60s\r\n", _cmd->usage + j * QSH_USAGE_DISP_MAX);
+                    QPRINTF("%-80.80s\r\n", _cmd->usage + j * QSH_USAGE_DISP_MAX);
                 }else{
                     QPRINTF("                   %-80.80s\r\n", _cmd->usage + j * QSH_USAGE_DISP_MAX + 1);
                 }
