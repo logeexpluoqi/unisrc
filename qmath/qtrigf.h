@@ -17,9 +17,13 @@ float qfsind(float x);
 
 float qfcosd(float x);
 
+float qftand(float x);
+
 float qfasind(float x);
 
 float qfacosd(float x);
+
+float qfatand(float x);
 
 #ifdef __cplusplus
  }
