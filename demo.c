@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:09:54 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-11-22 22:56:28
+ * @Last Modified time: 2022-11-25 00:30:42
  */
 
 #include <stdio.h>
@@ -25,13 +25,13 @@ static int close_all = 0;
 
 int main()
 {
-    mthread_basic_init();
     mthread_init(&task_qsh, "task_qsh", 50, 1000, task_qsh_hdl, "qsh task");
     mthread_start(&task_qsh);
     mthread_init(&qtasks_tick, "qtasks_tick", 10, 1000, qtasks_tick_hdl, "qtasks_tick");
     mthread_start(&qtasks_tick);
 
     qsh_init();
+    mthread_basic_init();
     qdemo_init();
 
     for(;;) {

@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2022-09-02 15:37:05 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-09-03 23:55:56
+ * @Last Modified time: 2022-11-25 00:29:23
  */
 
 #include <stdlib.h>
@@ -26,9 +26,9 @@ static int cmd_mr_hdl(int, char **);
 int mthread_basic_init(void)
 {
     thread_mid = 0;
-    qcmd_export("mls", cmd_mls_hdl, "list all mthread info @ /-d");
-    qcmd_export("mk", cmd_mk_hdl, "kill mthread @ mid");
-    qcmd_export("mr", cmd_mr_hdl, "restart mthread @ mid");
+    qcmd_export("mls", cmd_mls_hdl, "@ /-d (list all mthread info)");
+    qcmd_export("mk", cmd_mk_hdl, "@ mid (kill mthread)");
+    qcmd_export("mr", cmd_mr_hdl, "@ mid (restart mthread)");
     return 0;
 }
 

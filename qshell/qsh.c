@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:26 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-09-05 11:21:46
+ * @Last Modified time: 2022-11-25 00:38:27
  */
 
 #include <stdlib.h>
@@ -17,6 +17,8 @@ typedef enum
     RECV_NOCMD,
     RECV_FINISHED
 } RecvState;
+
+#define QSH_USAGE_DISP_MAX  80
 
 #define QLOGO      "/>$ "
 
@@ -392,7 +394,7 @@ int cmd_clear_hdl(int argc, char **argv)
 int cmd_help_hdl(int argc, char **argv)
 {
     CmdObj* _cmd;
-    unsigned int i;
+    int i, len, k = 0, j;
 
     unsigned int num = cmd_num();
     QPRINTF(" Commands: <%d>\r\n", num);
@@ -400,8 +402,25 @@ int cmd_help_hdl(int argc, char **argv)
     QPRINTF(" ----------     -------\r\n");
     for(i = num; i > 0; i--) {
         _cmd = cmd_obj(i);
-        QPRINTF("  -%-9s     %s\r\n", _cmd->name, _cmd->usage);
+        QPRINTF("  -%-9s     ", _cmd->name);
+        len = strlen(_cmd->usage);
+        if(len < QSH_USAGE_DISP_MAX){
+            QPRINTF("%s\r\n", _cmd->usage);
+        }else{
+            while (len > QSH_USAGE_DISP_MAX){
+                k++;
+                len = len - QSH_USAGE_DISP_MAX;
+            }
+            
+            for(j = 0; j <= k; j++){
+                if(j == 0){
+                    QPRINTF("%-60.60s\r\n", _cmd->usage + j * QSH_USAGE_DISP_MAX);
+                }else{
+                    QPRINTF("                   %-80.80s\r\n", _cmd->usage + j * QSH_USAGE_DISP_MAX + 1);
+                }
+            }
+        }
+        k = 0;
     }
-    QPRINTF("\r\n");
-    return 0;
+    return CMD_NO_ERR;
 }

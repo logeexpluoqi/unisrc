@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:47:43 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 19:22:25
+ * @Last Modified time: 2022-11-25 00:27:49
  */
 
 #include <string.h>
@@ -34,7 +34,7 @@ int demo_qtask_init()
     qtask_init(&task3, "task3", task3_hdl, 200, "timeslice task 3");
     qtask_del(&task3);
 
-    qcmd_init(&cmd_task, "task", cmd_task_hdl, "@ task<run/stop<1/2/3/3>>");
+    qcmd_init(&cmd_task, "task", cmd_task_hdl, "@ run/stop<1/2/3/3>");
     qcmd_add(&cmd_task);
 
     return 0;
