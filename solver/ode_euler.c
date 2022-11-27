@@ -2,31 +2,63 @@
  * @Author: luoqi 
  * @Date: 2022-01-26 14:45:52 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-11-24 23:44:27
+ * @Last Modified time: 2022-11-27 21:58:00
  */
 
 #include "ode_euler.h"
 
-int ode_euler(float *yt, float (*dy)(float t), float h, float y0, float t_start, unsigned int len)
+int ode_euler_1st_calcu(float *y, float (*dy)(float _x, float _y), float h, float y0, float t0, int len)
 {
-    yt[0] = dy(t_start);
-    for(unsigned int i = 0; i < (len - 1); i ++){
-        yt[i+1] = yt[i] + h * dy(i * h + t_start);
+    float tn;
+    if(len < 0){
+        return -1;
+    }
+    y[0] = y0;
+    for(int i = 0; i < (len - 1); i ++){
+        tn = i * h + t0;
+        y[i+1] = y[i] + h * dy(tn, y[i]);
     }
     return 0;
 }
 
-int ode_euler_k_init(OdeEuer *solver, float (*dy)(float), float y0, float h)
+int ode_euler_k_init(OdeEuer *solver, float (*dy)(float _x, float _y), float y0, float h)
 {
     solver->dy = dy;
-    solver->y0 = y0;
     solver->h = h;
-    solver->y_k1 = 0;
-    solver->k = 0;
+    solver->y = y0;
+    solver->x = 0;
     return 0;
 }
 
-float ode_euler_k_calcu(OdeEuer *solver)
+float ode_euler_1st_k_calcu(OdeEuer *solver)
 {
-    return (solver->y_k1 + solver->h * solver->dy(solver->k * solver->h));
+    float y = solver->y + solver->h * solver->dy(solver->x, solver->y);
+    solver->y = y;
+    solver->x = solver->x + solver->h;
+    return y;
+}
+
+int ode_euler_2st_calcu(float *y, float (*dy)(float _x, float _y), float h, float y0, float t0, int len)
+{
+    float y_hat;
+    float tn;
+    if(len < 0){
+        return -1;
+    }
+    y[0] = y0;
+    for(int i = 0; i < (len - 1); i ++){
+        tn = i * h + t0;
+        y_hat = y[i] + h * dy(tn, y[i]);
+        y[i+1] = y[i] + (h / 2) * (dy(tn, y[i]) + dy(tn + h, y_hat));
+    }
+    return 0;
+}
+
+float ode_euler_2st_k_calcu(OdeEuer *solver)
+{
+    float y_hat = solver->y + solver->h * solver->dy(solver->x, solver->y);
+    float y = solver->y + (solver->h / 2) * (solver->dy(solver->x, solver->y) + solver->dy(solver->x, y_hat));
+    solver->y = y;
+    solver->x = solver->x + solver->h;
+    return y;
 }

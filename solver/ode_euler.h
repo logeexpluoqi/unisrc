@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-09-17 11:13:12 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-11-24 23:43:57
+ * @Last Modified time: 2022-11-27 21:51:57
  */
 
 #ifndef _ODE_EULER_H
@@ -14,18 +14,25 @@
 
 typedef struct 
 {
-    float (*dy)(float k);
-    float y_k1;
-    float y0;
-    float k;
+    float (*dy)(float x, float y);
+    float y;
+    float x;
     float h;
 } OdeEuer;
 
-int ode_euler(float *yt, float (*dy)(float t), float h, float y0, float t_start, unsigned int len);
+int ode_euler_1st_calcu(float *y, float (*dy)(float _x, float _y), float h, float y0, float t0, int len);
 
-int ode_euler_k_init(OdeEuer *solver, float (*dy)(float), float y0, float h);
+int ode_euler_k_init(OdeEuer *solver, float (*dy)(float _x, float _y), float y0, float h);
 
-float ode_euler_k_calcu(OdeEuer *solver);
+float ode_euler_1st_k_calcu(OdeEuer *solver);
+
+/* prediction-correction formula */
+
+int ode_euler_2st_calcu(float *y, float (*dy)(float _x, float _y), float h, float y0, float t0, int len);
+
+int ode_euler_2st_k_init(OdeEuer *solver, float (*dy)(float _x, float _y), float y0, float h);
+
+float ode_euler_2st_k_calcu(OdeEuer *solver);
 
 #ifdef __cplusplus
  }
