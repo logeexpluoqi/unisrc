@@ -32,6 +32,8 @@ float pid_ki_isolate_calcu(PidObj* pid, float err, float seplimit);
 
 int pid_uk_clear(PidObj* pid);
 
+int pid_calcu_clear(PidObj* pid);
+
 #ifdef __cplusplus
  }
 #endif
