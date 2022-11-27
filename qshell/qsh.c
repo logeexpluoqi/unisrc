@@ -416,7 +416,7 @@ int cmd_help_hdl(int argc, char **argv)
                 if(j == 0){
                     QPRINTF("%-80.80s\r\n", _cmd->usage + j * QSH_USAGE_DISP_MAX);
                 }else{
-                    QPRINTF("                   %-80.80s\r\n", _cmd->usage + j * QSH_USAGE_DISP_MAX + 1);
+                    QPRINTF("                   %-80.80s\r\n", _cmd->usage + j * QSH_USAGE_DISP_MAX);
                 }
             }
         }
