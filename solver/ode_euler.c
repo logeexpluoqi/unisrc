@@ -21,7 +21,7 @@ int ode_euler_1st_calcu(float *y, float (*dy)(float _x, float _y), float h, floa
     return 0;
 }
 
-int ode_euler_k_init(OdeEuer *solver, float (*dy)(float _x, float _y), float h, float x0, float y0)
+int ode_euler_k_init(OdeEuler *solver, float (*dy)(float _x, float _y), float h, float x0, float y0)
 {
     solver->dy = dy;
     solver->h = h;
@@ -30,7 +30,7 @@ int ode_euler_k_init(OdeEuer *solver, float (*dy)(float _x, float _y), float h, 
     return 0;
 }
 
-float ode_euler_1st_k_calcu(OdeEuer *solver)
+float ode_euler_1st_k_calcu(OdeEuler *solver)
 {
     float y = solver->y + solver->h * solver->dy(solver->x, solver->y);
     solver->y = y;
@@ -54,7 +54,7 @@ int ode_euler_2st_calcu(float *y, float (*dy)(float _x, float _y), float h, floa
     return 0;
 }
 
-float ode_euler_2st_k_calcu(OdeEuer *solver)
+float ode_euler_2st_k_calcu(OdeEuler *solver)
 {
     float y_hat = solver->y + solver->h * solver->dy(solver->x, solver->y);
     float y = solver->y + (solver->h / 2) * (solver->dy(solver->x, solver->y) + solver->dy(solver->x + solver->h, y_hat));
