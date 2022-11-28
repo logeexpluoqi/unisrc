@@ -37,10 +37,10 @@ int ode_rk4_calcu(float* y, float (*dy)(float _x, float _y), float h, float x0, 
 float ode_rk4_k_calcu(OdeRKx* solver)
 {
     float k1 = solver->dy(solver->x, solver->y);
-    float k2 = solver->dy(solver->x + solver->h / 2, solver->y + (solver->h / 2) * k1);
-    float k3 = solver->dy(solver->x + solver->h / 2, solver->y + (solver->h / 2) * k2);
+    float k2 = solver->dy(solver->x + (solver->h / 2), solver->y + (solver->h / 2) * k1);
+    float k3 = solver->dy(solver->x + (solver->h / 2), solver->y + (solver->h / 2) * k2);
     float k4 = solver->dy(solver->x + solver->h, solver->y + solver->h * k3);
-    solver->y = solver->y + (solver->h / 6) * (k1 + 2 * k2 + 2 * k3 + k4);
+    solver->y = solver->y + (solver->h / 6) * (k1 + (2 * k2) + (2 * k3) + k4);
     solver->x = solver->x + solver->h;
     return solver->y;
 }
