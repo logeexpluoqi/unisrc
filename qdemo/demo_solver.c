@@ -8,6 +8,7 @@
 #include <math.h>
 #include "demo_solver.h"
 #include "../solver/ode_euler.h"
+#include "../solver/ode_rk.h"
 #include "../qshell/qsh.h"
 
 static CmdObj cmd_ode;
@@ -30,7 +31,7 @@ static float dy(float x, float y)
 static int demo_euler_solver()
 {
     float yt[TSPAN_SIZE] = {0};
-    ode_euler_1st_calcu(yt, dy, 0.5, dy(0, 0), 0, TSPAN_SIZE);
+    ode_euler_1st_calcu(yt, dy, 0.5, 0, dy(0, 0), TSPAN_SIZE);
     for(int i = 0; i < TSPAN_SIZE; i++){
         if(i % 10 == 0){
             printf("\r\n");
@@ -38,7 +39,7 @@ static int demo_euler_solver()
         printf(" %f", yt[i]);
     }
     printf("\r\n");
-    ode_euler_2st_calcu(yt, dy, 0.5, dy(0, 0), 0, TSPAN_SIZE);
+    ode_euler_2st_calcu(yt, dy, 0.5, 0, dy(0, 0), TSPAN_SIZE);
     for(int i = 0; i < TSPAN_SIZE; i++){
         if(i % 10 == 0){
             printf("\r\n");
@@ -51,7 +52,15 @@ static int demo_euler_solver()
 
 static int demo_rk4_solver()
 {
-
+    float yt[TSPAN_SIZE] = {0};
+    ode_rk4_calcu(yt, dy, 0.5, 0, dy(0, 0), TSPAN_SIZE);
+    for(int i = 0; i < TSPAN_SIZE; i++){
+        if(i % 10 == 0){
+            printf("\r\n");
+        }
+        printf(" %f", yt[i]);
+    }
+    printf("\r\n");
     return 0;
 }
 
