@@ -11,7 +11,7 @@
 #include "demo_filter.h"
 #include "../qshell/qsh.h"
 #include "../filter/sliding_average_filter.h"
-#include "../filter/lpf_first_order.h"
+#include "../filter/lpf_1st.h"
 #include "../filter/kalman_filter.h"
 #include "../filter/kalman_filter.h"
 
@@ -20,7 +20,7 @@
 SlidAveFilterObj sldave_filter;
 static void demo_filter_sliding_average(void);
 
-LpfFirstOderObj lpf_1st;
+Lpf1stObj lpf_1st;
 static void demo_lpf_1st(void);
 
 static CmdObj cmd_filter;
@@ -39,7 +39,7 @@ void demo_filter_init()
     }
 
     sliding_average_filter_init(&sldave_filter, 100);
-    lpf_first_order_init(&lpf_1st, 0.01);
+    lpf_1st_init(&lpf_1st, 0.01);
     kf_1dim_init(&kf_1dim, 0, 1, 0, 1, 0, 0.002, 0.5);
 
     qcmd_init(&cmd_filter, "filter", cmd_filter_hdl, "@ nsig, sldave, lpf1st, kf1dim");
@@ -95,7 +95,7 @@ void demo_lpf_1st()
 {
     float fdata[NDATA_SIZE] = {0};
     for(int i = 0; i < NDATA_SIZE; i++) {
-        fdata[i] = lpf_first_order_calcu(&lpf_1st, ndata[i]);
+        fdata[i] = lpf_1st_calcu(&lpf_1st, ndata[i]);
         if(i % 9) {
             QSH("\r\n");
         }
