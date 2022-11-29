@@ -5,8 +5,8 @@
  * @Last Modified time: 2021-09-24 18:23:02
  */
 
-#ifndef _ALPHA_BETA_GAMMA_H
-#define _ALPHA_BETA_GAMMA_H
+#ifndef _ABG_FILTER_H
+#define _ABG_FILTER_H
 
 #ifdef __cplusplus
  extern "C" {

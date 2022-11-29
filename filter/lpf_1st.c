@@ -9,25 +9,19 @@
 
 #define LPF_PI  3.1415926
 
-void lpf_1st_init(Lpf1stObj *filter, float alpha)
+int lpf_1st_init(Lpf1stObj *filter, float fc, float ts)
 {
-    filter->alpha = alpha;
-    filter->fc = 0;
-    filter->ts = 0;
-    filter->u_k1 = 0;
-}
-
-float lpf_1st_calcu(Lpf1stObj *filter, float xk)
-{
-    float u_k = filter->alpha * xk + (1 - filter->alpha) * filter->u_k1;
-    filter->u_k1 = u_k;
-
-    return u_k;
-}
-
-void lpf_1st_fc_set(Lpf1stObj *filter, float fc, float ts)
-{
+    filter->alpha = (2 * LPF_PI * ts * fc) / (1 + 2 * LPF_PI * ts * fc);;
     filter->fc = fc;
     filter->ts = ts;
-    filter->alpha = (2 * LPF_PI * ts * fc) / (1 + 2 * LPF_PI * ts * fc);
+    filter->y_k1 = 0;
+    return 0;
+}
+
+float lpf_1st_calcu(Lpf1stObj *filter, float u_k)
+{
+    float y_k = filter->alpha * u_k + (1 - filter->alpha) * filter->y_k1;
+    filter->y_k1 = y_k;
+
+    return y_k;
 }

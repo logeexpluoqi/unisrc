@@ -15,16 +15,14 @@
 typedef struct _lpf_first_order
 {
     float fc;    // cut-off frequency
-    float u_k1;  // last output
+    float y_k1;  // last output
     float alpha; // filter coefficient
     float ts;     // samping period
 }Lpf1stObj;
 
-void lpf_1st_init(Lpf1stObj *filter, float alpha);
+int lpf_1st_init(Lpf1stObj *filter, float fc, float ts);
 
-float lpf_1st_calcu(Lpf1stObj *filter, float xk);
-
-void lpf_1st_fc_set(Lpf1stObj *filter, float fc, float T);
+float lpf_1st_calcu(Lpf1stObj *filter, float u_k);
 
 #ifdef __cplusplus
  }
