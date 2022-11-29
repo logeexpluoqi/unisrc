@@ -23,7 +23,7 @@ typedef struct _hpf_first_order
 
 int hpf_1st_init(Hpf1stObj *filter, float fc, float ts);
 
-float hpf_1st_calcu(Hpf1stObj *filter, float uk);
+float hpf_1st_calcu(Hpf1stObj *filter, float u_k);
 
 #ifdef __cplusplus
  }
