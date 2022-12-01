@@ -12,13 +12,11 @@
  extern "C" {
 #endif
 
-#define QMAT_USING_LIBC     1
-
 typedef enum _qmat_err
 {
-    QMAT_ERR_NONE,
-    QMAT_ERR_DIM,
-    QMAT_ERR_CALC,
+    QMAT_ERR_DIM  = -1,
+    QMAT_ERR_NONE = 0,
+    QMAT_ERR_CALC = 1,
 }QMatErr;
 
 typedef struct _qmatrix
@@ -29,61 +27,13 @@ typedef struct _qmatrix
     QMatErr err;
 } QMat;
 
-#ifdef QMAT_USING_LIBC
-/* creat a matrix */
-QMat qmatc(int row, int col);
+int qmat_init(QMat *mat, float **elem, int row, int col);
 
-/* zeros */
-QMat qmatc_zeros(int row, int col);
+int qmat_zeros(QMat *mat);
 
-/* ones */
-QMat qmatc_ones(int row, int col);
+int qmat_ones(QMat *mat);
 
-/* eyes */
-QMat qmatc_eyes(int row, int col);
-
-/* A * B */
-QMat qmatc_mul(QMat A, QMat B);
-
-/* A * b */
-QMat qmatc_muln(QMat A, float b);
-
-/* A .* B */
-QMat qmatc_dotmul(QMat A, QMat B);
-
-/* A + B */
-QMat qmatc_add(QMat A, QMat B);
-
-/* A + b */
-QMat qmatc_addn(QMat A, float b);
-
-/* A - B */
-QMat qmatc_sub(QMat A, QMat B);
-
-/* A - b */
-QMat qmatc_subn(QMat A, float b);
-
-/* A / b */
-QMat qmatc_div(QMat A, QMat B);
-
-/* A / b */
-QMat qmatc_divn(QMat A, float b);
-
-/* A ./ b */
-QMat qmatc_dotdiv(QMat A, QMat B);
-
-/* 1 / A */
-QMat qmatc_inv(QMat A);
-
-#endif
-
-void qmat_init(QMat *mat, float **elem, int row, int col);
-
-void qmat_zeros(QMat *mat);
-
-void qmat_ones(QMat *mat);
-
-void qmat_eyes(QMat *mat);
+int qmat_eyes(QMat *mat);
 
 float qmat_elem(QMat *mat, int row, int col);
 

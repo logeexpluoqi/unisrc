@@ -7,218 +7,17 @@
 
 
 #include "qmatrix.h"
-#ifdef QMAT_USING_LIBC
-#include <stdlib.h>
-#endif
 
-void qmat_init(QMat *mat, float **elem, int row, int col) 
+int qmat_init(QMat *mat, float **elem, int row, int col) 
 {
     mat->row = row;
     mat->col = col;
     mat->elem = elem;
     mat->err = QMAT_ERR_NONE;
+    return QMAT_ERR_NONE;
 }
 
-#ifdef QMAT_USING_LIBC
-
-QMat qmatc(int row, int col)
-{
-    QMat mat;
-    float **elem = malloc(sizeof(float) * row * col);
-    qmat_init(&mat, elem, row, col);
-    mat.err = QMAT_ERR_NONE;
-    return mat;
-}
-
-QMat qmatc_zeros(int row, int col)
-{
-    int i, j;
-    QMat mat = qmatc(row, col);
-    for(i = 0; i < row; i++){
-        for(j = 0; j < col; j++){
-            mat.elem[i][j] = 0.0;
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_ones(int row, int col)
-{
-    int i, j;
-    QMat mat = qmatc(row, col);
-    for(i = 0; i < row; i++){
-        for(j = 0; j < col; j++){
-            if(i == j){
-                mat.elem[i][j] = 1.0;
-            }else{
-                mat.elem[i][j] = 0.0;
-            }
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_eyes(int row, int col)
-{
-    int i, j;
-    QMat mat = qmatc(row, col);
-    for(i = 0; i < row; i++){
-        for(j = 0; j < col; j++){
-            if(i == j){
-                mat.elem[i][j] = 1.0;
-            }else{
-                mat.elem[i][j] = 0.0;
-            }
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_mul(QMat A, QMat B)
-{
-    int i, j, m;
-    float tmp = 0.0;
-    QMat mat = qmatc(A.row, B.col);
-    if(A.row != B.col && A.col != B.row){
-        mat.err = QMAT_ERR_DIM;
-        return mat;
-    }
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            for(m = 0; m < A.row; m++){
-                tmp += A.elem[i][m] * B.elem[m][i];
-            }
-            mat.elem[i][j] = tmp;
-            tmp = 0.0;
-        }
-    }
-
-    return mat;
-}
-
-QMat qmatc_muln(QMat A, float b)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] * b;
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_dotmul(QMat A, QMat B)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-    if(A.row != B.row && A.col != B.col){
-        mat.err = QMAT_ERR_DIM;
-        return mat;
-    }
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] * B.elem[i][j];
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_add(QMat A, QMat B)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-    if(A.row != B.row && A.col != B.col){
-        mat.err = QMAT_ERR_DIM;
-        return mat;
-    }
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] + B.elem[i][j];
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_addn(QMat A, float b)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] + b;
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_sub(QMat A, QMat B)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-    if(A.row != B.row && A.col != B.col){
-        mat.err = QMAT_ERR_DIM;
-        return mat;
-    }
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] - B.elem[i][j];
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_subn(QMat A, float b)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] - b;
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_div(QMat A, QMat B)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-
-    return mat;
-}
-
-QMat qmatc_divn(QMat A, float b)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] / b;
-        }
-    }
-    return mat;
-}
-
-QMat qmatc_dotdiv(QMat A, QMat B)
-{
-    int i, j;
-    QMat mat = qmatc(A.row, A.col);
-    if(A.row != B.row && A.col != B.col){
-        mat.err = QMAT_ERR_DIM;
-        return mat;
-    }
-    for(i = 0; i < mat.row; i++){
-        for(j = 0; j < mat.col; j ++){
-            mat.elem[i][j] = A.elem[i][j] / B.elem[i][j];
-        }
-    }
-    return mat;
-}
-
-#endif
-
-void qmat_zeros(QMat *mat)
+int qmat_zeros(QMat *mat)
 {
     int i, j;
     for(i = 0; i < mat->row; i++){
@@ -227,9 +26,10 @@ void qmat_zeros(QMat *mat)
         }
     }
     mat->err = QMAT_ERR_NONE;
+    return QMAT_ERR_NONE;
 }
 
-void qmat_ones(QMat *mat)
+int qmat_ones(QMat *mat)
 {
     int i, j;
     for(i = 0; i < mat->row; i++){
@@ -238,9 +38,10 @@ void qmat_ones(QMat *mat)
         }
     }
     mat->err = QMAT_ERR_NONE;
+    return QMAT_ERR_NONE;
 }
 
-void qmat_eyes(QMat *mat)
+int qmat_eyes(QMat *mat)
 {
     int i, j;
     for(i = 0; i < mat->row; i++){
@@ -252,7 +53,8 @@ void qmat_eyes(QMat *mat)
             }
         }
     }
-    mat->err  =QMAT_ERR_NONE;
+    mat->err = QMAT_ERR_NONE;
+    return QMAT_ERR_NONE;
 }
 
 float qmat_elem(QMat *mat, int row, int col) 
@@ -270,7 +72,7 @@ int qmat_mul(QMat *A, QMat *B, QMat *result)
 {
     int i, j, m;
     float tmp = 0.0;
-    if(A->row == B->col && A->row == result->row && A->col == B->row && B->col == result->col){
+    if((A->row == B->col) && (A->row == result->row) && (A->col == B->row) && (B->col == result->col)){
         for(i = 0; i < A->row; i++){
             for(j = 0; j < A->col; j++){
                 for(m = 0; m < A->row; m++){
@@ -281,10 +83,10 @@ int qmat_mul(QMat *A, QMat *B, QMat *result)
             }
         }
         result->err = QMAT_ERR_NONE;
-        return 0;
+        return QMAT_ERR_NONE;
     }else{
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }
 }
 
@@ -292,9 +94,9 @@ int qmat_muln(QMat *A, float b, QMat *result)
 {
     int i, j;
 
-    if(A->row != result->row || A->col != result->col){
+    if((A->row != result->row) || (A->col != result->col)){
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }
 
     for(i = 0; i < A->row; i++){
@@ -303,23 +105,23 @@ int qmat_muln(QMat *A, float b, QMat *result)
         }
     }
     result->err = QMAT_ERR_NONE;
-    return 0;
+    return QMAT_ERR_NONE;
 }
 
 int qmat_dotmul(QMat *A, QMat *B, QMat *result) 
 {
     int i, j;
-    if(A->row == B->row && A->col == B->col && A->row == result->row && A->col == result->col){
+    if((A->row == B->row) && (A->col == B->col) && (A->row == result->row) && (A->col == result->col)){
         for(i = 0; i < A->row; i++){
             for(j = 0; j < A->col; j++){
                 result->elem[i][j] = A->elem[i][j] * B->elem[i][j];
             }
         }
         result->err = QMAT_ERR_NONE;
-        return 0;
+        return QMAT_ERR_NONE;
     }else{
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }
 }
 
@@ -333,10 +135,10 @@ int qmat_add(QMat *A, QMat *B, QMat *result)
             }
         }
         result->err = QMAT_ERR_NONE;
-        return 0;
+        return QMAT_ERR_NONE;
     }else{
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }
 }
 
@@ -345,7 +147,7 @@ int qmat_addn(QMat *A, float b, QMat *result)
     int i, j;
     if(A->row != result->row || A->col != result->col){
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }else{
         for(i = 0; i < A->row; i ++){
             for(j = 0; j < A->col; j++){
@@ -353,13 +155,13 @@ int qmat_addn(QMat *A, float b, QMat *result)
             }
         }
         result->err = QMAT_ERR_NONE;
-        return 0;
+        return QMAT_ERR_NONE;
     }
 }
 
 int qmat_div(QMat *A, QMat *B, QMat *result) 
 {
-    return 0;
+    return QMAT_ERR_NONE;
 }
 
 int qmat_divn(QMat *A, float b, QMat *result)
@@ -367,10 +169,10 @@ int qmat_divn(QMat *A, float b, QMat *result)
     int i, j;
     if(A->row != result->row || A->col != result->col){
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }else if(b == 0.0){
         result->err = QMAT_ERR_CALC;
-        return -1;
+        return QMAT_ERR_CALC;
     }else{
         for(i = 0; i < A->row; i ++){
             for(j = 0; j < A->col; j++){
@@ -378,7 +180,7 @@ int qmat_divn(QMat *A, float b, QMat *result)
             }
         }
         result->err = QMAT_ERR_NONE;
-        return 0;
+        return QMAT_ERR_NONE;
     }
 }
 
@@ -392,17 +194,17 @@ int qmat_dotdiv(QMat *A, QMat *B, QMat *result)
                     result->elem[i][j] = A->elem[i][j] / B->elem[i][j];
                 }else{
                     result->err = QMAT_ERR_CALC;
-                    return -1;
+                    return QMAT_ERR_CALC;
                 }
             }
         }
         result->err = QMAT_ERR_NONE;
-        return 0;
+        return QMAT_ERR_NONE;
     }else{
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }
-    return 0;
+    return QMAT_ERR_NONE;
 }
 
 int qmat_sub(QMat *A, QMat *B, QMat *result) 
@@ -415,12 +217,12 @@ int qmat_sub(QMat *A, QMat *B, QMat *result)
             }
         }
         result->err = QMAT_ERR_NONE;
-        return 0;
+        return QMAT_ERR_NONE;
     }else{
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }
-    return 0;
+    return QMAT_ERR_NONE;
 }
 
 int qmat_subn(QMat *A, float b, QMat *result) 
@@ -428,7 +230,7 @@ int qmat_subn(QMat *A, float b, QMat *result)
     int i, j;
     if(A->row != result->row || A->col != result->col){
         result->err = QMAT_ERR_DIM;
-        return -1;
+        return QMAT_ERR_DIM;
     }else{
         for(i = 0; i < A->row; i ++){
             for(j = 0; j < A->col; j++){
@@ -436,6 +238,6 @@ int qmat_subn(QMat *A, float b, QMat *result)
             }
         }
         result->err = QMAT_ERR_NONE;
-        return 0;
+        return QMAT_ERR_NONE;
     }
 }
