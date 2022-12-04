@@ -12,6 +12,11 @@
  extern "C" {
 #endif
 
+typedef struct _adrc
+{
+    
+} AdrcObj;
+
 
 #ifdef __cplusplus
  }

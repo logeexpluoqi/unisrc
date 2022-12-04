@@ -11,6 +11,12 @@
  extern "C" {
 #endif
 
+typedef struct _lqr
+{
+    
+} LqrObj;
+
+
 #ifdef __cplusplus
  }
 #endif

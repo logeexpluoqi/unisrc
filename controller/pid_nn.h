@@ -15,7 +15,7 @@
 typedef struct _pid_nn
 {
     
-} PidNN;
+} PidNnObj;
 
 
 #ifdef __cplusplus

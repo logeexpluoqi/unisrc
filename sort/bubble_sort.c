@@ -5,6 +5,7 @@
  * @Last Modified time: 2022-05-13 22:15:37
  */
 
+#include "bubble_sort.h"
 #include "sort_comm.h"
 
 int bubble_sort(float *data, int len)

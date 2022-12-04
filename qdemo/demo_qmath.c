@@ -18,7 +18,7 @@ static int cmd_qmat_hdl(int, char**);
 
 void demo_qmath_init()
 {
-    qcmd_init(&cmd_qmat, "qmat", cmd_qmat_hdl, "@ add<A B>, addn<A, b>, mul<A B>, muln<A b>, sub<A B>, subn<A b>, div<A B>, divn<A b>, dotdiv<A b>, inv<A>");
+    qcmd_init(&cmd_qmat, "qmat", cmd_qmat_hdl, "@ add, addn, mul, muln, sub, subn, div, divn, dotdiv, inv");
     qcmd_add(&cmd_qmat);
 }
 int cmd_qmat_hdl(int argc, char **argv)

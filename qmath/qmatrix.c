@@ -128,7 +128,7 @@ int qmat_dotmul(QMat *A, QMat *B, QMat *result)
 int qmat_add(QMat *A, QMat *B, QMat *result) 
 {
     int i, j;
-    if(A->row == B->row && A->col == B->col && A->row == result->row && A->col == result->col){
+    if((A->row == B->row) && (A->col == B->col) && (A->row == result->row) && (A->col == result->col)){
         for(i = 0; i< A->row; i++){
             for(j = 0; j < A->col; j++){
                 result->elem[i][j] = A->elem[i][j] + B->elem[i][j];
@@ -145,7 +145,7 @@ int qmat_add(QMat *A, QMat *B, QMat *result)
 int qmat_addn(QMat *A, float b, QMat *result)
 {
     int i, j;
-    if(A->row != result->row || A->col != result->col){
+    if((A->row != result->row) || (A->col != result->col)){
         result->err = QMAT_ERR_DIM;
         return QMAT_ERR_DIM;
     }else{
@@ -167,7 +167,7 @@ int qmat_div(QMat *A, QMat *B, QMat *result)
 int qmat_divn(QMat *A, float b, QMat *result)
 {
     int i, j;
-    if(A->row != result->row || A->col != result->col){
+    if((A->row != result->row) || (A->col != result->col)){
         result->err = QMAT_ERR_DIM;
         return QMAT_ERR_DIM;
     }else if(b == 0.0){
@@ -187,7 +187,7 @@ int qmat_divn(QMat *A, float b, QMat *result)
 int qmat_dotdiv(QMat *A, QMat *B, QMat *result)
 {
     int i, j;
-    if(A->row == B->row && A->col == B->col && A->row == result->row && A->col == result->col){
+    if((A->row == B->row) && (A->col == B->col) && (A->row == result->row) && (A->col == result->col)){
         for(i = 0; i< A->row; i++){
             for(j = 0; j < A->col; j++){
                 if(B->elem[i][j] != 0){
@@ -210,7 +210,7 @@ int qmat_dotdiv(QMat *A, QMat *B, QMat *result)
 int qmat_sub(QMat *A, QMat *B, QMat *result) 
 {
     int i, j;
-    if(A->row == B->row && A->col == B->col && A->row == result->row && A->col == result->col){
+    if((A->row == B->row) && (A->col == B->col) && (A->row == result->row) && (A->col == result->col)){
         for(i = 0; i< A->row; i++){
             for(j = 0; j < A->col; j++){
                 result->elem[i][j] = A->elem[i][j] - B->elem[i][j];
@@ -228,7 +228,7 @@ int qmat_sub(QMat *A, QMat *B, QMat *result)
 int qmat_subn(QMat *A, float b, QMat *result) 
 {
     int i, j;
-    if(A->row != result->row || A->col != result->col){
+    if((A->row != result->row) || (A->col != result->col)){
         result->err = QMAT_ERR_DIM;
         return QMAT_ERR_DIM;
     }else{
