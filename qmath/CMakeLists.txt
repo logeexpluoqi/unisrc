@@ -4,4 +4,10 @@ add_library(qmath
         qcomplex.c
         qconv.c
         qtrigf.c
-)
+        qdiff.c
+        qdiv.c
+        qfft.c
+        qint.c
+        qgrad.c
+        qinsert.c
+        qfit.c)

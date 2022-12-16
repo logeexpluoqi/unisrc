@@ -18,14 +18,21 @@ typedef struct
     float y;
     float x;
     float h;
+    float tolerance;
 } OdeRKx;
 
 
 int ode_rk4_calcu(float *y, float (*dy)(float _x, float _y), float h, float x0, float y0, int len);
 
-int ode_rk_init(OdeRKx *solver, float (*dy)(float, float), float h, float x0, float y0);
+int ode_rk45_calcu(float *y, float (*dy)(float _x, float _y), float h, float x0, float y0, int len);
+
+int ode_rk4_init(OdeRKx *solver, float (*dy)(float _x, float _y), float h, float x0, float y0);
 
 float ode_rk4_k_calcu(OdeRKx *solver);
+
+int ode_rk45_init(OdeRKx *solver, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tolerance);
+
+float ode_rk45_k_calcu(OdeRKx *solver);
 
 #ifdef __cplusplus
  }
