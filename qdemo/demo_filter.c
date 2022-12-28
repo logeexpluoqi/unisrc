@@ -10,7 +10,7 @@
 #include <string.h>
 #include "demo_filter.h"
 #include "../qshell/qsh.h"
-#include "../filter/sliding_average_filter.h"
+#include "../filter/lpf_sa.h"
 #include "../filter/lpf_1st.h"
 #include "../filter/hpf_1st.h"
 #include "../filter/kalman_filter.h"
@@ -18,7 +18,7 @@
 
 #define NDATA_SIZE    10000
 
-SlidAveFilterObj sldave_filter;
+LpfSaObj sldave_filter;
 static void demo_filter_sliding_average(void);
 
 Lpf1stObj lpf_1st;
@@ -42,7 +42,7 @@ void demo_filter_init()
         ndata[i] = sinf(0.001 * i) + (rand() % 10000) / 10000.0 - 0.5 + cos(0.005 * i);
     }
 
-    sliding_average_filter_init(&sldave_filter, 100);
+    lpf_sa_init(&sldave_filter, 100);
     lpf_1st_init(&lpf_1st, 0.01, 0.01);
     hpf_1st_init(&hpf_1st, 1, 0.01);
     kf_1dim_init(&kf_1dim, 0, 1, 0, 1, 0, 0.002, 0.5);
@@ -89,7 +89,7 @@ void demo_filter_sliding_average()
 {
     float fdata[NDATA_SIZE] = {0};
     for(int i = 0; i < NDATA_SIZE - 100; i++) {
-        fdata[i] = sliding_average_filter_calcu(&sldave_filter, ndata[i]);
+        fdata[i] = lpf_sa_calcu(&sldave_filter, ndata[i]);
         if((i % 10) == 0) {
             QSH("\r\n");
         }
