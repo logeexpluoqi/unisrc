@@ -30,6 +30,9 @@ QCmplx qcmplx_mul(QCmplx a, QCmplx b);
 /* division */
 QCmplx qcmplx_div(QCmplx a, QCmplx b);
 
+float qcmplx_arg(QCmplx a);
+
+float qcmplx_abs(QCmplx a);
 #ifdef __cplusplus
  }
 #endif
