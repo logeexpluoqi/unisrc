@@ -19,7 +19,7 @@
 #define NDATA_SIZE    10000
 
 LpfSaObj sldave_filter;
-static void demo_filter_sliding_average(void);
+static void demo_filter_sa(void);
 
 Lpf1stObj lpf_1st;
 static void demo_lpf_1st(void);
@@ -47,7 +47,7 @@ void demo_filter_init()
     hpf_1st_init(&hpf_1st, 1, 0.01);
     kf_1dim_init(&kf_1dim, 0, 1, 0, 1, 0, 0.002, 0.5);
 
-    qcmd_init(&cmd_filter, "filter", cmd_filter_hdl, "@ nsig, sldave, lpf1st, hpf1st, kf1dim");
+    qcmd_init(&cmd_filter, "filter", cmd_filter_hdl, "@ nsig, sa, lpf1st, hpf1st, kf1dim");
     qcmd_add(&cmd_filter);
 }
 
@@ -59,8 +59,8 @@ int cmd_filter_hdl(int argc, char **argv)
     
     if(ISARG(argv[1], "nsig")) {
         nsig_show();
-    } else if(ISARG(argv[1], "sldave")) {
-        demo_filter_sliding_average();
+    } else if(ISARG(argv[1], "sa")) {
+        demo_filter_sa();
     } else if(ISARG(argv[1], "lpf1st")) {
         demo_lpf_1st();
     } else if(ISARG(argv[1], "hpf1st")) {
@@ -85,7 +85,7 @@ void nsig_show()
     QSH("\r\n");
 }
 
-void demo_filter_sliding_average()
+void demo_filter_sa()
 {
     float fdata[NDATA_SIZE] = {0};
     for(int i = 0; i < NDATA_SIZE - 100; i++) {
