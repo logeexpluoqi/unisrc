@@ -9,21 +9,19 @@
 #define _QUI_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
-typedef struct 
-{
+typedef struct {
     int size_x;
-    int size_y; 
+    int size_y;
 } QuiObj;
 
 int qui_init(QuiObj *ui, int size_x, int size_y);
 
 
-
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

@@ -9,12 +9,12 @@
 #define _ODE_EULER_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
-typedef struct 
-{
+typedef struct {
     float (*dy)(float x, float y);
+
     float y;
     float x;
     float h;
@@ -35,7 +35,7 @@ int ode_euler_2st_k_init(OdeEuler *solver, float (*dy)(float _x, float _y), floa
 float ode_euler_2st_k_calcu(OdeEuler *solver);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

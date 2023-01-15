@@ -15,7 +15,9 @@
 
 static pthread_t task_qterm = -1;
 static pthread_t task_qterm_recv = -1;
+
 static void *task_qterm_hdl(void *args);
+
 static void *task_qterm_recv_hdl(void *args);
 
 #define QTERM_LOCAL_PORT    56666
@@ -30,14 +32,15 @@ static int fd_local = -1;
 
 static int qterm_send(char *data, int len)
 {
-    return sendto(fd_remote, data, len, 0, (struct sockaddr*)&remote, (socklen_t)sizeof(remote));
+    return sendto(fd_remote, data, len, 0, (struct sockaddr *) &remote, (socklen_t) sizeof(remote));
 }
+
 static int qterm_recv(char *buf, int len)
 {
     struct sockaddr_in addr;
     bzero(&addr, sizeof(addr));
     socklen_t sock_len = sizeof(addr);
-    return recvfrom(fd_remote, buf, len, 0, (struct sockaddr*)addr, &sock_len);
+    return recvfrom(fd_remote, buf, len, 0, (struct sockaddr *) addr, &sock_len);
 }
 
 int main()
@@ -52,13 +55,13 @@ int main()
     local.sin_port = htons(INADDR_ANY);
     local.sin_addr = inet_addr(QTERM_REMOTE_ADDR));
     fd_local = socket(AF_INET, SOCK_DGRAM, 0);
-    if(fd_local < 0){
+    if (fd_local < 0) {
         close(fd_local);
         perror(" qterm server socket creat");
         printf("\r\n");
         return -1;
     }
-    if(bind(fd_local, (struct sockaddr*)&local, sizeof(local)) < 0){
+    if (bind(fd_local, (struct sockaddr *) &local, sizeof(local)) < 0) {
         perror(" qterm server socket bind");
         printf("\r\n");
         return -1;
@@ -79,31 +82,29 @@ void *task_qterm_hdl(void *args)
     printf(" > LOCAL     IP:127.0.0.1 PORT: %d\r\n", QTERM_LOCAL_PORT);
     printf(" > REMOTE    IP:127.0.0.1 PORT: %d\r\n", QTERM_REMOTE_PORT);
     printf("================================================\r\n");
-    while (1)
-    {
+    while (1) {
         c = getchar();
         qterm_send(&c, 1);
-        if(c == 3){
+        if (c == 3) {
             systerm("stty -raw echo");
             printf("\033[H\033[J");
             pthread_exit(NULL);
         }
     }
-    
+
 }
 
 void *task_qterm_recv_hdl(void *args)
 {
     static char recv[256] = {0};
-    while (1)
-    {
+    while (1) {
         int nbytes = qterm_recv(recv);
-        if((nbytes > 0) && (nbytes) < 256){
+        if ((nbytes > 0) && (nbytes) < 256) {
             recv[nbytes] = '\0';
             printf("%s", recv);
             fflush(stdout);
             memset(recv, 0, sizeof(recv));
         }
     }
-    
+
 }

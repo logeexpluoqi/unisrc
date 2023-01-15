@@ -9,7 +9,7 @@
 
 static int _quick_short_recu(float *data, int len, int begin, int end);
 
-int quick_sort_recu(float *data, int len) 
+int quick_sort_recu(float *data, int len)
 {
     return (_quick_short_recu(data, len, 0, len - 1));
 }
@@ -17,27 +17,27 @@ int quick_sort_recu(float *data, int len)
 int _quick_short_recu(float *data, int len, int begin, int end)
 {
     int i, j;
-    if(begin < end){
-            i = begin + 1;
-            j = end;
-        
-        while(i < j) {
-            if(data[i] > data[begin]) {
+    if (begin < end) {
+        i = begin + 1;
+        j = end;
+
+        while (i < j) {
+            if (data[i] > data[begin]) {
                 sort_swap(&data[i], &data[j]);
-                j--; 
-            } else {  
+                j--;
+            } else {
                 i++;
             }
         }
-        if(data[i] >= data[begin]) { 
+        if (data[i] >= data[begin]) {
             i--;
         }
         sort_swap(&data[begin], &data[i]);
         _quick_short_recu(data, len, begin, i);
         _quick_short_recu(data, len, j, end);
-    }else{
+    } else {
         return 0;
     }
-    
+
     return 0;
 }

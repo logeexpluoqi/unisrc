@@ -16,11 +16,11 @@ typedef struct physicw
 {
     float gravity;
     float wind[2];
-} PhysicW;
+} PhysicWObj;
 
-int phyw_init(PhysicW *world, float gravity);
+int phyw_init(PhysicWObj *world, float gravity);
 
-int phyw_wind_set(PhysicW *world, float wind[2]);
+int phyw_wind_set(PhysicWObj *world, float wind[2]);
 
 #ifdef __cplusplus
  }

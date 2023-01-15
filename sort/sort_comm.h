@@ -8,13 +8,13 @@
 #define _SORT_COMM_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 int sort_swap(float *a, float *b);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

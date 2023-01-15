@@ -9,13 +9,13 @@
 #define _BUBBLE_SORT_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 int bubble_sort(float *data, int len);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

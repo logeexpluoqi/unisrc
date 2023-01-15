@@ -9,13 +9,13 @@
 #define _QUICK_SORT_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 int quick_sort_recu(float *data, int len);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

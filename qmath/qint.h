@@ -8,11 +8,11 @@
 #ifndef _QINT_H
 #define _QINT_H
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 
 #ifdef __cplusplus
- }
+}
 #endif
 #endif

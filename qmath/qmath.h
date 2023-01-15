@@ -9,7 +9,7 @@
 #define _QMATH_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 float qabs(float x);
@@ -29,7 +29,7 @@ float qfloor(float x);
 float qceil(float x);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

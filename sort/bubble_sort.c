@@ -11,11 +11,11 @@
 int bubble_sort(float *data, int len)
 {
     int i, j;
-    for(j = len - 1; j > 0; j--){
-        for(i = 0; i < j; i ++){
-            if(data[i] > data[i + 1]){
-                sort_swap(&data[i], &data[i+1]);
-            }else{
+    for (j = len - 1; j > 0; j--) {
+        for (i = 0; i < j; i++) {
+            if (data[i] > data[i + 1]) {
+                sort_swap(&data[i], &data[i + 1]);
+            } else {
                 continue;
             }
         }

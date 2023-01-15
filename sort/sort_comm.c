@@ -7,9 +7,9 @@
 
 int sort_swap(float *a, float *b)
 {
-    float tmp;  
+    float tmp;
 
-    tmp = *a;  
-    *a = *b;  
-    *b = tmp; 
+    tmp = *a;
+    *a = *b;
+    *b = tmp;
 }

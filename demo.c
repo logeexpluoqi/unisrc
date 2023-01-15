@@ -16,10 +16,12 @@
 #include "qdemo/qdemo.h"
 
 static MThread task_qsh;
-static void* task_qsh_hdl(void*);
+
+static void *task_qsh_hdl(void *);
 
 static MThread qtasks_tick;
-static void* qtasks_tick_hdl(void*);
+
+static void *qtasks_tick_hdl(void *);
 
 static int close_all = 0;
 
@@ -34,8 +36,8 @@ int main()
     mthread_basic_init();
     qdemo_init();
 
-    for(;;) {
-        if(close_all == 0) {
+    for (;;) {
+        if (close_all == 0) {
             qsh_exec();
             qtask_exec();
             usleep(10);
@@ -46,15 +48,15 @@ int main()
     return 0;
 }
 
-void* task_qsh_hdl(void* param)
+void *task_qsh_hdl(void *param)
 {
     char ch;
-    for(;;) {
+    for (;;) {
         mthread_task_begin(&task_qsh);
         system("stty raw -echo");
         ch = getchar();
         ch = (ch == 127) ? 8 : ch;
-        if(ch != 3) {
+        if (ch != 3) {
             qsh_recv(ch);
         } else {
             system("stty -raw echo");
@@ -68,13 +70,13 @@ void* task_qsh_hdl(void* param)
     }
 }
 
-void* qtasks_tick_hdl(void* param)
+void *qtasks_tick_hdl(void *param)
 {
-    for(;;) {
+    for (;;) {
         mthread_task_begin(&qtasks_tick);
 
         qtask_tick();
-        
+
         mthread_task_end(&qtasks_tick);
     }
 }

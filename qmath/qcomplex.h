@@ -9,11 +9,10 @@
 #define _QCOMPLEX_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
-typedef struct _qcomplex
-{
+typedef struct _qcomplex {
     float re;
     float im;
 } QCmplx;
@@ -33,8 +32,9 @@ QCmplx qcmplx_div(QCmplx a, QCmplx b);
 float qcmplx_arg(QCmplx a);
 
 float qcmplx_abs(QCmplx a);
+
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

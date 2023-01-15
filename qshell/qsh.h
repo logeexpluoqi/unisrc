@@ -9,14 +9,17 @@
 #define _QSH_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #define QSH_USING_LIBC    1
 
 #ifdef QSH_USING_LIBC
- #include <stdlib.h>
+
+#include <stdlib.h>
+
 #endif
+
 #include <stdio.h>
 #include <string.h>
 #include "../frame/cmd.h"
@@ -33,20 +36,20 @@ void qsh_init(void);
 
 void qsh_exec(void);
 
-void qcmd_init(CmdObj *qcmd, const char *name, int (*handle)(int, char**), const char *usage);
+void qcmd_init(CmdObj *qcmd, const char *name, int (*handle)(int, char **), const char *usage);
 
-void qcmd_add(CmdObj* qcmd);
+void qcmd_add(CmdObj *qcmd);
 
-void qcmd_del(CmdObj* qcmd);
+void qcmd_del(CmdObj *qcmd);
 
 #ifdef QSH_USING_LIBC
 
-int qcmd_export(const char *name, int (*handle)(int, char**), const char *usage);
+int qcmd_export(const char *name, int (*handle)(int, char **), const char *usage);
 
 #endif
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

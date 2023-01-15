@@ -7,7 +7,7 @@
 
 #include "ode_rk.h"
 
-int ode_rk4_init(OdeRKx* solver, float (*dy)(float _x, float _y), float h, float x0, float y0)
+int ode_rk4_init(OdeRKx *solver, float (*dy)(float _x, float _y), float h, float x0, float y0)
 {
     solver->dy = dy;
     solver->h = h;
@@ -17,15 +17,15 @@ int ode_rk4_init(OdeRKx* solver, float (*dy)(float _x, float _y), float h, float
     return 0;
 }
 
-int ode_rk4_calcu(float* y, float (*dy)(float _x, float _y), float h, float x0, float y0, int len)
+int ode_rk4_calcu(float *y, float (*dy)(float _x, float _y), float h, float x0, float y0, int len)
 {
     float xn, k1, k2, k3, k4;
-    if(len < 0) {
+    if (len < 0) {
         return -1;
     }
     y[0] = y0;
-    for(int i = 0; i < (len - 1); i++) {
-        xn = i * h + x0;
+    for (int i = 0; i < (len - 1); i++) {
+        xn = (float) i * h + x0;
         k1 = dy(xn, y[i]);
         k2 = dy(xn + (h / 2), y[i] + (h / 2) * k1);
         k3 = dy(xn + (h / 2), y[i] + (h / 2) * k2);
@@ -35,7 +35,7 @@ int ode_rk4_calcu(float* y, float (*dy)(float _x, float _y), float h, float x0, 
     return 0;
 }
 
-float ode_rk4_k_calcu(OdeRKx* solver)
+float ode_rk4_k_calcu(OdeRKx *solver)
 {
     float k1 = solver->dy(solver->x, solver->y);
     float k2 = solver->dy(solver->x + (solver->h / 2), solver->y + (solver->h / 2) * k1);
@@ -55,5 +55,5 @@ int ode_rk45_calcu(float *y, float (*dy)(float _x, float _y), float h, float x0,
 float ode_rk45_k_calcu(OdeRKx *solver)
 {
 
-    
+    return solver->y;
 }

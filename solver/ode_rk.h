@@ -9,12 +9,12 @@
 #define _ODE_RK_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
-typedef struct 
-{
+typedef struct {
     float (*dy)(float x, float y);
+
     float y;
     float x;
     float h;
@@ -35,7 +35,7 @@ int ode_rk45_init(OdeRKx *solver, float (*dy)(float _x, float _y), float h0, flo
 float ode_rk45_k_calcu(OdeRKx *solver);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

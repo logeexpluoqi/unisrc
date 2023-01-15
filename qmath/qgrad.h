@@ -8,11 +8,11 @@
 #ifndef _QGRAD_H
 #define _QGRAD_H
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 
 #ifdef __cplusplus
- }
+}
 #endif
 #endif

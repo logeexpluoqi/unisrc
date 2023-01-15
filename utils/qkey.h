@@ -9,22 +9,23 @@
 #define _QKEY_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "../frame/qlist.h"
 
-typedef enum _qkey_trig_def
-{
-    QKEY_STATE_LOW     = 0,
-    QKEY_STATE_HIGH    = 1
+typedef enum _qkey_trig_def {
+    QKEY_STATE_LOW = 0,
+    QKEY_STATE_HIGH = 1
 } QKeyState;
 
-typedef struct _qkey_obj
-{
-    const char* name;
+typedef struct _qkey_obj {
+    const char *name;
+
     int (*callback)(void);
+
     QKeyState (*getkey)(void);
+
     int id;
     int err;
     QKeyState state;
@@ -34,19 +35,19 @@ typedef struct _qkey_obj
     ListObj qkey_node;
 } QKeyObj;
 
-int qkey_init(QKeyObj* key,
-               const char* name,
-               QKeyState state,
-               QKeyState (*getkey)(void),
-               int (*callback)(void),
-               unsigned int dtime);
+int qkey_init(QKeyObj *key,
+              const char *name,
+              QKeyState state,
+              QKeyState (*getkey)(void),
+              int (*callback)(void),
+              unsigned int dtime);
 
 int qkey_exec(void);
 
 int qkey_tick(void);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

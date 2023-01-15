@@ -9,18 +9,16 @@
 #define _QMATRIX_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
-typedef enum _qmat_err
-{
-    QMAT_ERR_DIM  = -1,
+typedef enum _qmat_err {
+    QMAT_ERR_DIM = -1,
     QMAT_ERR_NONE = 0,
     QMAT_ERR_CALC = 1,
-}QMatErr;
+} QMatErr;
 
-typedef struct _qmatrix
-{
+typedef struct _qmatrix {
     unsigned int row;
     unsigned int col;
     float **elem;
@@ -71,7 +69,7 @@ int qmat_subn(QMat *A, float b, QMat *result);
 int qmat_inv(QMat *A, QMat *result);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

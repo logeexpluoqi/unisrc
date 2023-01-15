@@ -9,12 +9,12 @@
 #define _QINSERT_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 int qinsert_newton();
 
 #ifdef __cplusplus
- }
+}
 #endif
 #endif

@@ -8,11 +8,11 @@
 #ifndef _QDIFF_H
 #define _QDIFF_H
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 
 #ifdef __cplusplus
- }
+}
 #endif
 #endif
