@@ -9,7 +9,7 @@
 
 static LIST_HEAD(qtask_list);
 static LIST_HEAD(qdtask_list);
-static unsigned long timeslice_task_id = 0;
+static unsigned int qtask_id = 0;
 
 void qtask_exec()
 {
@@ -53,9 +53,9 @@ void qtask_init(QTaskObj* task,
                          unsigned int timeslice, 
                          const char* usage)
 {
-    timeslice_task_id ++;
+    qtask_id ++;
     task->name = name;
-    task->id = timeslice_task_id;
+    task->id = qtask_id;
     task->is_run = TASK_STOP;
     task->task_hdl = task_hdl;
     task->timer = timeslice;

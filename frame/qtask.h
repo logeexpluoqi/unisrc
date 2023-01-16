@@ -27,7 +27,7 @@ typedef struct _qtask
     IsTaskRun is_run;
     unsigned int timer;
     unsigned int timeslice;
-    unsigned long long run_time;
+    unsigned int run_time;
     ListObj qtask_node;
     const char* usage;
 } QTaskObj;

@@ -31,7 +31,7 @@ int cmd_ls_hdl(int argc, char **argv)
             QSH(" -----------      ---------   ----------      -----------      -------\r\n");
             for(i = num; i > 0; i--) {
                 task = qtask_get(i);
-                QSH("  %-15s  %-3u         %-6lld          %-6u           %s\r\n",
+                QSH("  %-15s  %-3u         %-6d          %-6u           %s\r\n",
                        task->name, task->id, task->run_time, task->timeslice, task->usage);
             }
             return 0;
@@ -45,7 +45,7 @@ int cmd_ls_hdl(int argc, char **argv)
             QSH(" -----------      ---------   ----------      -----------      -------\r\n");
             for(i = num; i > 0; i--) {
                 task = qdtask_get(i);
-                QSH("  %-15s  %-3u         %-6lld          %-6u           %s\r\n",
+                QSH("  %-15s  %-3u         %-6d          %-6u           %s\r\n",
                        task->name, task->id, task->run_time, task->timeslice, task->usage);
             }
         }
