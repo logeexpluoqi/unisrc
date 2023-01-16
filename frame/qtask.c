@@ -7,8 +7,8 @@
 
 #include "qtask.h"
 
-static LIST_HEAD(timeslice_task_list);
-static LIST_HEAD(timeslice_task_del_list);
+static LIST_HEAD(qtask_list);
+static LIST_HEAD(qdtask_list);
 static unsigned long timeslice_task_id = 0;
 
 void qtask_exec()
@@ -16,13 +16,11 @@ void qtask_exec()
     ListObj *node, *_node;
     QTaskObj *task;
 
-    list_for_each_safe(node, _node, &timeslice_task_list) {
+    list_for_each_safe(node, _node, &qtask_list) {
         task = list_entry(node, QTaskObj, qtask_node);
         if(task->is_run == TASK_RUN) {
-            // func_start();
             task->task_hdl();
             task->is_run = TASK_STOP;
-            // task->run_time = func_end;
         }
     }
 }
@@ -32,7 +30,7 @@ void qtask_tick()
     ListObj* node;
     QTaskObj *task;
 
-    list_for_each(node, &timeslice_task_list) {
+    list_for_each(node, &qtask_list) {
         task = list_entry(node, QTaskObj, qtask_node);
         if(task->timer != 0) {
             task->timer --;
@@ -46,7 +44,7 @@ void qtask_tick()
 
 unsigned int qtask_num_get()
 {
-    return list_len(&timeslice_task_list);
+    return list_len(&qtask_list);
 }
 
 void qtask_init(QTaskObj* task, 
@@ -75,7 +73,7 @@ int qtask_add(QTaskObj* task)
     }
 
     if(qtask_isexist(task) == 0) {
-        list_insert_before(&timeslice_task_list, &task->qtask_node);
+        list_insert_before(&qtask_list, &task->qtask_node);
         return 0;
     }
     return -1;
@@ -90,7 +88,7 @@ int qtask_del(QTaskObj* task)
     }
 
     if(qdtask_isexsit(task) == 0){
-        list_insert_before(&timeslice_task_del_list, &task->qtask_node);
+        list_insert_before(&qdtask_list, &task->qtask_node);
         return 0;
     } else {
         return -1;
@@ -103,7 +101,7 @@ int qtask_isexist(QTaskObj* task)
     ListObj *node, *_node;
     QTaskObj *_task;
 
-    list_for_each_safe(node, _node, &timeslice_task_list) {
+    list_for_each_safe(node, _node, &qtask_list) {
         _task = list_entry(node, QTaskObj, qtask_node);
         if(task->id == _task->id) {
             return 1;
@@ -119,7 +117,7 @@ int qdtask_isexsit(QTaskObj* task)
     ListObj *node, *_node;
     QTaskObj *_task;
 
-    list_for_each_safe(node, _node, &timeslice_task_del_list) {
+    list_for_each_safe(node, _node, &qdtask_list) {
         _task = list_entry(node, QTaskObj, qtask_node);
         if(task->id == _task->id) {
             return 1;
@@ -142,7 +140,7 @@ void qtask_timeslice_set(QTaskObj* obj, unsigned int slice_len)
 
 QTaskObj* qtask_get(unsigned int task_id)
 {
-    ListObj* node = &timeslice_task_list;
+    ListObj* node = &qtask_list;
 
     for(unsigned int i = task_id; i > 0; i--) {
         node = node->next;
@@ -153,12 +151,12 @@ QTaskObj* qtask_get(unsigned int task_id)
 
 unsigned int qdtask_num_get()
 {
-    return list_len(&timeslice_task_del_list);
+    return list_len(&qdtask_list);
 }
 
 QTaskObj* qdtask_get(unsigned int task_id)
 {
-    ListObj* node = &timeslice_task_del_list;
+    ListObj* node = &qdtask_list;
 
     for(unsigned int i = task_id; i > 0; i--) {
         node = node->next;
