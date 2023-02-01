@@ -33,7 +33,6 @@ int main()
     mthread_start(&qtasks_tick);
 
     qsh_init();
-    mthread_basic_init();
     qdemo_init();
 
     for (;;) {

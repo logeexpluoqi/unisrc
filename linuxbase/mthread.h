@@ -34,8 +34,6 @@ typedef struct mthread
     ListObj             mnode;
 } MThread;
 
-int mthread_basic_init(void);
-
 int mthread_period_set(MThread *mthread, uint32_t per);
 
 int mthread_periority_set(MThread *mthread, uint32_t per);

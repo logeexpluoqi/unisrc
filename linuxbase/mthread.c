@@ -14,7 +14,7 @@
 
 static LIST_HEAD(mthread_list);
 static LIST_HEAD(mthread_del_list);
-static uint32_t thread_mid;
+static uint32_t thread_mid = 0;
 
 static int mthread_isexist(MThread *mthread);
 static int mthread_del_isexist(MThread *mthread);
@@ -22,15 +22,6 @@ static int mthread_del_isexist(MThread *mthread);
 static int cmd_mls_hdl(int, char **);
 static int cmd_mk_hdl(int, char **);
 static int cmd_mr_hdl(int, char **);
-
-int mthread_basic_init(void)
-{
-    thread_mid = 0;
-    qcmd_export("mls", cmd_mls_hdl, "@ /-d (list all mthread info)");
-    qcmd_export("mk", cmd_mk_hdl, "@ mid (kill mthread)");
-    qcmd_export("mr", cmd_mr_hdl, "@ mid (restart mthread)");
-    return 0;
-}
 
 int mthread_period_set(MThread *mthread, uint32_t per)
 {
@@ -81,6 +72,11 @@ int mthread_init(MThread *mthread, const char *name, uint8_t priority, uint32_t 
     mthread->time.tv_sec    = 0;
     mthread->time.tv_nsec   = 0;
     mthread->usage          = usage;
+    if(thread_mid == 0){
+        qcmd_export("mls", cmd_mls_hdl, "@ /-d (list all mthread info)");
+        qcmd_export("mk", cmd_mk_hdl, "@ mid (kill mthread)");
+        qcmd_export("mr", cmd_mr_hdl, "@ mid (restart mthread)");
+    }
     mthread->mid            = thread_mid++;
     return 0;
 }
