@@ -71,7 +71,7 @@ float qfcosd(float x)
 
 float qftand(float x)
 {
-
+    return (qfsind(x) / qfsind(x + 90.0));
 }
 
 float qfasind(float x)

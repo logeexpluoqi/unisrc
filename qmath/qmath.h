@@ -28,6 +28,11 @@ float qfloor(float x);
 
 float qceil(float x);
 
+float qmean(float *data, int len);
+
+#define QPOW_ACCURACY   0.01
+float qpow(float a, float b);
+
 #ifdef __cplusplus
 }
 #endif

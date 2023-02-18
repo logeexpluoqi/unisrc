@@ -52,13 +52,17 @@ void *task_qsh_hdl(void *param)
     char ch;
     for (;;) {
         mthread_task_begin(&task_qsh);
-        system("stty raw -echo");
+        if(system("stty raw -echo") < 0){
+            printf(" #! system call error !\r\n");
+        }
         ch = getchar();
         ch = (ch == 127) ? 8 : ch;
         if (ch != 3) {
             qsh_recv(ch);
         } else {
-            system("stty -raw echo");
+            if(system("stty -raw echo") < 0){
+                printf(" #! system call error !\r\n");
+            }
             printf("\33[2K");
             printf("\033[H\033[J");
             printf(" \r\n#! qsh input thread closed !\r\n\r\n");

@@ -27,10 +27,7 @@ int ode_euler_k_init(OdeEuler *solver, float (*dy)(float _x, float _y), float x0
 float ode_euler_1st_k_calcu(OdeEuler *solver);
 
 /* prediction-correction formula */
-
 int ode_euler_2st_calcu(float *y, float (*dy)(float _x, float _y), float h, float x0, float y0, int len);
-
-int ode_euler_2st_k_init(OdeEuler *solver, float (*dy)(float _x, float _y), float h, float x0, float y0);
 
 float ode_euler_2st_k_calcu(OdeEuler *solver);
 

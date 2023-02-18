@@ -19,6 +19,9 @@ static int cmd_qmat_hdl(int, char **);
 static CmdObj cmd_cmplx;
 static int cmd_cmplx_hdl(int, char **);
 
+static CmdObj cmd_m;
+static int cmd_m_hdl(int, char **);
+
 void demo_qmath_init()
 {
     qcmd_init(&cmd_qmat, "qmat", cmd_qmat_hdl, "@ add, addn, mul, muln, sub, subn, div, divn, dotdiv, inv");
@@ -26,6 +29,9 @@ void demo_qmath_init()
 
     qcmd_init(&cmd_cmplx, "cmplx", cmd_cmplx_hdl, "@ add<a bi c di>, sub<a bi c di>, mul<a bi c di>, div<a bi c di>, abs<a bi>");
     qcmd_add(&cmd_cmplx);
+
+    qcmd_init(&cmd_m, "m", cmd_m_hdl, "@ pow<a b>");
+    qcmd_add(&cmd_m);
 }
 
 int cmd_qmat_hdl(int argc, char **argv)
@@ -73,5 +79,20 @@ int cmd_cmplx_hdl(int argc, char **argv)
         return CMD_PARAM_ERR;
     }
 
+    return CMD_NO_ERR;
+}
+
+static int cmd_m_hdl(int argc, char **argv)
+{
+    if(argc <= 1){
+        return CMD_PARAM_ERR;
+    }
+    if(ISARG(argv[1], "pow") && (argc == 4)) {
+        float a = atof(argv[2]); 
+        float b = atof(argv[3]); 
+        QSH(" %f^%f = %f\r\n", a, b, qpow(a, b));
+    }else{
+        return CMD_PARAM_ERR;
+    }
     return CMD_NO_ERR;
 }
