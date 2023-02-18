@@ -68,7 +68,7 @@ static int demo_rk4_solver()
 int demo_rkf45_solver()
 {
     float yt[50] = {0};
-    ode_rkf45_calcu(yt, dy, 0.5, 0, dy(0, 0), 0.0005, 50);
+    ode_rkf45_calcu(yt, dy, 0.5, 0, dy(0, 0), 0.0005, 0.5, 50);
     for(int i = 0; i < TSPAN_SIZE; i++){
         if(i % 10 == 0){
             printf("\r\n");

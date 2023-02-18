@@ -118,7 +118,7 @@ static float rk_pow(float a, float b) {
     }
 }
 
-int ode_rkf45_calcu(float* y, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tol, int len)
+int ode_rkf45_calcu(float* y, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tol, float max_h, int len)
 {
     float _h, k1, k2, k3, k4, k5, k6, w, z, xn;
     int _bingo;
@@ -155,16 +155,19 @@ int ode_rkf45_calcu(float* y, float (*dy)(float _x, float _y), float h0, float x
                 _h = 0.8 * rk_pow(solver->tol * qabs(w) / (z - w), 0.2) * _h;
             #endif
             }
+            if(_h > max_h){
+                _h = max_h;
+            }
         }
     }
     return 0;
 }
 
-float ode_rkf45_kcalcu(OdeRKx* solver)
+float ode_rkf45_kcalcu(OdeRKx* solver, float max_h)
 {
     float _h, k1, k2, k3, k4, k5, k6, w, z;
     int _bingo;
-    while(!_bingo)
+    while(!_bingo){
         _bingo = 0;
         _h = solver->h;
         k1 = solver->dy(solver->x, solver->y);
@@ -191,8 +194,11 @@ float ode_rkf45_kcalcu(OdeRKx* solver)
             _h = 0.8 * rk_pow(solver->tolerance * qabs(w) / (z - w), 0.2) * _h;
         #endif
         }
+        if(_h > max_h){
+            _h = max_h;
+        }
         solver->h = _h;
-    };
+    }
 
     return solver->y;
 }

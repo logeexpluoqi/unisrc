@@ -33,9 +33,9 @@ float ode_rk4_kcalcu(OdeRKx *solver);
 /* Runge-Kutta-Fehlberg method */
 int ode_rkf45_init(OdeRKx *solver, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tol);
 
-int ode_rkf45_calcu(float *y, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tol, int len);
+int ode_rkf45_calcu(float *y, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tol, float max_h, int len);
 
-float ode_rkf45_kcalcu(OdeRKx *solver);
+float ode_rkf45_kcalcu(OdeRKx *solver, float max_h);
 
 #ifdef __cplusplus
 }
