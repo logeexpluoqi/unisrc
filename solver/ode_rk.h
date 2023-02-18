@@ -18,21 +18,24 @@ typedef struct {
     float y;
     float x;
     float h;
-    float tolerance;
+    float tol;
 } OdeRKx;
 
 
 int ode_rk4_calcu(float *y, float (*dy)(float _x, float _y), float h, float x0, float y0, int len);
 
-int ode_rk45_calcu(float *y, float (*dy)(float _x, float _y), float h, float x0, float y0, int len);
-
 int ode_rk4_init(OdeRKx *solver, float (*dy)(float _x, float _y), float h, float x0, float y0);
 
-float ode_rk4_k_calcu(OdeRKx *solver);
+float ode_rk4_kcalcu(OdeRKx *solver);
 
-int ode_rk45_init(OdeRKx *solver, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tolerance);
+#define IS_USING_SIMPLE_RKF45    1
 
-float ode_rk45_k_calcu(OdeRKx *solver);
+/* Runge-Kutta-Fehlberg method */
+int ode_rkf45_init(OdeRKx *solver, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tol);
+
+int ode_rkf45_calcu(float *y, float (*dy)(float _x, float _y), float h0, float x0, float y0, float tol, int len);
+
+float ode_rkf45_kcalcu(OdeRKx *solver);
 
 #ifdef __cplusplus
 }

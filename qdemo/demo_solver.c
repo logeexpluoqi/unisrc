@@ -19,7 +19,7 @@ static float tspan[TSPAN_SIZE];
 
 int demo_solver_init()
 {
-    qcmd_init(&cmd_ode, "ode", cmd_ode_hdl, "@ euler, rk");
+    qcmd_init(&cmd_ode, "ode", cmd_ode_hdl, "@ euler, rk, rkf45");
     qcmd_add(&cmd_ode);
 }
 
@@ -50,10 +50,25 @@ static int demo_euler_solver()
     return 0;
 }
 
+
 static int demo_rk4_solver()
 {
     float yt[TSPAN_SIZE] = {0};
     ode_rk4_calcu(yt, dy, 0.5, 0, dy(0, 0), TSPAN_SIZE);
+    for(int i = 0; i < TSPAN_SIZE; i++){
+        if(i % 10 == 0){
+            printf("\r\n");
+        }
+        printf(" %f", yt[i]);
+    }
+    printf("\r\n");
+    return 0;
+}
+
+int demo_rkf45_solver()
+{
+    float yt[50] = {0};
+    ode_rkf45_calcu(yt, dy, 0.5, 0, dy(0, 0), 0.0005, 50);
     for(int i = 0; i < TSPAN_SIZE; i++){
         if(i % 10 == 0){
             printf("\r\n");
@@ -74,6 +89,8 @@ int cmd_ode_hdl(int argc, char **argv)
         demo_euler_solver();
     }else if(ISARG(argv[1], "rk")){
         demo_rk4_solver();
+    }else if(ISARG(argv[1], "rkf45")){
+        demo_rkf45_solver();
     }else{
         return CMD_PARAM_ERR;
     }
