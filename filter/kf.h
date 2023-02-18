@@ -5,14 +5,14 @@
  * @Last Modified time: 2021-04-28 19:32:46
  */
 
-#ifndef _KALMAN_FILTER_H
-#define _KALMAN_FILTER_H
+#ifndef _KF_H
+#define _KF_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
-typedef struct _kalman_filter_1dimension
+typedef struct _kf_1dim
 {
     float x; // state, x(k) = a*x(k-1) + b*u(k)
     float a; // state transfer matrix

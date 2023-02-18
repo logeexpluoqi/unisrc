@@ -5,7 +5,7 @@
  * @Last Modified time: 2021-04-27 19:25:22
  */
 
-#include "kalman_filter.h"
+#include "kf.h"
 
 int kf_1dim_init(KF1DimObj* kf, float x0, float a, float b, float h, float p0, float q, float r)
 {

@@ -13,8 +13,7 @@
 #include "../filter/lpf_sa.h"
 #include "../filter/lpf_1st.h"
 #include "../filter/hpf_1st.h"
-#include "../filter/kalman_filter.h"
-#include "../filter/kalman_filter.h"
+#include "../filter/kf.h"
 
 #define NDATA_SIZE    10000
 
