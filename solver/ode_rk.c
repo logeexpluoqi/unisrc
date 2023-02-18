@@ -164,7 +164,7 @@ float ode_rkf45_kcalcu(OdeRKx* solver)
 {
     float _h, k1, k2, k3, k4, k5, k6, w, z;
     int _bingo;
-    do {
+    while(!_bingo)
         _bingo = 0;
         _h = solver->h;
         k1 = solver->dy(solver->x, solver->y);
@@ -192,7 +192,7 @@ float ode_rkf45_kcalcu(OdeRKx* solver)
         #endif
         }
         solver->h = _h;
-    } while(!_bingo);
+    };
 
     return solver->y;
 }
