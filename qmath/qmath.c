@@ -120,9 +120,7 @@ float qpow(float a, float b) {
             x = x + pow_i(t, i) * pow_d(b, i);
         }
         return x;
-    }
-
-    else if(a > 2) {
+    } else if(a > 2) {
 
         while(a > 2) {
             a = a / 2;
@@ -130,9 +128,7 @@ float qpow(float a, float b) {
         }
 
         return qpow(a, b) * qpow(2, b * p);
-    }
-
-    else {
+    } else {
         if(((int)b % 2) == 0) {
             return qpow(-a, b);
         } else {
