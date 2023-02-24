@@ -2,7 +2,7 @@
  * @Author: luoqi
  * @Date: 2021-09-17 11:15:21
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-11-27 22:49:14
+ * @Last Modified time: 2023-02-21 21:20:48
  */
 
 #include "ode_rk.h"
@@ -10,11 +10,6 @@
 static float qabs(float x)
 {
     return ((x >= 0) ? x : -x);
-}
-
-static float qpow(float x, float p)
-{
-
 }
 
 int ode_rk4_init(OdeRKx* solver, float (*dy)(float _x, float _y), float h, float x0, float y0)
