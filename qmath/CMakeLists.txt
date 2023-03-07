@@ -10,4 +10,5 @@ add_library(qmath
         qint.c
         qgrad.c
         qinsert.c
+        qrot.c
         qfit.c)
