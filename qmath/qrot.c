@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2023-03-07 20:38:56 
  * @Last Modified by: luoqi
- * @Last Modified time: 2023-03-07 22:00:00
+ * @Last Modified time: 2023-03-07 22:02:28
  */
 
 #include <math.h>
@@ -53,9 +53,9 @@ QRotQuat qrot_e2q(QRotEuler e)
 QRotEuler qrot_q2e(QRotQuat q)
 {
     QRotEuler e;
-    e.alpha = atan2(2 * (q.w * q.i + q.j * q.k), 1 - 2 * (q.i * q.i + q.j * q.j));
+    e.alpha = qrot_atan2(2 * (q.w * q.i + q.j * q.k), 1 - 2 * (q.i * q.i + q.j * q.j));
     e.beta = qrot_asin(2 * (q.w * q.j - q.i * q.k));
-    e.gamma = atan2(2 * (q.w * q.k + q.i * q.j), 2 * (q.j * q.j + q.k * q.k));
+    e.gamma = qrot_atan2(2 * (q.w * q.k + q.i * q.j), 2 * (q.j * q.j + q.k * q.k));
 
     return e;
 }
