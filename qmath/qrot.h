@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2023-03-07 20:36:07 
  * @Last Modified by: luoqi
- * @Last Modified time: 2023-03-07 20:54:17
+ * @Last Modified time: 2023-03-07 21:41:01
  */
 
 #ifndef _QROT_H
@@ -23,7 +23,7 @@ typedef struct qrot_euler_angle
     float alpha;
     float beta;
     float gamma;
-} QRotEulerAngle;
+} QRotEuler;
 
 typedef struct qrot_quatrnion
 {
@@ -33,9 +33,13 @@ typedef struct qrot_quatrnion
     float w;
 } QRotQuat;
 
-QRotCoord3D qrot_euler(QRotCoord3D c, QRotEulerAngle e);
+QRotCoord3D qrot_euler(QRotCoord3D c, QRotEuler e);
 
 QRotCoord3D qrot_quat(QRotCoord3D c, QRotQuat q);
+
+QRotQuat qrot_e2q(QRotEuler e);
+
+QRotEuler qrot_q2e(QRotQuat q);
 
 #ifdef __cplusplus
  }
