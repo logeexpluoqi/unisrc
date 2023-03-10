@@ -19,14 +19,13 @@ typedef enum {
 
 #define QSH_USAGE_DISP_MAX  80
 
-#define QLOGO      "/>$ "
-
 #define QPRINTF(...)     printf(__VA_ARGS__);
 
 #define QSH_BACKSPACE   '\b'
 #define QSH_ENTER       '\r'
 #define QSH_SPACE       '\20'
 
+static const char *logo = "/>$ ";
 static char cmd_buf[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
 static unsigned int hs_index = 0;
@@ -106,10 +105,17 @@ void qsh_init()
     qlogo();
 }
 
+int qcmd_call(const char *args)
+{
+    char _args[CMD_MAX_LEN+1] = {0};
+    strcpy(_args, args);
+    return cmd_exec(_args);
+}
+
 void qlogo()
 {
     QPRINTF("\r");
-    QPRINTF(QLOGO);
+    QPRINTF("%s", logo);
 }
 
 void clear_line()
@@ -358,7 +364,7 @@ void qsh_exec()
         recv_size = 0;
         memset(cmd_buf, 0, sizeof(cmd_buf));
         cmd_reset();
-        QPRINTF(QLOGO);
+        QPRINTF("%s", logo);
         recv_state = RECV_NOCMD;
     }
 }

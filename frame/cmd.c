@@ -1,6 +1,6 @@
 /*
- * @Author: luoqi 
- * @Date: 2021-04-29 00:29:54 
+ * @Author: luoqi
+ * @Date: 2021-04-29 00:29:54
  * @Last Modified by: luoqi
  * @Last Modified time: 2022-06-13 22:12:19
  */
@@ -19,41 +19,41 @@ CmdErr cmd_exec(char* args)
 {
     ListObj* node;
     CmdObj* cmd;
-    char* argv[CMD_MAX_NUM + 1] = {0};
+    char* argv[CMD_MAX_NUM + 1] = { 0 };
     int argc = 0;
     int argn = 0;
     int i = 0;
-    
+
     /* cmd parser */
-    do{
-        if (i == 0) {
+    do {
+        if(i == 0) {
             argv[argn] = &args[i];
-        } else if (args[i] == ASCII_SPACE || args[i] == ASCII_DOT) {
+        } else if(args[i] == ASCII_SPACE || args[i] == ASCII_DOT) {
             args[i] = 0;
-            if(args[i + 1] != ASCII_SPACE && args[i + 1] != ASCII_DOT){
+            if(args[i + 1] != ASCII_SPACE && args[i + 1] != ASCII_DOT) {
                 argv[++argn] = &args[i + 1];
             }
         }
         i++;
-        if (i > CMD_MAX_LEN - 1) {
+        if(i > CMD_MAX_LEN - 1) {
             return CMD_LEN_OUT;
         }
 
-        if (argn > CMD_MAX_NUM - 1) {
+        if(argn > CMD_MAX_NUM - 1) {
             return CMD_NUM_OUT;
         }
-        
+
     } while(args[i] != 0);
     /* End of dismantling input command string */
     /* add 1 because there is no space key value front of the first argv */
-    argc = argn + 1; 
-    list_for_each(node, &cmd_list){
+    argc = argn + 1;
+    list_for_each(node, &cmd_list) {
         cmd = list_entry(node, CmdObj, cmd_list);
-        if (strcmp(cmd->name, argv[0]) == 0) {
+        if(strcmp(cmd->name, argv[0]) == 0) {
             if(cmd->param_num != 0xff) {
-                if (cmd->param_num > argc - 1) {
+                if(cmd->param_num > argc - 1) {
                     return CMD_PARAM_LESS;
-                } else if (cmd->param_num < argc - 1) {
+                } else if(cmd->param_num < argc - 1) {
                     return CMD_PARAM_EXCEED;
                 }
                 return cmd->cmd_hdl(argc, argv);
@@ -127,8 +127,8 @@ int strcmp(const char* s1, const char* s2)
 {
     unsigned int i = 0;
 
-    while (s1[i] != 0 || s2[i] != 0) {
-        if (s1[i] != s2[i]) {
+    while(s1[i] != 0 || s2[i] != 0) {
+        if(s1[i] != s2[i]) {
             return 1;
         } else {
             i++;

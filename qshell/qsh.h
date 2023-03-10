@@ -42,6 +42,8 @@ void qcmd_add(CmdObj *qcmd);
 
 void qcmd_del(CmdObj *qcmd);
 
+int qcmd_call(const char *args);
+
 #ifdef QSH_USING_LIBC
 
 int qcmd_export(const char *name, int (*handle)(int, char **), const char *usage);
