@@ -23,11 +23,16 @@ int image_set(ImageObj *image, char **cache, int rows, int cols)
 
 ImageObj image_creat(int rows, int cols)
 {
-    return (ImageObj *)malloc(sizeof(int) * rows * clos);
+
+    ImageObj *image = malloc(sizeof(ImageObj));
+    char *cache = malloc(sizeof(int) * rows * cols);
+    image->img = cache;
+    return image;
 }
 
 void image_destroy(ImageObj *image)
 {
+    free(image->img);
     free(image);
 }
 
