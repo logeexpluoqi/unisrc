@@ -21,7 +21,7 @@ int image_set(ImageObj *image, char **cache, int rows, int cols)
 
 #if IMAGE_USING_STDLIB
 
-ImageObj image_creat(int rows, int cols)
+ImageObj *image_creat(int rows, int cols)
 {
 
     ImageObj *image = malloc(sizeof(ImageObj));
