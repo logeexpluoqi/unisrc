@@ -2,7 +2,7 @@
  * @Author: luoqi
  * @Date: 2021-09-23 14:49:05
  * @Last Modified by: luoqi
- * @Last Modified time: 2023-05-12 15:53:26
+ * @Last Modified time: 2023-05-12 17:47:37
  */
 
 #if QMAT_USING_LIBC
@@ -99,9 +99,9 @@ mat_s qmat_mul(QMat *A, QMat *B, QMat *result)
     mat_f tmp = 0;
     if((A->row == B->col) && (A->row == result->row) && (A->col == B->row) && (B->col == result->col)){
         for(i = 0; i < A->row; i++){
-            for(j = 0; j < A->col; j++){
-                for(m = 0; m < A->row; m++){
-                    tmp += QMAT_ELEM(A, i, m) * QMAT_ELEM(B, m, i);
+            for(j = 0; j < A->row; j++){
+                for(m = 0; m < A->col; m++){
+                    tmp += QMAT_ELEM(A, i, m) * QMAT_ELEM(B, m, j);
                 }
                 QMAT_ELEM(result, i, j) = tmp;
                 tmp = 0;
