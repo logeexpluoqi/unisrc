@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-09-23 14:48:27 
  * @Last Modified by: luoqi
- * @Last Modified time: 2022-01-26 16:21:41
+ * @Last Modified time: 2023-05-12 11:13:44
  */
 
 #ifndef _QMATRIX_H
@@ -12,6 +12,12 @@
 extern "C" {
 #endif
 
+#define QMAT_USING_LIBC   1
+
+typedef float           mat_f;
+typedef int             mat_s;
+typedef unsigned int    mat_u;
+
 typedef enum _qmat_err {
     QMAT_ERR_DIM = -1,
     QMAT_ERR_NONE = 0,
@@ -19,54 +25,61 @@ typedef enum _qmat_err {
 } QMatErr;
 
 typedef struct _qmatrix {
-    unsigned int row;
-    unsigned int col;
-    float **elem;
-    QMatErr err;
+    mat_u row;
+    mat_u col;
+    mat_f *elem;
 } QMat;
 
-int qmat_init(QMat *mat, float **elem, int row, int col);
+#if QMAT_USING_LIBC
 
-int qmat_zeros(QMat *mat);
+QMat *qmat_create(mat_u row, mat_u col);
 
-int qmat_ones(QMat *mat);
+mat_u qmat_delete(QMat *mat);
 
-int qmat_eyes(QMat *mat);
+#endif
 
-float qmat_elem(QMat *mat, int row, int col);
+mat_s qmat_init(QMat *mat, mat_f **elem, mat_u row, mat_u col);
+
+mat_s qmat_zeros(QMat *mat);
+
+mat_s qmat_ones(QMat *mat);
+
+mat_s qmat_eyes(QMat *mat);
+
+mat_f qmat_elem(QMat *mat, mat_u row, mat_u col);
 
 /* A + B */
-int qmat_mul(QMat *A, QMat *B, QMat *result);
+mat_s qmat_mul(QMat *A, QMat *B, QMat *result);
 
 /* A + b */
-int qmat_muln(QMat *A, float b, QMat *result);
+mat_s qmat_muln(QMat *A, mat_f b, QMat *result);
 
 /* A .* B */
-int qmat_dotmul(QMat *A, QMat *B, QMat *result);
+mat_s qmat_dotmul(QMat *A, QMat *B, QMat *result);
 
 /* A + B */
-int qmat_add(QMat *A, QMat *B, QMat *result);
+mat_s qmat_add(QMat *A, QMat *B, QMat *result);
 
 /* A + b */
-int qmat_addn(QMat *A, float b, QMat *result);
+mat_s qmat_addn(QMat *A, mat_f b, QMat *result);
 
 /* A / B */
-int qmat_div(QMat *A, QMat *B, QMat *result);
+mat_s qmat_div(QMat *A, QMat *B, QMat *result);
 
 /* A / b */
-int qmat_divn(QMat *A, float b, QMat *result);
+mat_s qmat_divn(QMat *A, mat_f b, QMat *result);
 
 /* A ./ B */
-int qmat_dotdiv(QMat *A, QMat *B, QMat *result);
+mat_s qmat_dotdiv(QMat *A, QMat *B, QMat *result);
 
 /* A - B */
-int qmat_sub(QMat *A, QMat *B, QMat *result);
+mat_s qmat_sub(QMat *A, QMat *B, QMat *result);
 
 /* A - b */
-int qmat_subn(QMat *A, float b, QMat *result);
+mat_s qmat_subn(QMat *A, mat_f b, QMat *result);
 
 /* 1 / A */
-int qmat_inv(QMat *A, QMat *result);
+mat_s qmat_inv(QMat *A, QMat *result);
 
 #ifdef __cplusplus
 }

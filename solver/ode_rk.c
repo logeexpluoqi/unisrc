@@ -2,7 +2,7 @@
  * @Author: luoqi
  * @Date: 2021-09-17 11:15:21
  * @Last Modified by: luoqi
- * @Last Modified time: 2023-02-21 21:20:48
+ * @Last Modified time: 2023-05-12 11:20:22
  */
 
 #include "ode_rk.h"
@@ -103,12 +103,12 @@ static float rk_pow(float a, float b) {
             a = a / 2;
             p++;
         }
-        return qpow(a, b) * qpow(2, b * p);
+        return pow_i(a, b) * pow_i(2, b * p);
     } else {
         if(((int)b % 2) == 0) {
-            return qpow(-a, b);
+            return pow_i(-a, b);
         } else {
-            return -qpow(-a, b);
+            return -pow_i(-a, b);
         }
     }
 }

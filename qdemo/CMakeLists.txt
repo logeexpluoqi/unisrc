@@ -23,6 +23,7 @@ add_library(qdemo
         demo_mthread.c
         demo_udp_server.c
         demo_qtrigf.c
+        demo_matrix.c
 )
 target_link_libraries(qdemo
         qsh
