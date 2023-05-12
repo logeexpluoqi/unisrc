@@ -2,7 +2,7 @@
  * @Author: luoqi
  * @Date: 2021-09-23 14:49:05
  * @Last Modified by: luoqi
- * @Last Modified time: 2023-05-12 17:47:37
+ * @Last Modified time: 2023-05-12 17:56:52
  */
 
 #if QMAT_USING_LIBC
@@ -120,7 +120,6 @@ mat_s qmat_muln(QMat *A, mat_f b, QMat *result)
     if((A->row != result->row) || (A->col != result->col)){
         return QMAT_ERR_DIM;
     }
-
     for(i = 0; i < A->row; i++){
         for(j = 0; j < A->col; j++){
             QMAT_ELEM(result, i, j) = QMAT_ELEM(A, i, j) * b;
@@ -213,7 +212,6 @@ mat_s qmat_dotdiv(QMat *A, QMat *B, QMat *result)
     }else{
         return QMAT_ERR_DIM;
     }
-    return QMAT_ERR_NONE;
 }
 
 mat_s qmat_sub(QMat *A, QMat *B, QMat *result) 
@@ -229,7 +227,6 @@ mat_s qmat_sub(QMat *A, QMat *B, QMat *result)
     }else{
         return QMAT_ERR_DIM;
     }
-    return QMAT_ERR_NONE;
 }
 
 mat_s qmat_subn(QMat *A, mat_f b, QMat *result) 
