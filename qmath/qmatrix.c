@@ -2,21 +2,22 @@
  * @Author: luoqi
  * @Date: 2021-09-23 14:49:05
  * @Last Modified by: luoqi
- * @Last Modified time: 2023-05-12 11:44:46
+ * @Last Modified time: 2023-05-12 15:53:26
  */
 
 #if QMAT_USING_LIBC
 #include <stdlib.h>
+#include <string.h>
 #endif
 #include "qmatrix.h"
 
-#define QMAT_ELEM(mat, i, j)   mat->elem[i * mat->row + j]
+#define QMAT_ELEM(mat, i, j)   mat->elem[i * mat->col + j]
 
 mat_s qmat_init(QMat *mat, mat_f **elem, mat_u row, mat_u col) 
 {
     mat->row = row;
     mat->col = col;
-    mat->elem = &(*elem);
+    mat->elem = &(*elem); 
     return QMAT_ERR_NONE;
 }
 
@@ -24,7 +25,10 @@ mat_s qmat_init(QMat *mat, mat_f **elem, mat_u row, mat_u col)
 QMat *qmat_create(mat_u row, mat_u col)
 {
     QMat *mat = (QMat *)malloc(sizeof(QMat));
+    mat->row = row;
+    mat->col = col;
     mat->elem = (mat_f *)malloc(row * col * sizeof(mat_f));
+    memset(mat->elem, 0, row * col * sizeof(mat_f));
     return mat;
 }
 
@@ -35,6 +39,12 @@ mat_u qmat_delete(QMat *mat)
     return 0;
 }
 #endif
+
+mat_s qmat_set(QMat *mat, mat_u row, mat_u col, mat_f num)
+{
+    QMAT_ELEM(mat, row, col) = num;
+    return 0;
+}
 
 mat_s qmat_zeros(QMat *mat)
 {

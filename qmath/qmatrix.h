@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-09-23 14:48:27 
  * @Last Modified by: luoqi
- * @Last Modified time: 2023-05-12 11:13:44
+ * @Last Modified time: 2023-05-12 15:18:04
  */
 
 #ifndef _QMATRIX_H
@@ -45,6 +45,8 @@ mat_s qmat_zeros(QMat *mat);
 mat_s qmat_ones(QMat *mat);
 
 mat_s qmat_eyes(QMat *mat);
+
+mat_s qmat_set(QMat *mat, mat_u row, mat_u col, mat_f num);
 
 mat_f qmat_elem(QMat *mat, mat_u row, mat_u col);
 
