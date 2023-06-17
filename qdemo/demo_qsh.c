@@ -24,29 +24,29 @@ int cmd_ls_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
         QTaskObj *task;
-            unsigned int i;
-            unsigned int num = qtask_num_get();
+            uint32_t i;
+            uint32_t num = qtask_num();
             QSH(" TASK NUM %u\r\n", num);
             QSH(" [Task name]      [Task ID]   [Run time]      [Timeslice]      [Usage]\r\n");
             QSH(" -----------      ---------   ----------      -----------      -------\r\n");
             for(i = num; i > 0; i--) {
                 task = qtask_get(i);
                 QSH("  %-15s  %-3u         %-6d          %-6u           %s\r\n",
-                       task->name, task->id, task->run_time, task->timeslice, task->usage);
+                       task->name, task->id, task->run_time, task->tick, task->usage);
             }
             return 0;
     } else {
         if(ISARG(argv[1], "-d")) {
             QTaskObj *task;
-            unsigned int i;
-            unsigned int num = qdtask_num_get();
+            uint32_t i;
+            uint32_t num = qdtask_num();
             QSH(" TASK NUM %u\r\n", num);
             QSH(" [Task name]      [Task ID]   [Run time]      [Timeslice]      [Usage]\r\n");
             QSH(" -----------      ---------   ----------      -----------      -------\r\n");
             for(i = num; i > 0; i--) {
                 task = qdtask_get(i);
                 QSH("  %-15s  %-3u         %-6d          %-6u           %s\r\n",
-                       task->name, task->id, task->run_time, task->timeslice, task->usage);
+                       task->name, task->id, task->run_time, task->tick, task->usage);
             }
         }
         else {

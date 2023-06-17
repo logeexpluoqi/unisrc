@@ -9,7 +9,7 @@
 
 static LIST_HEAD(qtask_list);
 static LIST_HEAD(qdtask_list);
-static unsigned int qtask_id = 0;
+static uint32_t qtask_id = 0;
 
 void qtask_exec()
 {
@@ -19,7 +19,7 @@ void qtask_exec()
     list_for_each_safe(node, _node, &qtask_list) {
         task = list_entry(node, QTaskObj, qtask_node);
         if(task->is_run == TASK_RUN) {
-            task->task_hdl();
+            task->handle();
             task->is_run = TASK_STOP;
         }
     }
@@ -36,30 +36,30 @@ void qtask_tick()
             task->timer --;
             if(task->timer == 0) {
                 task->is_run = TASK_RUN;
-                task->timer = task->timeslice;
+                task->timer = task->tick;
             }
         }
     }
 }
 
-unsigned int qtask_num_get()
+uint32_t qtask_num()
 {
     return list_len(&qtask_list);
 }
 
 void qtask_init(QTaskObj* task, 
                          const char* name,
-                         void (*task_hdl)(void),
-                         unsigned int timeslice, 
+                         QTaskHandle handle,
+                         uint32_t tick, 
                          const char* usage)
 {
     qtask_id ++;
     task->name = name;
     task->id = qtask_id;
     task->is_run = TASK_STOP;
-    task->task_hdl = task_hdl;
-    task->timer = timeslice;
-    task->timeslice = timeslice;
+    task->handle = handle;
+    task->timer = tick;
+    task->tick = tick;
     task->usage = usage;
     task->run_time = 0;
 }
@@ -68,7 +68,7 @@ int qtask_add(QTaskObj* task)
 {
     if(qdtask_isexsit(task) == 1) {
         task->is_run = TASK_STOP;
-        task->timer = task->timeslice;
+        task->timer = task->tick;
         list_remove(&task->qtask_node);
     }
 
@@ -83,7 +83,7 @@ int qtask_del(QTaskObj* task)
 {
     if(qtask_isexist(task) == 1){
         task->is_run = TASK_STOP;
-        task->timer = task->timeslice;
+        task->timer = task->tick;
         list_remove(&task->qtask_node);
     }
 
@@ -128,37 +128,37 @@ int qdtask_isexsit(QTaskObj* task)
     return 0;
 }
 
-unsigned int qtask_timeslice_get(QTaskObj* task)
+uint32_t qtask_tick_get(QTaskObj* task)
 {
-    return task->timeslice;
+    return task->tick;
 }
 
-void qtask_timeslice_set(QTaskObj* obj, unsigned int slice_len)
+void qtask_tick_set(QTaskObj* obj, uint32_t tick)
 {
-    obj->timeslice = slice_len;
+    obj->tick = tick;
 }
 
-QTaskObj* qtask_get(unsigned int task_id)
+QTaskObj* qtask_get(uint32_t task_id)
 {
     ListObj* node = &qtask_list;
 
-    for(unsigned int i = task_id; i > 0; i--) {
+    for(uint32_t i = task_id; i > 0; i--) {
         node = node->next;
     }
 
     return list_entry(node, QTaskObj, qtask_node);
 }
 
-unsigned int qdtask_num_get()
+uint32_t qdtask_num()
 {
     return list_len(&qdtask_list);
 }
 
-QTaskObj* qdtask_get(unsigned int task_id)
+QTaskObj* qdtask_get(uint32_t task_id)
 {
     ListObj* node = &qdtask_list;
 
-    for(unsigned int i = task_id; i > 0; i--) {
+    for(uint32_t i = task_id; i > 0; i--) {
         node = node->next;
     }
 
