@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 #include "qlist.h"
 #define CMD_MAX_LEN     60
 #define CMD_MAX_NUM     10
@@ -28,15 +30,16 @@ extern "C" {
         CMD_EXEC_ERR = 6
     } CmdErr;
 
+    typedef int (*CmdCallback)(int, char **);
     typedef struct cmd_object
     {
         const char* name;
         /* id auto increased from 1,
         if return id is 0 means that there is no target command */
-        unsigned int    id;
+        uint32_t    id;
         /* parameter number, max 255 */
-        unsigned char   param_num;
-        int             (*cmd_hdl)(int, char* []);
+        uint8_t  param_num;
+        CmdCallback callback;
         const char* usage;
         ListObj         cmd_list;
     } CmdObj;
@@ -45,8 +48,8 @@ extern "C" {
 
     int cmd_init(CmdObj* cmd,
         const char* name,
-        unsigned char param_num, // if this value is 0xff, means that no arg number limit
-        int(*cmd_hdl)(int, char* []),
+        uint8_t param_num, // if this value is 0xff, means that no arg number limit
+        CmdCallback callback,
         const char* usage);
 
     int cmd_add(CmdObj* cmd);
@@ -55,11 +58,11 @@ extern "C" {
 
     int cmd_isexist(CmdObj* cmd);
 
-    unsigned int cmd_id(CmdObj* cmd);
+    uint32_t cmd_id(CmdObj* cmd);
 
-    unsigned int cmd_num(void);
+    uint32_t cmd_num(void);
 
-    CmdObj* cmd_obj(unsigned int id);
+    CmdObj* cmd_obj(uint32_t id);
 
 #ifdef __cplusplus
 }

@@ -11,7 +11,7 @@
 #define ASCII_DOT       0x2c
 
 static LIST_HEAD(cmd_list);
-static unsigned int id = 1;
+static uint32_t id = 1;
 
 static int strcmp(const char* s1, const char* s2);
 
@@ -56,21 +56,21 @@ CmdErr cmd_exec(char* args)
                 } else if(cmd->param_num < argc - 1) {
                     return CMD_PARAM_EXCEED;
                 }
-                return cmd->cmd_hdl(argc, argv);
+                return cmd->callback(argc, argv);
             } else {
-                return cmd->cmd_hdl(argc, argv);
+                return cmd->callback(argc, argv);
             }
         }
     }
     return CMD_NO_CMD;
 }
 
-int cmd_init(CmdObj* cmd, const char* name, unsigned char param_num, int (*cmd_hdl)(int, char* []), const char* usage)
+int cmd_init(CmdObj* cmd, const char* name, uint8_t param_num, CmdCallback callback, const char* usage)
 {
     cmd->name = name;
     cmd->param_num = param_num;
     cmd->id = id;
-    cmd->cmd_hdl = cmd_hdl;
+    cmd->callback = callback;
     cmd->usage = usage;
     id++;
     return 0;
@@ -98,7 +98,7 @@ int cmd_del(CmdObj* cmd)
 
 int cmd_isexist(CmdObj* cmd)
 {
-    unsigned char isexist = 0;
+    uint8_t isexist = 0;
     ListObj* node;
     CmdObj* _cmd;
 
@@ -113,19 +113,19 @@ int cmd_isexist(CmdObj* cmd)
     return 0;
 }
 
-unsigned int cmd_id(CmdObj* cmd)
+uint32_t cmd_id(CmdObj* cmd)
 {
     return cmd->id;
 }
 
-unsigned int cmd_num()
+uint32_t cmd_num()
 {
     return list_len(&cmd_list);
 }
 
 int strcmp(const char* s1, const char* s2)
 {
-    unsigned int i = 0;
+    uint32_t i = 0;
 
     while(s1[i] != 0 || s2[i] != 0) {
         if(s1[i] != s2[i]) {
@@ -138,11 +138,11 @@ int strcmp(const char* s1, const char* s2)
     return 0;
 }
 
-CmdObj* cmd_obj(unsigned int id)
+CmdObj* cmd_obj(uint32_t id)
 {
     ListObj* node = &cmd_list;
 
-    for(unsigned int i = id; i > 0; i--) {
+    for(uint32_t i = id; i > 0; i--) {
         node = node->next;
     }
 
