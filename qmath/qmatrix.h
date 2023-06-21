@@ -38,8 +38,6 @@ mat_u qmat_delete(QMat *mat);
 
 #endif
 
-#define QMAT(name, row, col)    mat_f name[row * col]
-
 mat_s qmat_init(QMat *mat, mat_f *elem, mat_u row, mat_u col);
 
 mat_s qmat_zeros(QMat *mat);
