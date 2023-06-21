@@ -13,11 +13,11 @@
 
 #define QMAT_ELEM(mat, i, j)   mat->elem[i * mat->col + j]
 
-mat_s qmat_init(QMat *mat, mat_f **elem, mat_u row, mat_u col) 
+mat_s qmat_init(QMat *mat, mat_f *elem, mat_u row, mat_u col) 
 {
     mat->row = row;
     mat->col = col;
-    mat->elem = &(*elem); 
+    mat->elem = elem; 
     return QMAT_ERR_NONE;
 }
 
