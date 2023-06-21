@@ -92,7 +92,6 @@ mat_f qmat_elem(QMat *mat, mat_u row, mat_u col)
     }
 }
 
-
 mat_s qmat_mul(QMat *A, QMat *B, QMat *result) 
 {
     mat_u i, j, m;

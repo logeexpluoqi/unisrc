@@ -12,6 +12,7 @@
  extern "C" {
 #endif
 
+#include <stdint.h>
 #include "qlist.h"
 
 typedef enum {
@@ -19,15 +20,16 @@ typedef enum {
     TASK_RUN
 } IsTaskRun;
 
+typedef void (*QTaskHandle)(void);
 typedef struct _qtask
 {
     const char* name;
-    unsigned int id;
-    void (*task_hdl)(void);
+    uint32_t id;
+    QTaskHandle handle;
     IsTaskRun is_run;
-    unsigned int timer;
-    unsigned int timeslice;
-    unsigned int run_time;
+    uint32_t timer;
+    uint32_t tick;
+    uint32_t run_time;
     ListObj qtask_node;
     const char* usage;
 } QTaskObj;
@@ -38,29 +40,27 @@ void qtask_tick(void);
 
 void qtask_init(QTaskObj* task, 
                          const char* name, 
-                         void (*task_hdl)(void),
-                         unsigned int timeslice, 
+                         QTaskHandle handle,
+                         uint32_t tick, 
                          const char* usage);
 
 int qtask_add(QTaskObj* task);
 
 int qtask_del(QTaskObj* task);
 
-void qtask_timeslice_set(QTaskObj* task, unsigned int slice_len);
+void qtask_tick_set(QTaskObj* task, uint32_t tick);
 
-unsigned int qtask_timeslice_get(QTaskObj* task);
+uint32_t qtask_num(void);
 
-unsigned int qtask_num_get(void);
+uint32_t qdtask_num(void);
 
 int qtask_isexist(QTaskObj* task);
 
 int qdtask_isexsit(QTaskObj* task);
 
-QTaskObj* qtask_get(unsigned int task_id);
+QTaskObj* qtask_get(uint32_t task_id);
 
-unsigned int qdtask_num_get(void);
-
-QTaskObj* qdtask_get(unsigned int task_id);
+QTaskObj* qdtask_get(uint32_t task_id);
 
 #ifdef __cplusplus
  }
