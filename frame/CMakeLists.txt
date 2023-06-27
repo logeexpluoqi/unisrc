@@ -5,4 +5,5 @@ add_library(frame
         qtask.c
         qlist.c
         qmem.c
+        ringbuf.c
 )
