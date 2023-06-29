@@ -6,7 +6,7 @@
  */
 
 #include <string.h>
-#include "demo_qsh.h"
+#include "qdemo.h"
 #include "../qshell/qsh.h"
 #include "../frame/qtask.h"
 

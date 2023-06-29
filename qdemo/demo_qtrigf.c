@@ -5,7 +5,7 @@
  * @Last Modified time: 2022-11-28 00:00:26
  */
 
-#include "demo_qtrigf.h"
+#include "qdemo.h"
 #include "../qmath/qtrigf.h"
 #include "../qshell/qsh.h"
 

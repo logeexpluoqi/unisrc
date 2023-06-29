@@ -5,7 +5,7 @@
  * @Last Modified time: 2022-09-03 23:36:38
  */
 
-#include "demo_mthread.h"
+#include "qdemo.h"
 #include "../linuxbase/mthread.h"
 
 static MThread thread;

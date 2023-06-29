@@ -8,7 +8,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include "demo_filter.h"
+#include "qdemo.h"
 #include "../qshell/qsh.h"
 #include "../filter/lpf_sa.h"
 #include "../filter/lpf_1st.h"

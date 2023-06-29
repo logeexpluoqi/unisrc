@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "demo_matrix.h"
+#include "qdemo.h"
 #include "../qmath/qmatrix.h"
 #include "../qshell/qsh.h"
 

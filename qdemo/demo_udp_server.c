@@ -6,7 +6,7 @@
  */
 #include <stdlib.h>
 #include <netinet/in.h>
-#include "demo_udp_server.h"
+#include "qdemo.h"
 #include "../linuxbase/mthread.h"
 #include "../linuxbase/udp_server.h"
 #include "../qshell/qsh.h"

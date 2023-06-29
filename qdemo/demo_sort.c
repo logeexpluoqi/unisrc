@@ -6,7 +6,7 @@
  */
 
 #include <stdlib.h>
-#include "demo_sort.h"
+#include "qdemo.h"
 #include "../sort/quick_sort.h"
 #include "../sort/bubble_sort.h"
 #include "../qshell/qsh.h"

@@ -5,19 +5,7 @@
  * @Last Modified time: 2023-05-11 14:31:59
  */
 
-#include "demo_qsh.h"
-#include "demo_fsm.h"
-#include "demo_qtask.h"
-#include "demo_msg.h"
-#include "demo_qmath.h"
-#include "demo_qkey.h"
-#include "demo_filter.h"
-#include "demo_sort.h"
-#include "demo_solver.h"
-#include "demo_mthread.h"
-#include "demo_udp_server.h"
-#include "demo_qtrigf.h"
-#include "demo_matrix.h"
+#include "qdemo.h"
 
 int qdemo_init()
 {

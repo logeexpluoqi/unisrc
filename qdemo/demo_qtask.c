@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "demo_qtask.h"
+#include "qdemo.h"
 #include "../frame/qtask.h"
 #include "../qshell/qsh.h"
 

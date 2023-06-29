@@ -6,7 +6,7 @@
  */
 #include <stdio.h>
 #include <math.h>
-#include "demo_solver.h"
+#include "qdemo.h"
 #include "../solver/ode_euler.h"
 #include "../solver/ode_rk.h"
 #include "../qshell/qsh.h"

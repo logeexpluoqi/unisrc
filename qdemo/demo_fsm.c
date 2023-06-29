@@ -6,7 +6,7 @@
  */
 
 #include <string.h>
-#include "demo_fsm.h"
+#include "qdemo.h"
 #include "../frame/fsm.h"
 #include "../qshell/qsh.h"
 

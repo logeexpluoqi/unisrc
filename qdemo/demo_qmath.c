@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "demo_qmath.h"
+#include "qdemo.h"
 #include "../qmath/qmath.h"
 #include "../qmath/qcomplex.h"
 #include "../qshell/qsh.h"

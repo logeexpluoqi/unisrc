@@ -10,4 +10,32 @@
 
 int qdemo_init(void);
 
+void demo_filter_init(void);
+
+int demo_fsm_init(void);
+
+int demo_matrix_init(void);
+
+int demo_msg_init(void);
+
+int demo_mthread_init(void);
+
+int demo_qkey_init(void);
+
+void demo_qmath_init(void);
+
+int demo_qmem_init(void);
+
+int demo_qsh_init(void);
+
+int demo_qtask_init(void);
+
+int demo_qtrigf_init(void);
+
+int demo_solver_init(void);
+
+int demo_sort_init(void);
+
+int demo_udp_server_init(void);
+
 #endif

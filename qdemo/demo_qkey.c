@@ -5,7 +5,7 @@
  * @Last Modified time: 2022-08-14 00:17:25
  */
 
-#include "demo_qkey.h"
+#include "qdemo.h"
 #include "../utils/qkey.h"
 
 static QKeyObj key1;
