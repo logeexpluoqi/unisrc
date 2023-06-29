@@ -79,7 +79,7 @@ int cmd_init(CmdObj* cmd, const char* name, uint8_t param_num, CmdCallback callb
 int cmd_add(CmdObj* cmd)
 {
     if(cmd_isexist(cmd) == 0) {
-        list_insert_before(&cmd_list, &cmd->cmd_list);
+        list_insert_after(&cmd_list, &cmd->cmd_list);
         return 0;
     } else {
         return -1;
