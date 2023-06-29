@@ -38,4 +38,6 @@ int demo_sort_init(void);
 
 int demo_udp_server_init(void);
 
+int demo_ringbuf_init(void);
+
 #endif

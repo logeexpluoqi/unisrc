@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2023-06-27 14:17
  * @ Modified by: luoqi
- * @ Modified time: 2023-06-29 14:51
+ * @ Modified time: 2023-06-29 18:10
  * @ Description:
  */
 
@@ -67,7 +67,7 @@ int ringbuf_read(RingBufObj *ring, uint8_t *rdata, uint32_t len)
         mem_cpy(rdata + (ring->bufsz - ring->tail), ring->buf, len - (ring->bufsz - ring->tail));      
     }else{
         mem_cpy(rdata, ring->buf + ring->tail, len);
-        ring->tail = ring->tail + len;
     }
+    ring->tail = (ring->tail + len) % ring->bufsz;
     return ring->tail;
 }

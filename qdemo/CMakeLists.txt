@@ -24,6 +24,7 @@ add_library(qdemo
         demo_udp_server.c
         demo_qtrigf.c
         demo_matrix.c
+        demo_ringbuf.c
 )
 target_link_libraries(qdemo
         qsh
