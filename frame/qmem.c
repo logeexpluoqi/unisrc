@@ -11,29 +11,24 @@ static char mheap[QMEM_HEAP_SIZE];
 
 int qmem_init()
 {
-     for(int i = 0; i < QMEM_HEAP_SIZE; i++){
-        if((i % QMEM_PAGE_SIZE) == 0){
-            mheap[i] = 1; 
-        }else{
-            mheap[i] = 0;
-        }
+    for(int i = 0; i < QMEM_HEAP_SIZE; i++){
+        mheap[i] = 0;    
     }
-
     return 0;
 }
 
-void *qmalloc(unsigned int size)
+void *qmalloc(size_m size)
 {
     
     return QMEM_NULL;
 }
 
-void *qcalloc(unsigned int size)
+void *qcalloc(size_m size)
 {
 
 }
 
-void *qrealloc(void *ptr, unsigned int size)
+void *qrealloc(void *ptr, size_m size)
 {
 
 }
