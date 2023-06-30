@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2023-06-29 15:08
  * @ Modified by: luoqi
- * @ Modified time: 2023-06-29 18:18
+ * @ Modified time: 2023-06-30 09:57
  * @ Description:
  */
 
@@ -36,6 +36,7 @@ static int write(int len)
         w = 1;
     };
     int head = ringbuf_write(&ring, wbuf, len);
+    QSH(" bufsz: %d, head: %d, tail: %d, msgsz: %d\r\n", ring.bufsz, ring.head, ring.tail, ring.msgsz);
     free(wbuf);
     return head;
 }
@@ -44,8 +45,9 @@ static int read(int len)
 {
     uint8_t *rbuf = (uint8_t *)malloc(len);
     int tail = ringbuf_read(&ring, rbuf, len);
+    QSH(" bufsz: %d, head: %d, tail: %d, msgsz: %d\r\n", ring.bufsz, ring.head, ring.tail, ring.msgsz);
     for(int i = 0; i < len; i++){
-        QSH(" %02X", rbuf[i]);
+        QSH(" %02X", *(rbuf + i));
     }
     QSH("\r\n");
     free(rbuf);
