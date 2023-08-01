@@ -50,25 +50,15 @@ CmdErr cmd_exec(char* args)
     list_for_each(node, &cmd_list) {
         cmd = list_entry(node, CmdObj, cmd_list);
         if(strcmp(cmd->name, argv[0]) == 0) {
-            if(cmd->param_num != 0xff) {
-                if(cmd->param_num > argc - 1) {
-                    return CMD_PARAM_LESS;
-                } else if(cmd->param_num < argc - 1) {
-                    return CMD_PARAM_EXCEED;
-                }
-                return cmd->callback(argc, argv);
-            } else {
-                return cmd->callback(argc, argv);
-            }
+            return cmd->callback(argc, argv);
         }
     }
     return CMD_NO_CMD;
 }
 
-int cmd_init(CmdObj* cmd, const char* name, uint8_t param_num, CmdCallback callback, const char* usage)
+int cmd_init(CmdObj* cmd, const char* name, CmdCallback callback, const char* usage)
 {
     cmd->name = name;
-    cmd->param_num = param_num;
     cmd->id = id;
     cmd->callback = callback;
     cmd->usage = usage;

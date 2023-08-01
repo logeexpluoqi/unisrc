@@ -37,20 +37,14 @@ extern "C" {
         /* id auto increased from 1,
         if return id is 0 means that there is no target command */
         uint32_t    id;
-        /* parameter number, max 255 */
-        uint8_t  param_num;
         CmdCallback callback;
         const char* usage;
-        ListObj         cmd_list;
+        ListObj     cmd_list;
     } CmdObj;
 
     CmdErr cmd_exec(char* cmd_msg);
 
-    int cmd_init(CmdObj* cmd,
-        const char* name,
-        uint8_t param_num, // if this value is 0xff, means that no arg number limit
-        CmdCallback callback,
-        const char* usage);
+    int cmd_init(CmdObj* cmd, const char* name, CmdCallback callback, const char* usage);
 
     int cmd_add(CmdObj* cmd);
 

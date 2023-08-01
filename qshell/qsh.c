@@ -91,10 +91,10 @@ void qsh_init()
     recv_size = 0;
     cmd_index = 0;
 
-    cmd_init(&cmd_hs, "hs", 0, cmd_hs_hdl, "list command history");
-    cmd_init(&cmd_help, "help", 0, cmd_help_hdl, "list all commands");
-    cmd_init(&cmd_help_alis, "?", 0, cmd_help_hdl, "do help");
-    cmd_init(&cmd_clear, "clear", 0, cmd_clear_hdl, "clear window");
+    cmd_init(&cmd_hs, "hs", cmd_hs_hdl, "list command history");
+    cmd_init(&cmd_help, "help", cmd_help_hdl, "list all commands");
+    cmd_init(&cmd_help_alis, "?", cmd_help_hdl, "do help");
+    cmd_init(&cmd_clear, "clear", cmd_clear_hdl, "clear window");
 
     cmd_add(&cmd_help_alis);
     cmd_add(&cmd_help);
@@ -371,13 +371,13 @@ void qsh_exec()
 
 void qcmd_init(CmdObj *qcmd, const char *name, int (*handle)(int, char **), const char *usage)
 {
-    cmd_init((CmdObj *) qcmd, name, 0xff, handle, usage);
+    cmd_init((CmdObj *) qcmd, name, handle, usage);
 }
 
 int qcmd_export(const char *name, int (*handle)(int, char **), const char *usage)
 {
     CmdObj *qcmd = (CmdObj *) malloc(sizeof(CmdObj));
-    cmd_init((CmdObj *) qcmd, name, 0xff, handle, usage);
+    cmd_init((CmdObj *) qcmd, name, handle, usage);
     cmd_add(qcmd);
 }
 
