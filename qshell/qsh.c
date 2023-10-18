@@ -36,24 +36,23 @@ typedef enum{
 
 #define QSH_CLEAR_LINE      QPRINTF("\r\x1b[K")
 #define QSH_SHOW_PERFIX     QPRINTF("\r%s", _perfix)
-#define QSH_CLEAR           QPRINTF("\033[H\033[J")
+#define QSH_CLEAR_DISP       QPRINTF("\033[H\033[2J")
 
 static const char *_perfix = "/>$ ";
 static char _args[CMD_MAX_LEN];
 static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
-static unsigned int hs_cnt = 0;
-static unsigned int recall_cnt = 0;
-static unsigned int recv_index = 0;
-static unsigned int hs_index = 0;
-static unsigned int recall_index = 0;
+static uint32_t hs_cnt = 0;
+static uint32_t recall_cnt = 0;
+static uint32_t hs_index = 0;
+static uint32_t recall_index = 0;
+static uint32_t recv_index = 0;
+static uint32_t cursor_index = 0;
 static QshRecallState recall_status = QSH_RECALL_NULL;
 static RecvState recv_state = RECV_UNFINISH;
 
 static inline void _prev_history(void);
 
 static inline void _next_history(void);
-
-static inline void _recv_backspace(void);
 
 static inline void _recv_enter(void);
 
@@ -75,24 +74,24 @@ static int _hs_hdl(int argc, char **argv);
 
 static int _clear_hdl(int argc, char **argv);
 
-static void *_memcpy(void *dst, void *src, uint32_t len)
+static void *_memcpy(void *dest, void *src, uint32_t len)
 {
     char *d;
     const char *s;
-    if((dst > (src + len)) || (dst < src)) {
-        d = dst;
+    if((dest > (src + len)) || (dest < src)) {
+        d = dest;
         s = src;
         while(len--) {
             *d++ = *s++;
         }
     } else {
-        d = (char *)(dst + len - 1);
+        d = (char *)(dest + len - 1);
         s = (char *)(src + len - 1);
         while(len--) {
             *d-- = *s--;
         }
     }
-    return dst;
+    return dest;
 }
 
 static void *_memset(void *dest, int c, uint32_t n)
@@ -152,7 +151,7 @@ void qsh_init()
     recall_status = QSH_RECALL_NULL;
     recv_state = RECV_UNFINISH;
     recv_index = 0;
-
+    cursor_index = 0;
     cmd_init(&_hs, "hs", _hs_hdl, "show history");
     cmd_init(&_help, "?", _help_hdl, "do help");
     cmd_init(&_clear, "clear", _clear_hdl, "clear window");
@@ -160,7 +159,7 @@ void qsh_init()
     cmd_add(&_help);
     cmd_add(&_hs);
     cmd_add(&_clear);
-    QSH_CLEAR;
+    QSH_CLEAR_DISP;
     QPRINTF("========== QSH BY LUOQI ==========\r\n");
     QSH_SHOW_PERFIX;
 }
@@ -179,6 +178,7 @@ void _recv_enter()
         while(*(_args + recv_index) == QSH_KEY_SPACE){
             *(_args + recv_index) = 0;
             recv_index --;
+            cursor_index --;
         }
         /* save history */
         if(_strcmp(_args, "hs") != 0) {
@@ -189,7 +189,6 @@ void _recv_enter()
                 hs_cnt = (hs_cnt + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_cnt + 1);
             }
         }
-
         /* history recall record */
         if(recall_status == QSH_RECALL_NEXT) {
             if(recall_cnt != hs_cnt) {
@@ -206,11 +205,6 @@ void _recv_enter()
         }else{
             recall_status = QSH_RECALL_NULL;
         }
-
-        recall_index = hs_index;
-        recall_cnt = 0;
-        recv_index = 0;
-        QPRINTF("\r\n");
         recv_state = RECV_FINISH;
     } else {
         QPRINTF("\r\n");
@@ -228,6 +222,7 @@ void _prev_history()
         recall_cnt = hs_cnt;
     }
     recv_index = _strlen(hs_buf[recall_index]);
+    cursor_index = recv_index;
     _memcpy(_args, hs_buf[recall_index], recv_index);
 }
 
@@ -237,20 +232,13 @@ void _next_history()
     if(recall_cnt > 0) {
         recall_index = (recall_index + 1) % QSH_HISTORY_MAX;
         recv_index = _strlen(hs_buf[recall_index]);
+        cursor_index = recv_index;
         _memcpy(_args, hs_buf[recall_index], recv_index);
         recall_cnt--;
     } else {
         recall_cnt = 0;
         _memset(_args, 0, _strlen(_args));
     }
-}
-
-void _recv_backspace()
-{
-    QPRINTF("\b ");
-    _args[--recv_index] = 0;
-    QSH_SHOW_PERFIX;
-    QPRINTF("%s", _args);
 }
 
 void _recv_up()
@@ -281,12 +269,18 @@ void _recv_down()
 
 void _recv_right()
 {
-
+    if(cursor_index < recv_index){
+        cursor_index ++;
+        QPRINTF("\033[1C");
+    }
 }
 
 void _recv_left()
 {
-
+    if(cursor_index > 0){
+        cursor_index --;
+        QPRINTF("\033[1D");
+    }
 }
 
 void qsh_recv(char c)
@@ -302,17 +296,38 @@ void qsh_recv(char c)
         }
     } else if(c == QSH_KEY_ENTER) {
         _recv_enter();
-    } else if(c == QSH_KEY_BACKSPACE && recv_index > 0) {
-        _recv_backspace();
+    } else if(c == QSH_KEY_BACKSPACE) {
+        if(recv_index > 0){
+            recv_index --;
+            cursor_index --;
+            _args[recv_index] = 0;
+            QPRINTF("\b \b");
+        }
     } else {
-        _args[recv_index++] = c;
-        QPRINTF("%c", c);
+        if(cursor_index == recv_index){
+            _args[recv_index] = c;
+            recv_index ++;
+            cursor_index ++;
+            QPRINTF("%c", c);
+        }else{
+            //TODO: still have bug
+            for(int i = recv_index; i > cursor_index; i--){
+                _args[i+1] = _args[i];
+                recv_index ++;
+            }
+            _args[cursor_index] = c;
+            QPRINTF("\r%s%s", _perfix, _args);
+            // QPRINTF("%s", _args + cursor_index - 1);
+            cursor_index ++;
+            recv_index ++;
+        }
     }
 }
 
 void qsh_exec()
 {
     if(recv_state == RECV_FINISH) {
+        QPRINTF("\r\n");
         switch(cmd_exec(_args)) {
         case CMD_EOK:
             break;
@@ -337,10 +352,12 @@ void qsh_exec()
         default:
             break;
         }
+        recall_cnt = 0;
         recv_index = 0;
-        _memset(_args, 0, _strlen(_args));
-        QPRINTF("%s", _perfix);
+        cursor_index = 0;
         recv_state = RECV_UNFINISH;
+        _memset(_args, 0, _strlen(_args));
+        QSH_SHOW_PERFIX;
     }
 }
 
@@ -383,7 +400,7 @@ int _hs_hdl(int argc, char **argv)
 
 int _clear_hdl(int argc, char **argv)
 {
-    QSH_CLEAR;
+    QSH_CLEAR_DISP;
     return 0;
 }
 
@@ -392,7 +409,7 @@ int _help_hdl(int argc, char **argv)
     CmdObj *_cmd;
     int i, j, k = 0;
     int len;
-    unsigned int num = cmd_num();
+    uint32_t num = cmd_num();
     QPRINTF("  Number:          %d\r\n", num);
     QPRINTF("  Commands       Usage \r\n");
     QPRINTF(" ----------     -------\r\n");
