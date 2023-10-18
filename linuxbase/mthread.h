@@ -15,7 +15,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <time.h>
-#include "../frame/qlist.h"
+#include "../qlib/qlist.h"
 
 #define LINUX_USING_RTKERNEL
 typedef struct mthread
@@ -31,7 +31,7 @@ typedef struct mthread
     uint8_t             priority;
     void                *(*func)(void *);
     const char          *usage;
-    ListObj             mnode;
+    QList             mnode;
 } MThread;
 
 int mthread_period_set(MThread *mthread, uint32_t per);

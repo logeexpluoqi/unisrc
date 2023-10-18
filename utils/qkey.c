@@ -7,7 +7,7 @@
 
 #include "qkey.h"
 
-static LIST_HEAD(key_list);
+static QLIST_CREAT(key_list);
 static unsigned int key_id_base = 0;
 
 int qkey_init(QKeyObj *key,
@@ -25,19 +25,19 @@ int qkey_init(QKeyObj *key,
     key->dstart = 0;
     key->dtime = dtime;
     key->dcnt = dtime;
-    list_insert_before(&key->qkey_node, &key_list);
+    qlist_insert_before(&key->qkey_node, &key_list);
     key_id_base++;
     return 0;
 }
 
 int qkey_exec()
 {
-    ListObj *node, *_node;
+    QList *node, *_node;
     QKeyObj *key;
     int state;
 
-    list_for_each_safe(node, _node, &key_list) {
-        key = list_entry(node, QKeyObj, qkey_node);
+    QLIST_ITERATER_SAFE(node, _node, &key_list) {
+        key = QLIST_OBJ(node, QKeyObj, qkey_node);
         if (key->getkey() == key->state) {
             key->dstart = 1;
         }
@@ -47,11 +47,11 @@ int qkey_exec()
 
 int qkey_tick()
 {
-    ListObj *node, *_node;
+    QList *node, *_node;
     QKeyObj *key;
 
-    list_for_each_safe(node, _node, &key_list) {
-        key = list_entry(node, QKeyObj, qkey_node);
+    QLIST_ITERATER_SAFE(node, _node, &key_list) {
+        key = QLIST_OBJ(node, QKeyObj, qkey_node);
         if (key->dstart == 1) {
             key->dcnt--;
         }

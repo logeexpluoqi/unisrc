@@ -1,4 +1,4 @@
-add_library(frame 
+add_library(qlib 
         cmd.c
         fsm.c
         msg.c

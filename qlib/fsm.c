@@ -13,17 +13,17 @@ void fsm_init(FsmObj* fsm, const char* name, int init_state)
     fsm->curr_state = init_state;
     fsm->next_state = init_state;
     fsm->fsm_state_id_base = 0;
-    list_init(&fsm->fsm_list_head);
+    qlist_init(&fsm->fsm_list_head);
 }
 
 int fsm_exec(FsmObj* fsm)
 {
-    ListObj* node;
+    QList* node;
     FsmStateObj* state;
 
     fsm->curr_state = fsm->next_state;
-    list_for_each(node, &fsm->fsm_list_head) {
-        state = list_entry(node, FsmStateObj, fsm_state_list);
+    QLIST_ITERATER(node, &fsm->fsm_list_head) {
+        state = QLIST_OBJ(node, FsmStateObj, fsm_state_list);
         if (state->link_state == fsm->curr_state) {
             return state->fsm_state_task_hdl();
         }
@@ -50,12 +50,12 @@ void fsm_state_add(FsmObj* fsm, FsmStateObj* state)
         state->id = fsm->fsm_state_id_base;
     }
     state->belong_to = fsm->name;
-    list_insert_before(&fsm->fsm_list_head, &state->fsm_state_list);
+    qlist_insert_before(&fsm->fsm_list_head, &state->fsm_state_list);
 }
 
 void fsm_state_del(FsmStateObj* state)
 {
-    list_remove(&state->fsm_state_list);
+    qlist_remove(&state->fsm_state_list);
 }
 
 int fsm_state_get(FsmObj* state)

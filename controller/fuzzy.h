@@ -12,7 +12,7 @@
  extern "C" {
 #endif
 
-#include "../frame/qlist.h"
+#include "../qlib/qlist.h"
 
 typedef enum _fuzz_mf_var
 {
@@ -69,7 +69,7 @@ typedef struct _fuzz_membership_function_object
     float param_b; // c      | c1     | ck | ck1
     float param_c; // sigma2 | ak2
     float param_d; // c2     | ck2
-    ListObj _mf_inner_list;
+    QList _mf_inner_list;
 } FuzzMemFuncObj;
 
 typedef struct _fuzz_controller_object
@@ -88,9 +88,9 @@ typedef struct _fuzz_controller_object
     int mf_e_num;
     int mf_ec_num;
     int mf_u_num;
-    ListObj _mf_list_e;
-    ListObj _mf_list_ec;
-    ListObj _mf_list_u;
+    QList _mf_list_e;
+    QList _mf_list_ec;
+    QList _mf_list_u;
 } FuzzObj;
 
 void fuzz_init(FuzzObj* fuzz_obj,

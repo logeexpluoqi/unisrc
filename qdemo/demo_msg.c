@@ -6,7 +6,7 @@
  */
 
 #include "qdemo.h"
-#include "../frame/msg.h"
+#include "../qlib/msg.h"
 
 int demo_msg_init()
 {

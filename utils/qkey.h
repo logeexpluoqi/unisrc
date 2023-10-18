@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-#include "../frame/qlist.h"
+#include "../qlib/qlist.h"
 
 typedef enum _qkey_trig_def {
     QKEY_STATE_LOW = 0,
@@ -32,7 +32,7 @@ typedef struct _qkey_obj {
     unsigned int dtime;     // debounce time
     unsigned int dcnt;      // debounce counter
     unsigned char dstart;   // debounce start
-    ListObj qkey_node;
+    QList qkey_node;
 } QKeyObj;
 
 int qkey_init(QKeyObj *key,

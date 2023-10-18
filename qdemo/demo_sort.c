@@ -26,7 +26,7 @@ int demo_sort_init()
         quicksortdata[i] = (float)rand() / RAND_MAX;
     }
 
-    qcmd_init(&cmd_sort, "sort", cmd_sort_hdl, "@ quick, bub");
+    qcmd_init(&cmd_sort, "sort", cmd_sort_hdl, "quick, bub");
     qcmd_add(&cmd_sort);
 
     return 0;

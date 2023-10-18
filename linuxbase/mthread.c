@@ -12,8 +12,8 @@
 #include "mthread.h"
 #include "../qshell/qsh.h"
 
-static LIST_HEAD(mthread_list);
-static LIST_HEAD(mthread_del_list);
+static QLIST_CREAT(mthread_list);
+static QLIST_CREAT(mthread_del_list);
 static uint32_t thread_mid = 0;
 
 static int mthread_isexist(MThread *mthread);
@@ -73,9 +73,9 @@ int mthread_init(MThread *mthread, const char *name, uint8_t priority, uint32_t 
     mthread->time.tv_nsec   = 0;
     mthread->usage          = usage;
     if(thread_mid == 0){
-        qcmd_export("mls", cmd_mls_hdl, "@ /-d (list all mthread info)");
-        qcmd_export("mk", cmd_mk_hdl, "@ mid (kill mthread)");
-        qcmd_export("mr", cmd_mr_hdl, "@ mid (restart mthread)");
+        qcmd_export("mls", cmd_mls_hdl, "/-d (list all mthread info)");
+        qcmd_export("mk", cmd_mk_hdl, "mid (kill mthread)");
+        qcmd_export("mr", cmd_mr_hdl, "mid (restart mthread)");
     }
     mthread->mid            = thread_mid++;
     return 0;
@@ -88,11 +88,11 @@ int mthread_start(MThread *mthread)
     pthread_attr_t attr;
     param.sched_priority = mthread->priority;
     if(mthread_del_isexist(mthread)){
-        list_remove(&mthread->mnode);
+        qlist_remove(&mthread->mnode);
     }
 #ifndef LINUX_USING_RTKERNEL
     if(mthread_isexist(mthread) == 0){
-        list_insert_after(&mthread_list, &mthread->mnode);
+        qlist_insert_after(&mthread_list, &mthread->mnode);
         if(pthread_attr_init(&attr) != 0){
             printf(" #! thread %s, id %d attr init error !\r\n", mthread->name, mthread->mid);
         }
@@ -112,7 +112,7 @@ int mthread_start(MThread *mthread)
         pthread_detach(mthread->thread);
     }
 #else
-    list_insert_after(&mthread_list, &mthread->mnode);
+    qlist_insert_after(&mthread_list, &mthread->mnode);
     ret = pthread_create(&mthread->thread, NULL, mthread->func, NULL);
     pthread_detach(mthread->thread);
 #endif
@@ -121,9 +121,9 @@ int mthread_start(MThread *mthread)
 
 int mthread_stop(MThread *mthread)
 {
-    list_remove(&mthread->mnode);
+    qlist_remove(&mthread->mnode);
     if(mthread_del_isexist(mthread) == 0){
-        list_insert_after(&mthread_del_list, &mthread->mnode);
+        qlist_insert_after(&mthread_del_list, &mthread->mnode);
         mthread->time.tv_sec = 0;
         mthread->time.tv_nsec = 0;
         mthread->runtime = 0;
@@ -143,9 +143,9 @@ int mthread_join(MThread *mthread)
 
 int mthread_isexist(MThread *mthread)
 {
-    ListObj *node, *_node;
-    list_for_each_safe(node, _node, &mthread_list){
-        MThread *_mthread = list_entry(node, MThread, mnode);
+    QList *node, *_node;
+    QLIST_ITERATER_SAFE(node, _node, &mthread_list){
+        MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
         if(mthread->mid == _mthread->mid){
             return 1;
         }else{
@@ -157,9 +157,9 @@ int mthread_isexist(MThread *mthread)
 
 int mthread_del_isexist(MThread *mthread)
 {
-    ListObj *node, *_node;
-    list_for_each_safe(node, _node, &mthread_del_list){
-        MThread *_mthread = list_entry(node, MThread, mnode);
+    QList *node, *_node;
+    QLIST_ITERATER_SAFE(node, _node, &mthread_del_list){
+        MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
         if(mthread->mid == _mthread->mid){
             return 1;
         }else{
@@ -172,37 +172,37 @@ int mthread_del_isexist(MThread *mthread)
 int cmd_mls_hdl(int argc, char **argv)
 {
     if(argc == 1){
-        ListObj *node, *_node;
-        uint32_t len = list_len(&mthread_list);
+        QList *node, *_node;
+        uint32_t len = qlist_len(&mthread_list);
         printf(" Threads <%u>\r\n", len);
         printf(" [name]            [mid]    [period/us]    [runtime/us]     [calltime/us]     [priority]    [usage]\r\n");
         printf("--------          -------  -------------  --------------   ---------------   ------------  ---------\r\n");
-        list_for_each_safe(node, _node, &mthread_list){
-            MThread *_mthread = list_entry(node, MThread, mnode);
+        QLIST_ITERATER_SAFE(node, _node, &mthread_list){
+            MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
             if(_mthread != NULL){
                 printf(" %-15s    %-5u    %-9u      %010.3f       %011.3f       %-3u           %-s\r\n",
                 _mthread->name, _mthread->mid, _mthread->period_us, (float)(_mthread->runtime) / 1000,
                 (float)(_mthread->calltime)  / 1000, _mthread->priority, _mthread->usage);
             }else{
-                return CMD_NO_CMD;
+                return CMD_MISSING;
             }
         }
         printf("\r\n");
     }else{
         if(ISARG(argv[1], "-d")){
-            ListObj *node, *_node;
-            uint32_t len = list_len(&mthread_list);
+            QList *node, *_node;
+            uint32_t len = qlist_len(&mthread_list);
             printf(" Threads <%u>\r\n", len);
             printf(" [name]            [mid]    [period/us]    [runtime/us]     [calltime/us]     [priority]    [usage]\r\n");
             printf("--------          -------  -------------  --------------   ---------------   ------------  ---------\r\n");
-            list_for_each_safe(node, _node, &mthread_del_list){
-                MThread *_mthread = list_entry(node, MThread, mnode);
+            QLIST_ITERATER_SAFE(node, _node, &mthread_del_list){
+                MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
                 if(_mthread != NULL){
                     printf(" %-15s    %-5u    %-9u      %010.3f       %011.3f       %-3u           %-s\r\n",
                     _mthread->name, _mthread->mid, _mthread->period_us, (float)(_mthread->runtime) / 1000,
                     (float)(_mthread->calltime)  / 1000, _mthread->priority, _mthread->usage);
                 }else{
-                    return CMD_NO_CMD;
+                    return CMD_MISSING;
                 }
             }
             printf("\r\n");
@@ -218,11 +218,11 @@ int cmd_mk_hdl(int argc, char **argv)
     if(argc <= 1){
         return CMD_PARAM_LESS;
     }else if(argc > 2){
-        return CMD_PARAM_EXCEED;
+        return CMD_PARAM_OVERFLOW;
     }else{
-        ListObj *node, *_node;
-        list_for_each_safe(node, _node, &mthread_list){
-            MThread *_mthread = list_entry(node, MThread, mnode);
+        QList *node, *_node;
+        QLIST_ITERATER_SAFE(node, _node, &mthread_list){
+            MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
             if(_mthread->mid == atol(argv[1])){
                 mthread_stop(_mthread);
                 return 0;
@@ -237,11 +237,11 @@ int cmd_mr_hdl(int argc, char **argv)
     if(argc <= 1){
         return CMD_PARAM_LESS;
     }else if(argc > 2){
-        return CMD_PARAM_EXCEED;
+        return CMD_PARAM_OVERFLOW;
     }else{
-        ListObj *node, *_node;
-        list_for_each_safe(node, _node, &mthread_del_list){
-            MThread *_mthread = list_entry(node, MThread, mnode);
+        QList *node, *_node;
+        QLIST_ITERATER_SAFE(node, _node, &mthread_del_list){
+            MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
             if(_mthread->mid == atol(argv[1])){
                 mthread_start(_mthread);
                 return 0;

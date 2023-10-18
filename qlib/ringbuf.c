@@ -2,13 +2,13 @@
  * @ Author: luoqi
  * @ Create Time: 2023-06-27 14:17
  * @ Modified by: luoqi
- * @ Modified time: 2023-06-30 10:32
+ * @ Modified time: 2023-10-17 18:01
  * @ Description:
  */
 
 #include "ringbuf.h"
 
-static void *mem_cpy(void *dst, void *src, uint32_t len)
+static void *_memcpy(void *dst, void *src, uint32_t len)
 {
     char *d;
     const char *s;
@@ -51,10 +51,10 @@ int ringbuf_write(RingBufObj *ring, uint8_t *data, uint32_t len)
     if((ring->bufsz - ring->msgsz) < len){
         return -1;
     }else if((ring->head + len) > ring->bufsz){
-        mem_cpy(ring->buf + ring->head, data, ring->bufsz - ring->head);
-        mem_cpy(ring->buf, data + (ring->bufsz - ring->head), len - (ring->bufsz - ring->head));
+        _memcpy(ring->buf + ring->head, data, ring->bufsz - ring->head);
+        _memcpy(ring->buf, data + (ring->bufsz - ring->head), len - (ring->bufsz - ring->head));
     }else{
-        mem_cpy(ring->buf + ring->head, data, len);
+        _memcpy(ring->buf + ring->head, data, len);
     }
     ring->msgsz = ring->msgsz + len;
     ring->head = (ring->head + len) % ring->bufsz;
@@ -66,13 +66,13 @@ int ringbuf_read(RingBufObj *ring, uint8_t *rdata, uint32_t len)
     if(ring->msgsz < len){
         return -1;
     }else if(ring->head >= ring->tail){
-        mem_cpy(rdata, ring->buf + ring->tail, len);
+        _memcpy(rdata, ring->buf + ring->tail, len);
     }else {
         if((ring->bufsz - ring->tail) >= len){
-            mem_cpy(rdata, ring->buf + ring->tail, len);
+            _memcpy(rdata, ring->buf + ring->tail, len);
         }else{
-            mem_cpy(rdata, ring->buf + ring->tail, ring->bufsz - ring->tail);
-            mem_cpy(rdata + (ring->bufsz - ring->tail), ring->buf, len - (ring->bufsz - ring->tail));      
+            _memcpy(rdata, ring->buf + ring->tail, ring->bufsz - ring->tail);
+            _memcpy(rdata + (ring->bufsz - ring->tail), ring->buf, len - (ring->bufsz - ring->tail));      
         }
     }
     ring->msgsz = ring->msgsz - len;

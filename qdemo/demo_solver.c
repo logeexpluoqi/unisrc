@@ -19,7 +19,7 @@ static float tspan[TSPAN_SIZE];
 
 int demo_solver_init()
 {
-    qcmd_init(&cmd_ode, "ode", cmd_ode_hdl, "@ euler, rk, rkf45");
+    qcmd_init(&cmd_ode, "ode", cmd_ode_hdl, "euler, rk, rkf45");
     qcmd_add(&cmd_ode);
 }
 

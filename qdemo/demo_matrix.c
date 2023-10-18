@@ -54,7 +54,7 @@ int demo_matrix_init()
     qmat_init(&M5x5_B, m5x5_b, 5, 5);
     qmat_init(&M5x5_C, m5x5_c, 5, 5);
     qmat_init(&M3x3, m3x3, 3, 3);
-    qcmd_export("mat", cmd_mat_hdl, "@ add, sub, mul, div, show, gen");
+    qcmd_export("mat", cmd_mat_hdl, "add, sub, mul, div, show, gen");
     return 0;
 }
 
@@ -142,5 +142,5 @@ int cmd_mat_hdl(int argc, char **argv)
         return CMD_PARAM_ERR;
     }
 
-    return CMD_NO_ERR;
+    return CMD_EOK;
 }

@@ -1,13 +1,13 @@
 /*
  * @Author: luoqi 
  * @Date: 2021-08-31 15:49:21 
- * @Last Modified by: luoqi
- * @Last Modified time: 2022-04-23 19:25:13
+ * @ Modified by: luoqi
+ * @ Modified time: 2023-10-18 15:11
  */
 
 #include <string.h>
 #include "qdemo.h"
-#include "../frame/fsm.h"
+#include "../qlib/fsm.h"
 #include "../qshell/qsh.h"
 
 static FsmObj fsm_1;
@@ -32,7 +32,7 @@ static int cmd_fsm_hdl(int argc, char **argv);
 
 int demo_fsm_init()
 {
-    qcmd_init(&cmd_fsm, "fsm", cmd_fsm_hdl, "@ fsm<run/stop>");
+    qcmd_init(&cmd_fsm, "fsm", cmd_fsm_hdl, "fsm<run/stop>");
     qcmd_add(&cmd_fsm);
     fsm_init(&fsm_1, "fsm 1", 0);
     fsm_init(&fsm_2, "fsm 2", 0);

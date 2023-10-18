@@ -46,7 +46,7 @@ void demo_filter_init()
     hpf_1st_init(&hpf_1st, 1, 0.01);
     kf_1dim_init(&kf_1dim, 0, 1, 0, 1, 0, 0.002, 0.5);
 
-    qcmd_init(&cmd_filter, "filter", cmd_filter_hdl, "@ nsig, sa, lpf1st, hpf1st, kf1dim");
+    qcmd_init(&cmd_filter, "filter", cmd_filter_hdl, "nsig, sa, lpf1st, hpf1st, kf1dim");
     qcmd_add(&cmd_filter);
 }
 

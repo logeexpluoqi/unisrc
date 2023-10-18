@@ -35,7 +35,7 @@ typedef struct msg_container
 {
     const char* name;
     const char* usage;
-    ListObj msg_list;
+    QList msg_list;
 } MsgContainer;
 
 typedef struct msg_obj
@@ -46,7 +46,7 @@ typedef struct msg_obj
     MsgType type;
     unsigned char is_update;
     const char* usage;
-    ListObj msg_list_node;
+    QList msg_list_node;
 } MsgObj;
 
 #define MSG_CREAT(name, mem, type, size)     MsgObj name; type mem[size]

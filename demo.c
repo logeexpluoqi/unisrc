@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "linuxbase/mthread.h"
 #include "qshell/qsh.h"
-#include "frame/qtask.h"
+#include "qlib/qtask.h"
 #include "qdemo/qdemo.h"
 
 static MThread task_qsh;

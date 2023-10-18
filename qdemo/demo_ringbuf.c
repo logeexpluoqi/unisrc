@@ -2,13 +2,13 @@
  * @ Author: luoqi
  * @ Create Time: 2023-06-29 15:08
  * @ Modified by: luoqi
- * @ Modified time: 2023-06-30 09:57
+ * @ Modified time: 2023-10-18 15:10
  * @ Description:
  */
 
 #include <stdlib.h>
 #include "qdemo.h"
-#include "../frame/ringbuf.h"
+#include "../qlib/ringbuf.h"
 #include "../qshell/qsh.h"
 
 #define BUF_SIZE 10
@@ -21,7 +21,7 @@ static int cmd_ringbuf_hdl(int argc, char **argv);
 int demo_ringbuf_init()
 {
     ringbuf_init(&ring, buf, BUF_SIZE);
-    qcmd_export("rbuf", cmd_ringbuf_hdl, "@ wr<len>, rd<len>");
+    qcmd_export("rbuf", cmd_ringbuf_hdl, "wr<len>, rd<len>");
     return 0;
 }
 
@@ -62,7 +62,7 @@ int cmd_ringbuf_hdl(int argc, char **argv)
             QSH(" %02X", buf[i]);
         }
         QSH("\r\n");
-        return CMD_NO_ERR;
+        return CMD_EOK;
     }
     if(argc != 3){
         return CMD_PARAM_ERR;
@@ -77,5 +77,5 @@ int cmd_ringbuf_hdl(int argc, char **argv)
     }else {
         return CMD_PARAM_ERR;
     }
-    return CMD_NO_ERR;
+    return CMD_EOK;
 }

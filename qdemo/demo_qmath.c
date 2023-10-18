@@ -24,10 +24,10 @@ static int cmd_m_hdl(int, char **);
 
 void demo_qmath_init()
 {
-    qcmd_init(&cmd_cmplx, "cmplx", cmd_cmplx_hdl, "@ add<a bi c di>, sub<a bi c di>, mul<a bi c di>, div<a bi c di>, abs<a bi>");
+    qcmd_init(&cmd_cmplx, "cmplx", cmd_cmplx_hdl, "add<a bi c di>, sub<a bi c di>, mul<a bi c di>, div<a bi c di>, abs<a bi>");
     qcmd_add(&cmd_cmplx);
 
-    qcmd_init(&cmd_m, "m", cmd_m_hdl, "@ pow<a b>");
+    qcmd_init(&cmd_m, "m", cmd_m_hdl, "pow<a b>");
     qcmd_add(&cmd_m);
 }
 
@@ -67,7 +67,7 @@ int cmd_cmplx_hdl(int argc, char **argv)
         return CMD_PARAM_ERR;
     }
 
-    return CMD_NO_ERR;
+    return CMD_EOK;
 }
 
 static int cmd_m_hdl(int argc, char **argv)
@@ -82,5 +82,5 @@ static int cmd_m_hdl(int argc, char **argv)
     }else{
         return CMD_PARAM_ERR;
     }
-    return CMD_NO_ERR;
+    return CMD_EOK;
 }

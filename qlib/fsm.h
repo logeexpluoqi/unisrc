@@ -19,7 +19,7 @@ typedef struct fsm_object {
     unsigned int fsm_state_id_base;
     int curr_state;
     int next_state;
-    ListObj fsm_list_head;
+    QList fsm_list_head;
 } FsmObj;
 
 typedef struct fsm_state_object {
@@ -27,7 +27,7 @@ typedef struct fsm_state_object {
     const char* belong_to;
     int link_state;
     int (*fsm_state_task_hdl)(void);
-    ListObj fsm_state_list;
+    QList fsm_state_list;
 } FsmStateObj;
 
 void fsm_init(FsmObj* fsm, const char* name, int init_state);

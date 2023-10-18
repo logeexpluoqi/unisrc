@@ -14,7 +14,7 @@ static int cmd_qtrif_hdl(int argc, char **argv);
 
 int demo_qtrigf_init()
 {
-    qcmd_init(&cmd_qtrigf, "qtrigf", cmd_qtrif_hdl, "@ sin, cos, tan, asin, acos, atan");
+    qcmd_init(&cmd_qtrigf, "qtrigf", cmd_qtrif_hdl, "sin, cos, tan, asin, acos, atan");
     qcmd_add(&cmd_qtrigf);
     return 0;
 }
@@ -68,5 +68,5 @@ int cmd_qtrif_hdl(int argc, char **argv)
         return CMD_PARAM_ERR;
     }
 
-    return CMD_NO_ERR;   
+    return CMD_EOK;   
 }

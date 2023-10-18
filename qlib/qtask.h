@@ -30,7 +30,7 @@ typedef struct _qtask
     uint32_t timer;
     uint32_t tick;
     uint32_t run_time;
-    ListObj qtask_node;
+    QList qtask_node;
     const char* usage;
 } QTaskObj;
 

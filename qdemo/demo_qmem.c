@@ -7,7 +7,7 @@
 
 #include "qdemo.h"
 #include "../qshell/qsh.h"
-#include "../frame/qmem.h"
+#include "../qlib/qmem.h"
 
 int demo_qmem_init(void)
 {

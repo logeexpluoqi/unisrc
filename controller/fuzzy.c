@@ -153,9 +153,9 @@ void fuzz_init(FuzzObj* fuzz_obj,
     fuzz_obj->dis_ec_size = dis_ec_size;
     fuzz_obj->dis_u_size = dis_u_size;
     fuzz_obj->rules = rules;
-    list_init(&fuzz_obj->_mf_list_e);
-    list_init(&fuzz_obj->_mf_list_ec);
-    list_init(&fuzz_obj->_mf_list_u);
+    qlist_init(&fuzz_obj->_mf_list_e);
+    qlist_init(&fuzz_obj->_mf_list_ec);
+    qlist_init(&fuzz_obj->_mf_list_u);
     fuzz_obj->e_range[0] = e_min;
     fuzz_obj->e_range[1] = e_max;
     fuzz_obj->ec_range[0] = ec_min;
@@ -187,15 +187,15 @@ int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMfVar var, FuzzMemFuncObj* mf)
     switch(var)
     {
     case FUZZ_E:
-        list_insert_before(&fuzz_obj->_mf_list_e, &mf->_mf_inner_list);
+        qlist_insert_before(&fuzz_obj->_mf_list_e, &mf->_mf_inner_list);
         fuzz_obj->mf_e_num ++;
         break;
     case FUZZ_EC:
-        list_insert_before(&fuzz_obj->_mf_list_ec, &mf->_mf_inner_list);
+        qlist_insert_before(&fuzz_obj->_mf_list_ec, &mf->_mf_inner_list);
         fuzz_obj->mf_ec_num ++;
         break;
     case FUZZ_U:
-        list_insert_before(&fuzz_obj->_mf_list_u, &mf->_mf_inner_list);
+        qlist_insert_before(&fuzz_obj->_mf_list_u, &mf->_mf_inner_list);
         fuzz_obj->mf_u_num ++;
         break;
     default:
@@ -208,11 +208,11 @@ int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMfVar var, FuzzMemFuncObj* mf)
 int fuzz_mf_num(FuzzObj* fuzz_obj, FuzzMfVar var)
 {
     if(var == FUZZ_E)
-        return list_len(&fuzz_obj->_mf_list_e);
+        return qlist_len(&fuzz_obj->_mf_list_e);
     else if(FUZZ_EC)
-        return list_len(&fuzz_obj->_mf_list_ec);
+        return qlist_len(&fuzz_obj->_mf_list_ec);
     else if(FUZZ_U)
-        return list_len(&fuzz_obj->_mf_list_u);
+        return qlist_len(&fuzz_obj->_mf_list_u);
     else
         return -1;
 }

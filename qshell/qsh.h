@@ -21,14 +21,17 @@ extern "C" {
 #endif
 
 #include <stdio.h>
-#include <string.h>
-#include "../frame/cmd.h"
+#include "../qlib/cmd.h"
 
 #define QSH_HISTORY_MAX         10
 
 #define QSH(...)                printf(__VA_ARGS__)
 
-#define ISARG(str1, str2)       (strcmp(str1, str2) == 0)
+#define QPRINTF(...)            printf(__VA_ARGS__);
+
+#define ISARG(str1, str2)       (_strcmp(str1, str2) == 0)
+
+int _strcmp(const char* s1, const char *s2);
 
 void qsh_recv(char recv);
 
@@ -42,7 +45,7 @@ void qcmd_add(CmdObj *qcmd);
 
 void qcmd_del(CmdObj *qcmd);
 
-int qcmd_call(const char *args);
+int qsh_call(const char *args);
 
 #ifdef QSH_USING_LIBC
 
