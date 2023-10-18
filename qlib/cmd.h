@@ -16,8 +16,7 @@ extern "C" {
 
 #define CLIST_OBJ(ptr, type, member)     ((type *)((char *)(ptr) - ((unsigned long) &((type*)0)->member)))
 
-#define CLIST_ITERATER(node, clist) \
-    for (node = (clist)->next; node != (clist); node = node->next)
+#define CLIST_ITERATOR(node, clist)      for (node = (clist)->next; node != (clist); node = node->next)
 
 #define CMD_MAX_LEN     60
 #define CMD_MAX_NUM     10

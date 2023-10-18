@@ -57,11 +57,11 @@ CmdInfo cmd_exec(char *args)
     /* cmd parser */
     do {
         if(i == 0) {
-            argv[argn] = &args[i];
+            argv[argn] = args + i;
         } else if(args[i] == ASCII_SPACE || args[i] == ASCII_DOT) {
             args[i] = 0;
             if(args[i + 1] != ASCII_SPACE && args[i + 1] != ASCII_DOT) {
-                argv[++argn] = &args[i + 1];
+                argv[++argn] = args + i + 1;
             }
         }
         i++;
@@ -77,7 +77,7 @@ CmdInfo cmd_exec(char *args)
     /* End of dismantling input command string */
     /* add 1 because there is no space key value front of the first argv */
     argc = argn + 1;
-    CLIST_ITERATER(_node, &clist) {
+    CLIST_ITERATOR(_node, &clist) {
         cmd = CLIST_OBJ(_node, CmdObj, node);
         if(_strcmp(cmd->name, argv[0]) == 0) {
             return cmd->callback(argc, argv);
@@ -118,11 +118,10 @@ int cmd_del(CmdObj *cmd)
 
 int cmd_isexist(CmdObj *cmd)
 {
-    uint8_t isexist = 0;
     CList *_node;
     CmdObj *_cmd;
 
-    CLIST_ITERATER(_node, &clist) {
+    CLIST_ITERATOR(_node, &clist) {
         _cmd = CLIST_OBJ(_node, CmdObj, node);
         if(cmd->id == _cmd->id) {
             return 1;
