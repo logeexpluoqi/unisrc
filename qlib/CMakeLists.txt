@@ -6,4 +6,5 @@ add_library(qlib
         qlist.c
         qmem.c
         ringbuf.c
+        qlibc.c
 )
