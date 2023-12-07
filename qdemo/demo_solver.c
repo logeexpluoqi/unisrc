@@ -11,7 +11,7 @@
 #include "../solver/ode_rk.h"
 #include "../qshell/qsh.h"
 
-static CmdObj cmd_ode;
+static QCmdObj cmd_ode;
 static int cmd_ode_hdl(int argc, char **argv);
 
 #define TSPAN_SIZE      31
@@ -82,7 +82,7 @@ int demo_rkf45_solver()
 int cmd_ode_hdl(int argc, char **argv)
 {
     if(argc <= 1){
-        return CMD_PARAM_LESS;
+        return -2;
     }
 
     if(ISARG(argv[1], "euler")){
@@ -92,7 +92,7 @@ int cmd_ode_hdl(int argc, char **argv)
     }else if(ISARG(argv[1], "rkf45")){
         demo_rkf45_solver();
     }else{
-        return CMD_PARAM_ERR;
+        return -1;
     }
 
     return 0;

@@ -26,7 +26,7 @@ static void demo_lpf_1st(void);
 Hpf1stObj hpf_1st;
 static void demo_hpf_1st(void);
 
-static CmdObj cmd_filter;
+static QCmdObj cmd_filter;
 static int cmd_filter_hdl(int argc, char **argv);
 
 static KF1DimObj kf_1dim;
@@ -53,7 +53,7 @@ void demo_filter_init()
 int cmd_filter_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
-        return CMD_PARAM_LESS;
+        return -2;
     }
     
     if(ISARG(argv[1], "nsig")) {
@@ -67,7 +67,7 @@ int cmd_filter_hdl(int argc, char **argv)
     } else if(ISARG(argv[1], "kf1dim")) {
         demo_kf_1dim();
     }else {
-        return CMD_PARAM_ERR;
+        return -1;
     }
 
     return 0;

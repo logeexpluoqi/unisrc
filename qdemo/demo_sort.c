@@ -13,7 +13,7 @@
 
 #define DEMO_SORT_DATA_SIZE     50
 
-static CmdObj cmd_sort;
+static QCmdObj cmd_sort;
 static int cmd_sort_hdl(int, char **);
 static float quicksortdata[DEMO_SORT_DATA_SIZE];
 
@@ -35,7 +35,7 @@ int demo_sort_init()
 int cmd_sort_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
-        return CMD_PARAM_LESS;
+        return -2;
     }
 
     if(ISARG(argv[1], "quick")){
@@ -43,7 +43,7 @@ int cmd_sort_hdl(int argc, char **argv)
     } else if(ISARG(argv[1], "bub")){
         demo_bubbule_sort();
     }else {
-        return CMD_PARAM_ERR;
+        return -1;
     }
     return 0;
 }

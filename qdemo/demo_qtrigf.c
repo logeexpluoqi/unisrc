@@ -9,7 +9,7 @@
 #include "../qmath/qtrigf.h"
 #include "../qshell/qsh.h"
 
-static CmdObj cmd_qtrigf;
+static QCmdObj cmd_qtrigf;
 static int cmd_qtrif_hdl(int argc, char **argv);
 
 int demo_qtrigf_init()
@@ -50,7 +50,7 @@ static int qcos_func()
 int cmd_qtrif_hdl(int argc, char **argv)
 {
     if(argc != 2){
-        return CMD_PARAM_ERR;
+        return -2;
     }
     if(ISARG(argv[1], "sin")){
         qsin_func();
@@ -65,8 +65,8 @@ int cmd_qtrif_hdl(int argc, char **argv)
     }else if(ISARG(argv[1], "atan")){
         
     }else{
-        return CMD_PARAM_ERR;
+        return -1;
     }
 
-    return CMD_EOK;   
+    return 0;   
 }

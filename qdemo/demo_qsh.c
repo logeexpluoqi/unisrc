@@ -10,7 +10,7 @@
 #include "../qshell/qsh.h"
 #include "../qlib/qtask.h"
 
-static CmdObj   cmd_ls;
+static QCmdObj   cmd_ls;
 static int cmd_ls_hdl(int, char **);
 
 int demo_qsh_init()
@@ -50,7 +50,7 @@ int cmd_ls_hdl(int argc, char **argv)
             }
         }
         else {
-            return CMD_PARAM_ERR;
+            return -1;
         }
     }
     return 0;

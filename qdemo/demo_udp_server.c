@@ -47,7 +47,7 @@ void *udpserver_hdl(void *args)
 int cmd_udps_hdl(int argc, char **argv)
 {
     if(argc <= 1){
-        return CMD_PARAM_LESS;
+        return -2;
     }
     if(ISARG(argv[1], "port")){
         fd = udp_server_creat(atoi(argv[2]));
@@ -75,7 +75,7 @@ int cmd_udps_hdl(int argc, char **argv)
         int ret = udp_server_delete(atoi(argv[2]));
         QSH(" closed udp server return: %d, issuccess: %d\r\n", atoi(argv[2]), ret);
     }else{
-        return CMD_PARAM_ERR;
+        return -1;
     }
     return 0;
 }

@@ -139,8 +139,8 @@ int cmd_mat_hdl(int argc, char **argv)
     }else if(ISARG(argv[1], "gen")){
         mat_gen();
     }else{
-        return CMD_PARAM_ERR;
+        return -1;
     }
 
-    return CMD_EOK;
+    return 0;
 }

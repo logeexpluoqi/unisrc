@@ -16,6 +16,16 @@ static QLIST_CREAT(mthread_list);
 static QLIST_CREAT(mthread_del_list);
 static uint32_t thread_mid = 0;
 
+enum{
+    CMD_EXEC_ERR = -2,
+    CMD_PARAM_ERR = -1,
+    CMD_EOK = 0,
+    CMD_LENGTH_OUT = 1,
+    CMD_MISSING = 2,
+    CMD_PARAM_OVERFLOW = 3,
+    CMD_PARAM_LESS = 4,
+};
+
 static int mthread_isexist(MThread *mthread);
 static int mthread_del_isexist(MThread *mthread);
 

@@ -13,13 +13,13 @@
 #include "../qmath/qcomplex.h"
 #include "../qshell/qsh.h"
 
-static CmdObj cmd_qmat;
+static QCmdObj cmd_qmat;
 static int cmd_qmat_hdl(int, char **);
 
-static CmdObj cmd_cmplx;
+static QCmdObj cmd_cmplx;
 static int cmd_cmplx_hdl(int, char **);
 
-static CmdObj cmd_m;
+static QCmdObj cmd_m;
 static int cmd_m_hdl(int, char **);
 
 void demo_qmath_init()
@@ -52,7 +52,7 @@ int cmd_cmplx_hdl(int argc, char **argv)
             c = qcmplx_div(x, y);
             QSH(" (%f+%fi) / (%f+%fi) = (%f+%fi)\r\n", x.re, x.im, y.re, y.im, c.re, c.im);
         } else{
-            return CMD_PARAM_ERR;
+            return -1;
         }
     }else if(argc == 4){
         QCmplx a;
@@ -64,23 +64,23 @@ int cmd_cmplx_hdl(int argc, char **argv)
             QSH(" arg(%f+%fi) = %f\r\n", a.re, a.im, qcmplx_arg(a));
         }
     }else{
-        return CMD_PARAM_ERR;
+        return -1;
     }
 
-    return CMD_EOK;
+    return 0;
 }
 
 static int cmd_m_hdl(int argc, char **argv)
 {
     if(argc <= 1){
-        return CMD_PARAM_ERR;
+        return -1;
     }
     if(ISARG(argv[1], "pow") && (argc == 4)) {
         float a = atof(argv[2]); 
         float b = atof(argv[3]); 
         QSH(" %f^%f = %f\r\n", a, b, qpow(a, b));
     }else{
-        return CMD_PARAM_ERR;
+        return -1;
     }
-    return CMD_EOK;
+    return 0;
 }

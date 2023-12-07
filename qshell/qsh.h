@@ -12,45 +12,47 @@
 extern "C" {
 #endif
 
-#define QSH_USING_LIBC    1
+#include "qsh_def.h"
 
 #ifdef QSH_USING_LIBC
-
 #include <stdlib.h>
-
 #endif
 
-#include <stdio.h>
-#include "../qlib/cmd.h"
+#define ISARG(str1, str2)       (qcmd_isarg(str1, str2) == 0)
 
-#define QSH_HISTORY_MAX         10
+typedef struct _clist {
+    struct _clist *prev;
+    struct _clist *next;
+} QCList;
 
-#define QSH(...)                printf(__VA_ARGS__)
+typedef int (*CmdCallback)(int, char **);
+typedef struct
+{
+    const char      *name;
+    uint32_t        id;
+    CmdCallback     callback;
+    const char      *usage;
+    QCList          node;
+} QCmdObj;
 
-#define QPRINTF(...)            printf(__VA_ARGS__);
+int qcmd_isarg(const char *s, const char *arg);
 
-#define ISARG(str1, str2)       (_strcmp(str1, str2) == 0)
+int qsh_recv(char c);
 
-int _strcmp(const char* s1, const char *s2);
+int qsh_init(void);
 
-void qsh_recv(char recv);
+int qsh_exec(void);
 
-void qsh_init(void);
+int qcmd_init(QCmdObj *qcmd, const char *name, int (*handle)(int, char **), const char *usage);
 
-void qsh_exec(void);
+int qcmd_add(QCmdObj *qcmd);
 
-void qcmd_init(CmdObj *qcmd, const char *name, int (*handle)(int, char **), const char *usage);
-
-void qcmd_add(CmdObj *qcmd);
-
-void qcmd_del(CmdObj *qcmd);
+int qcmd_del(QCmdObj *qcmd);
 
 int qsh_call(const char *args);
 
 #ifdef QSH_USING_LIBC
-
 int qcmd_export(const char *name, int (*handle)(int, char **), const char *usage);
-
 #endif
 
 #ifdef __cplusplus

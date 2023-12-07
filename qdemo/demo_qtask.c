@@ -20,7 +20,7 @@ void task1_hdl(void);
 void task2_hdl(void);
 void task3_hdl(void);
 
-static CmdObj cmd_task;
+static QCmdObj cmd_task;
 static int cmd_task_hdl(int , char**);
 
 int demo_qtask_init()
@@ -59,7 +59,7 @@ void task3_hdl()
 int cmd_task_hdl(int argc, char **argv)
 {
     if(argc <= 1){
-        return CMD_PARAM_ERR;
+        return -1;
     }
     
     if(ISARG(argv[1], "run")){
@@ -74,7 +74,7 @@ int cmd_task_hdl(int argc, char **argv)
         else if(ISARG(argv[2], "3")){
             qtask_add(&task3);
         }else{
-            return CMD_PARAM_ERR;
+            return -1;
         }
     }else if(ISARG(argv[1], "stop")){
         if(ISARG(argv[2], "1")){
@@ -85,7 +85,7 @@ int cmd_task_hdl(int argc, char **argv)
             qtask_del(&task1);
             qtask_del(&task2);
         }else{
-            return CMD_PARAM_ERR;
+            return -1;
         }
     }
 

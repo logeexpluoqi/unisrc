@@ -5,28 +5,9 @@
  * @Last Modified time: 2022-11-25 00:40:28
  */
 
-#include <stdlib.h>
-#include <stdint.h>
 #include "qsh.h"
 
 #define QSH_NULL    ((void*)0)
-
-#define QSH_USAGE_DISP_MAX  80
-
-enum {
-    QSH_KEY_BACKSPACE = '\b',
-    QSH_KEY_SPACE = '\20',
-    QSH_KEY_ENTER = '\r',
-    QSH_KEY_UP = '\x41',
-    QSH_KEY_DOWN = '\x42',
-    QSH_KEY_RIGHT = '\x43',
-    QSH_KEY_LEFT = '\x44',
-};
-
-typedef enum {
-    QSH_RECV_UNFINISH,
-    QSH_RECV_FINISH
-} RecvState;
 
 typedef enum {
     QSH_FUNCKEY_NONE = 0,
@@ -34,22 +15,39 @@ typedef enum {
     QSH_FUNCKEY_RECV,
 } QshFunckeyStage;
 
+typedef enum {
+    QCMD_EXEC_ERR       = -2,
+    QCMD_PARAM_ERR      = -1,
+    QCMD_EOK            = 0,
+    QCMD_LENGTH_OUT     = 1,
+    QCMD_MISSING        = 2,
+    QCMD_PARAM_OVERFLOW = 3,
+    QCMD_PARAM_LESS     = 4,
+} QCmdInfo;
+
 #define QSH_CLEAR_LINE      QPRINTF("\r\x1b[K")
-#define QSH_SHOW_PERFIX     QPRINTF("\r%s", _perfix)
+#define QSH_SHOW_PERFIX     QPRINTF("\r%s", QSH_PERFIX)
 #define QSH_CLEAR_DISP      QPRINTF("\033[H\033[2J")
 
-static const char *_perfix = "/>$ ";
-static char _args[CMD_MAX_LEN];
+#define QCLIST_OBJ(ptr, type, member)     ((type *)((char *)(ptr) - ((unsigned long) &((type*)0)->member)))
+#define QCLIST_ITERATOR(node, clist)      for (node = (clist)->next; node != (clist); node = node->next)
+
+static QCList clist = { &clist, &clist };
+static uint32_t id = 1;
+
+static int iscall = 0;
+static int isenter = 0;
+
+static char _args[QSH_CMD_LEN_MAX];
 static uint32_t _args_c = 0;
-static char _hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
+static char _hs_buf[QSH_HISTORY_MAX][QSH_CMD_LEN_MAX];
 static uint32_t hs_cnt = 0;
 static uint32_t hs_recall = 0;
 static uint32_t hs_index = 0;
-static RecvState recv_state = QSH_RECV_UNFINISH;
 
-static CmdObj _history;
-static CmdObj _clear;
-static CmdObj _help;
+static QCmdObj _history;
+static QCmdObj _clear;
+static QCmdObj _help;
 
 static int _help_hdl(int argc, char **argv);
 
@@ -123,32 +121,101 @@ int _strcmp(const char *s1, const char *s2)
     return 0;
 }
 
-void qsh_init()
+static inline void _clist_insert(QCList *list, QCList *node)
 {
-    _memset(_args, 0, sizeof(_args));
-    _memset(_hs_buf, 0, sizeof(_hs_buf));
-    hs_index = 0;
-    hs_cnt = 0;
-    hs_recall = 0;
-    recv_state = QSH_RECV_UNFINISH;
-    _args_c = 0;
-    cmd_init(&_history, "hs", _hs_hdl, "show history");
-    cmd_init(&_help, "?", _help_hdl, "do help");
-    cmd_init(&_clear, "clear", _clear_hdl, "clear window");
+    list->next->prev = node;
+    node->next = list->next;
 
-    cmd_add(&_help);
-    cmd_add(&_history);
-    cmd_add(&_clear);
-    QSH_CLEAR_DISP;
-    QPRINTF("========== QSH BY LUOQI ==========\r\n");
-    QSH_SHOW_PERFIX;
+    list->next = node;
+    node->prev = list;
 }
 
-int qsh_call(const char *args)
+static inline void _cqlist_remove(QCList *node)
 {
-    char _args[CMD_MAX_LEN + 1] = { 0 };
-    _strcpy(_args, args);
-    return cmd_exec(_args);
+    node->next->prev = node->prev;
+    node->prev->next = node->next;
+
+    node->next = node->prev = node;
+}
+
+static QCmdInfo _cmd_exec(char *args)
+{
+    QCList *_node;
+    QCmdObj *cmd;
+    char *argv[QSH_CMD_ARGS_MAX + 1] = { 0 };
+    int argc = 0;
+    int argn = 0;
+    int i = 0;
+
+    /* cmd parser */
+    do {
+        if(i == 0) {
+            argv[argn] = args + i;
+        } else if(args[i] == ASCII_SPACE || args[i] == ASCII_DOT) {
+            args[i] = 0;
+            if(args[i + 1] != ASCII_SPACE && args[i + 1] != ASCII_DOT) {
+                argv[++argn] = args + i + 1;
+            }
+        }
+        i++;
+        if(i > QSH_CMD_LEN_MAX - 1) {
+            return QCMD_LENGTH_OUT;
+        }
+
+        if(argn > QSH_CMD_ARGS_MAX - 1) {
+            return QCMD_PARAM_OVERFLOW;
+        }
+
+    } while(args[i] != 0);
+    /* End of dismantling input command string */
+    /* add 1 because there is no space key value front of the first argv */
+    argc = argn + 1;
+    QCLIST_ITERATOR(_node, &clist) {
+        cmd = QCLIST_OBJ(_node, QCmdObj, node);
+        if(_strcmp(cmd->name, argv[0]) == 0) {
+            return cmd->callback(argc, argv);
+        }
+    }
+    return QCMD_MISSING;
+}
+
+static int _cmd_isexist(QCmdObj *cmd)
+{
+    QCList *_node;
+    QCmdObj *_cmd;
+
+    QCLIST_ITERATOR(_node, &clist) {
+        _cmd = QCLIST_OBJ(_node, QCmdObj, node);
+        if(cmd->id == _cmd->id) {
+            return 1;
+        } else {
+            continue;
+        }
+    }
+    return 0;
+}
+
+static uint32_t _cmd_num()
+{
+    unsigned int len = 0;
+    const QCList *l = &clist;
+    while (l->next != &clist) {
+        l = l->next;
+        len++;
+    }
+
+    return len;
+}
+
+static QCmdObj *_cmd_obj(uint32_t id)
+{
+    QCList *_node = &clist;
+
+    for(uint32_t i = id; i > 0; i--) {
+        _node = _node->next;
+    }
+
+    return QCLIST_OBJ(_node, QCmdObj, node);
 }
 
 static inline void _recv_enter()
@@ -168,7 +235,7 @@ static inline void _recv_enter()
                 hs_cnt = (hs_cnt + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_cnt + 1);
             }
         }
-        recv_state = QSH_RECV_FINISH;
+        isenter = 1;
     } else {
         QPRINTF("\r\n");
         QSH_SHOW_PERFIX;
@@ -210,6 +277,8 @@ static inline void _recv_down()
         _next_history();
         hs_recall --;
     } else {
+        _memset(_args, 0, _args_c);
+        _args_c = 0;
         QSH_CLEAR_LINE;
         QSH_SHOW_PERFIX;
     }
@@ -242,9 +311,50 @@ static inline void _recv_characters(char c)
     }
 }
 
-void qsh_recv(char c)
+static inline void _reset()
+{
+    _memset(_args, 0, _args_c);
+    hs_recall = 0;
+    _args_c = 0;
+}
+
+int qsh_init()
+{
+    _memset(_args, 0, sizeof(_args));
+    _memset(_hs_buf, 0, sizeof(_hs_buf));
+    hs_index = 0;
+    hs_cnt = 0;
+    hs_recall = 0;
+    isenter = 0;
+    iscall = 0;
+    _args_c = 0;
+    qcmd_init(&_history, "hs", _hs_hdl, "show history");
+    qcmd_init(&_help, "?", _help_hdl, "do help");
+    qcmd_init(&_clear, "clear", _clear_hdl, "clear window");
+
+    qcmd_add(&_help);
+    qcmd_add(&_history);
+    qcmd_add(&_clear);
+    QSH_CLEAR_DISP;
+    QPRINTF("|========== QSH BY LUOQI ==========|\r\n");
+    QSH_SHOW_PERFIX;
+}
+
+int qsh_call(const char *args)
+{
+    iscall = 1;
+    _args_c = _strlen(args);
+    _memcpy(_args, args, _args_c);
+    isenter = 1;
+    return qsh_exec();
+}
+
+int qsh_recv(char c)
 {
     static QshFunckeyStage key_state = QSH_FUNCKEY_NONE;
+    if(iscall){
+        return 0;
+    }
     /* functional key receive FSM */
     switch(key_state) {
     case QSH_FUNCKEY_NONE:
@@ -280,73 +390,97 @@ void qsh_recv(char c)
         key_state = QSH_FUNCKEY_NONE;
         break;
     }
+    return c;
 }
 
-static inline void _reset()
+int qcmd_isarg(const char *s, const char *arg)
 {
-    _memset(_args, 0, _args_c);
-    hs_recall = 0;
-    _args_c = 0;
+    return _strcmp(s, arg);
 }
 
-void qsh_exec()
+int qsh_exec()
 {
-    if(recv_state == QSH_RECV_FINISH) {
-        QPRINTF("\r\n");
-        switch(cmd_exec(_args)) {
-        case CMD_EOK:
+    int result = 0;
+    if(isenter) {
+        result = _cmd_exec(_args);
+        if(iscall){
+            iscall = 0;
+            return result;
+        }
+        switch(result) {
+        case QCMD_EOK:
             break;
-        case CMD_LENGTH_OUT:
-            QPRINTF(" #! length exceed !\r\n");
+        case QCMD_LENGTH_OUT:
+            QPRINTF("\r\n #! length exceed !\r\n");
             break;
-        case CMD_MISSING:
-            QPRINTF(" #! cmd missing !\r\n");
+        case QCMD_MISSING:
+            QPRINTF("\r\n #! cmd missing !\r\n");
             break;
-        case CMD_PARAM_OVERFLOW:
-            QPRINTF(" #! param overflow !\r\n");
+        case QCMD_PARAM_OVERFLOW:
+            QPRINTF("\r\n #! param overflow !\r\n");
             break;
-        case CMD_PARAM_LESS:
-            QPRINTF(" #! param short !\r\n");
+        case QCMD_PARAM_LESS:
+            QPRINTF("\r\n #! param short !\r\n");
             break;
-        case CMD_EXEC_ERR:
-            QPRINTF(" #! exec error !\r\n");
+        case QCMD_EXEC_ERR:
+            QPRINTF("\r\n #! exec error !\r\n");
             break;
-        case CMD_PARAM_ERR:
-            QPRINTF(" #! param error !\r\n");
+        case QCMD_PARAM_ERR:
+            QPRINTF("\r\n #! param error !\r\n");
             break;
         default:
             break;
         }
         _reset();
-        recv_state = QSH_RECV_UNFINISH;
+        isenter = 0;
         QSH_SHOW_PERFIX;
+    }
+    return result;
+}
+
+int qcmd_init(QCmdObj *qcmd, const char *name, int (*handle)(int, char **), const char *usage)
+{
+    qcmd->name = name;
+    qcmd->id = id;
+    qcmd->callback = handle;
+    qcmd->usage = usage;
+    id++;
+    return 0;
+}
+
+#ifdef QSH_USING_LIBC
+int qcmd_export(const char *name, int (*handle)(int, char **), const char *usage)
+{
+    QCmdObj *qcmd = (QCmdObj *)malloc(sizeof(QCmdObj));
+    qcmd_init((QCmdObj *)qcmd, name, handle, usage);
+    qcmd_add(qcmd);
+    return 0;
+}
+#endif
+
+int qcmd_add(QCmdObj *qcmd)
+{
+    if(_cmd_isexist(qcmd) == 0) {
+        _clist_insert(&clist, &qcmd->node);
+        return 0;
+    } else {
+        return -1;
     }
 }
 
-void qcmd_init(CmdObj *qcmd, const char *name, int (*handle)(int, char **), const char *usage)
+int qcmd_del(QCmdObj *qcmd)
 {
-    cmd_init((CmdObj *)qcmd, name, handle, usage);
-}
-
-int qcmd_export(const char *name, int (*handle)(int, char **), const char *usage)
-{
-    CmdObj *qcmd = (CmdObj *)malloc(sizeof(CmdObj));
-    cmd_init((CmdObj *)qcmd, name, handle, usage);
-    cmd_add(qcmd);
-}
-
-void qcmd_add(CmdObj *qcmd)
-{
-    cmd_add((CmdObj *)qcmd);
-}
-
-void qcmd_del(CmdObj *qcmd)
-{
-    cmd_del((CmdObj *)qcmd);
+    if(_cmd_isexist(qcmd)) {
+        _cqlist_remove(&qcmd->node);
+        return 0;
+    } else {
+        return -1;
+    };
 }
 
 int _hs_hdl(int argc, char **argv)
 {
+    QPRINTF("\r\n");
     for(int i = hs_cnt; i > 0; i--) {
         QPRINTF(" %2d: %s\r\n", i, _hs_buf[(hs_index - i + QSH_HISTORY_MAX) % QSH_HISTORY_MAX]);
     }
@@ -361,15 +495,15 @@ int _clear_hdl(int argc, char **argv)
 
 int _help_hdl(int argc, char **argv)
 {
-    CmdObj *_cmd;
+    QCmdObj *_cmd;
     int i, j, k = 0;
     int len;
-    uint32_t num = cmd_num();
+    uint32_t num = _cmd_num();
     QPRINTF("  Number:          %d\r\n", num);
     QPRINTF("  Commands       Usage \r\n");
     QPRINTF(" ----------     -------\r\n");
     for(i = 1; i <= num; i++) {
-        _cmd = cmd_obj(i);
+        _cmd = _cmd_obj(i);
         QPRINTF(" - %-9s     > ", _cmd->name);
         len = _strlen(_cmd->usage);
         if(len < QSH_USAGE_DISP_MAX) {
@@ -390,5 +524,5 @@ int _help_hdl(int argc, char **argv)
         }
         k = 0;
     }
-    return CMD_EOK;
+    return 0;
 }

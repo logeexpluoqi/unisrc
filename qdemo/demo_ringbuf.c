@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2023-06-29 15:08
  * @ Modified by: luoqi
- * @ Modified time: 2023-10-18 15:10
+ * @ Modified time: 2023-12-07 21:42
  * @ Description:
  */
 
@@ -62,10 +62,10 @@ int cmd_ringbuf_hdl(int argc, char **argv)
             QSH(" %02X", buf[i]);
         }
         QSH("\r\n");
-        return CMD_EOK;
+        return 0;
     }
     if(argc != 3){
-        return CMD_PARAM_ERR;
+        return -1;
     }
     int len = atoi(argv[2]);
     if(ISARG(argv[1], "wr")){
@@ -75,7 +75,7 @@ int cmd_ringbuf_hdl(int argc, char **argv)
         int tail = read(len);
         QSH(" tail: %d\r\n", tail);
     }else {
-        return CMD_PARAM_ERR;
+        return -1;
     }
-    return CMD_EOK;
+    return 0;
 }

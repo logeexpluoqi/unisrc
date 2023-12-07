@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:49:21 
  * @ Modified by: luoqi
- * @ Modified time: 2023-10-18 15:11
+ * @ Modified time: 2023-12-07 21:36
  */
 
 #include <string.h>
@@ -27,7 +27,7 @@ static int state_8_hdl(void);
 FsmStateObj state_idle;
 static int state_idle_hdl(void);
 
-static CmdObj cmd_fsm;
+static QCmdObj cmd_fsm;
 static int cmd_fsm_hdl(int argc, char **argv);
 
 int demo_fsm_init()
@@ -44,7 +44,7 @@ int demo_fsm_init()
 int cmd_fsm_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
-        return CMD_PARAM_LESS;
+        return -1;
     }
 
     if(strcmp(argv[1], "run") == 0) {
@@ -54,7 +54,7 @@ int cmd_fsm_hdl(int argc, char **argv)
 
         QSH(">> fsm stopped\r\n");
     } else {
-        return CMD_PARAM_ERR;
+        return -1;
     }
     return 0;
 }
