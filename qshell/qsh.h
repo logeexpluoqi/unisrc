@@ -14,10 +14,6 @@ extern "C" {
 
 #include "qsh_def.h"
 
-#ifdef QSH_USING_LIBC
-#include <stdlib.h>
-#endif
-
 #define ISARG(str1, str2)       (qcmd_isarg(str1, str2) == 0)
 
 typedef struct _clist {

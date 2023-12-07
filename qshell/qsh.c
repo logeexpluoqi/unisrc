@@ -7,6 +7,10 @@
 
 #include "qsh.h"
 
+#ifdef QSH_USING_LIBC
+#include <stdlib.h>
+#endif
+
 #define QSH_NULL    ((void*)0)
 
 typedef enum {
