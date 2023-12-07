@@ -13,58 +13,41 @@
 
 #define QSH_USAGE_DISP_MAX  80
 
-enum{
-    QSH_KEY_BACKSPACE   = '\b',
-    QSH_KEY_SPACE       = '\20',
-    QSH_KEY_ENTER       = '\r',
-    QSH_KEY_UP          = '\x41',
-    QSH_KEY_DOWN        = '\x42',
-    QSH_KEY_RIGHT       = '\x43',
-    QSH_KEY_LEFT        = '\x44',
+enum {
+    QSH_KEY_BACKSPACE = '\b',
+    QSH_KEY_SPACE = '\20',
+    QSH_KEY_ENTER = '\r',
+    QSH_KEY_UP = '\x41',
+    QSH_KEY_DOWN = '\x42',
+    QSH_KEY_RIGHT = '\x43',
+    QSH_KEY_LEFT = '\x44',
 };
 
 typedef enum {
-    RECV_UNFINISH,
-    RECV_FINISH
+    QSH_RECV_UNFINISH,
+    QSH_RECV_FINISH
 } RecvState;
 
-typedef enum{
-    QSH_RECALL_PREV = -1,
-    QSH_RECALL_NULL = 0,
-    QSH_RECALL_NEXT = 1,
-} QshRecallState;
+typedef enum {
+    QSH_FUNCKEY_NONE = 0,
+    QSH_FUNCKEY_START,
+    QSH_FUNCKEY_RECV,
+} QshFunckeyStage;
 
 #define QSH_CLEAR_LINE      QPRINTF("\r\x1b[K")
 #define QSH_SHOW_PERFIX     QPRINTF("\r%s", _perfix)
-#define QSH_CLEAR_DISP       QPRINTF("\033[H\033[2J")
+#define QSH_CLEAR_DISP      QPRINTF("\033[H\033[2J")
 
 static const char *_perfix = "/>$ ";
 static char _args[CMD_MAX_LEN];
-static char hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
+static uint32_t _args_c = 0;
+static char _hs_buf[QSH_HISTORY_MAX][CMD_MAX_LEN];
 static uint32_t hs_cnt = 0;
-static uint32_t recall_cnt = 0;
+static uint32_t hs_recall = 0;
 static uint32_t hs_index = 0;
-static uint32_t recall_index = 0;
-static uint32_t recv_index = 0;
-static uint32_t cursor_index = 0;
-static QshRecallState recall_status = QSH_RECALL_NULL;
-static RecvState recv_state = RECV_UNFINISH;
+static RecvState recv_state = QSH_RECV_UNFINISH;
 
-static inline void _prev_history(void);
-
-static inline void _next_history(void);
-
-static inline void _recv_enter(void);
-
-static inline void _recv_up(void);
-
-static inline void _recv_down(void);
-
-static inline void _recv_right(void);
-
-static inline void _recv_left(void);
-
-static CmdObj _hs;
+static CmdObj _history;
 static CmdObj _clear;
 static CmdObj _help;
 
@@ -74,7 +57,7 @@ static int _hs_hdl(int argc, char **argv);
 
 static int _clear_hdl(int argc, char **argv);
 
-static void *_memcpy(void *dest, void *src, uint32_t len)
+static void *_memcpy(void *dest, const void *src, uint32_t len)
 {
     char *d;
     const char *s;
@@ -143,21 +126,18 @@ int _strcmp(const char *s1, const char *s2)
 void qsh_init()
 {
     _memset(_args, 0, sizeof(_args));
-    _memset(hs_buf, 0, sizeof(hs_buf));
+    _memset(_hs_buf, 0, sizeof(_hs_buf));
     hs_index = 0;
     hs_cnt = 0;
-    recall_index = 0;
-    recall_cnt = 0;
-    recall_status = QSH_RECALL_NULL;
-    recv_state = RECV_UNFINISH;
-    recv_index = 0;
-    cursor_index = 0;
-    cmd_init(&_hs, "hs", _hs_hdl, "show history");
+    hs_recall = 0;
+    recv_state = QSH_RECV_UNFINISH;
+    _args_c = 0;
+    cmd_init(&_history, "hs", _hs_hdl, "show history");
     cmd_init(&_help, "?", _help_hdl, "do help");
     cmd_init(&_clear, "clear", _clear_hdl, "clear window");
 
     cmd_add(&_help);
-    cmd_add(&_hs);
+    cmd_add(&_history);
     cmd_add(&_clear);
     QSH_CLEAR_DISP;
     QPRINTF("========== QSH BY LUOQI ==========\r\n");
@@ -171,162 +151,147 @@ int qsh_call(const char *args)
     return cmd_exec(_args);
 }
 
-void _recv_enter()
+static inline void _recv_enter()
 {
-    int h_index;
-    if(recv_index != 0) {
-        while(*(_args + recv_index) == QSH_KEY_SPACE){
-            *(_args + recv_index) = 0;
-            recv_index --;
-            cursor_index --;
+    if(_args_c != 0) {
+        /* clear space charactors behind args */
+        while(*(_args + _args_c) == QSH_KEY_SPACE) {
+            *(_args + _args_c) = 0;
+            _args_c--;
         }
         /* save history */
         if(_strcmp(_args, "hs") != 0) {
-            h_index = (hs_index + QSH_HISTORY_MAX - 1) % QSH_HISTORY_MAX;
-            if(_strcmp(_args, hs_buf[h_index]) != 0) {
-                _memcpy(hs_buf[hs_index], _args, _strlen(_args));
+            /* if this arg and last arg are different, save this arg */
+            if(_strcmp(_args, _hs_buf[(hs_index + QSH_HISTORY_MAX - 1) % QSH_HISTORY_MAX]) != 0) {
+                _memcpy(_hs_buf[hs_index], _args, _strlen(_args));
                 hs_index = (hs_index + 1) % QSH_HISTORY_MAX;
                 hs_cnt = (hs_cnt + 1 > QSH_HISTORY_MAX) ? QSH_HISTORY_MAX : (hs_cnt + 1);
             }
         }
-        /* history recall record */
-        if(recall_status == QSH_RECALL_NEXT) {
-            if(recall_cnt != hs_cnt) {
-                recall_cnt--;
-            } else {
-                recall_cnt = hs_cnt;
-            }
-        } else if(recall_status == QSH_RECALL_PREV) {
-            if(recall_cnt != 0) {
-                recall_cnt++;
-            } else {
-                recall_cnt = 0;
-            }
-        }else{
-            recall_status = QSH_RECALL_NULL;
-        }
-        recv_state = RECV_FINISH;
+        recv_state = QSH_RECV_FINISH;
     } else {
         QPRINTF("\r\n");
         QSH_SHOW_PERFIX;
     }
 }
 
-void _prev_history()
+static inline void _prev_history()
 {
-    recall_status = QSH_RECALL_PREV;
-    if(recall_cnt < hs_cnt) {
-        recall_index = (recall_index - 1 + QSH_HISTORY_MAX) % QSH_HISTORY_MAX;
-        recall_cnt++;
-    } else {
-        recall_cnt = hs_cnt;
-    }
-    recv_index = _strlen(hs_buf[recall_index]);
-    cursor_index = recv_index;
-    _memcpy(_args, hs_buf[recall_index], recv_index);
+    uint32_t index = ((hs_index + QSH_HISTORY_MAX - 1) - hs_recall) % QSH_HISTORY_MAX;
+    _args_c = _strlen(_hs_buf[index]) + 1;
+    _memcpy(_args, _hs_buf[index], _args_c);
+    QPRINTF("%s", _args);
 }
 
-void _next_history()
+static inline void _next_history()
 {
-    recall_status = QSH_RECALL_NEXT;
-    if(recall_cnt > 0) {
-        recall_index = (recall_index + 1) % QSH_HISTORY_MAX;
-        recv_index = _strlen(hs_buf[recall_index]);
-        cursor_index = recv_index;
-        _memcpy(_args, hs_buf[recall_index], recv_index);
-        recall_cnt--;
-    } else {
-        recall_cnt = 0;
-        _memset(_args, 0, _strlen(_args));
-    }
+    uint32_t index = ((hs_index + QSH_HISTORY_MAX - 1) - hs_recall) % QSH_HISTORY_MAX;
+    _args_c = _strlen(_hs_buf[index]) + 1;
+    _memcpy(_args, _hs_buf[index], _args_c);
+    QPRINTF("%s", _args);
+
 }
 
-void _recv_up()
+static inline void _recv_up()
 {
-    if(hs_cnt > 0) {
+    if(hs_recall < hs_cnt) {
         QSH_CLEAR_LINE;
         QSH_SHOW_PERFIX;
         _prev_history();
-        QPRINTF("%s", _args);
-    } else {
-        QSH_CLEAR_LINE;
-        QSH_SHOW_PERFIX;
+        hs_recall ++;
     }
 }
 
-void _recv_down()
+static inline void _recv_down()
 {
-    if(hs_cnt > 0) {
+    if(hs_recall > 1) {
         QSH_CLEAR_LINE;
         QSH_SHOW_PERFIX;
         _next_history();
-        QPRINTF("%s", _args);
+        hs_recall --;
     } else {
         QSH_CLEAR_LINE;
         QSH_SHOW_PERFIX;
     }
 }
 
-void _recv_right()
+static inline void _recv_right()
 {
-    if(cursor_index < recv_index){
-        cursor_index ++;
-        QPRINTF("\033[1C");
-    }
+
 }
 
-void _recv_left()
+static inline void _recv_left()
 {
-    if(cursor_index > 0){
-        cursor_index --;
-        QPRINTF("\033[1D");
+
+}
+
+static inline void _recv_characters(char c)
+{
+    if(c == QSH_KEY_ENTER) {
+        _recv_enter();
+    } else if(c == QSH_KEY_BACKSPACE) {
+        if(_args_c > 0) {
+            _args_c--;
+            _args[_args_c] = 0;
+            QPRINTF("\b \b");
+        }
+    } else {
+        _args[_args_c] = c;
+        _args_c++;
+        QPRINTF("%c", c);
     }
 }
 
 void qsh_recv(char c)
 {
-    if((c == '\x1b') || (c == '\x5b')
-        || (c == QSH_KEY_UP) || (c == QSH_KEY_DOWN) || (c == QSH_KEY_RIGHT) || (c == QSH_KEY_LEFT)) {
-        switch(c) {
-        case QSH_KEY_UP: _recv_up(); break;
-        case QSH_KEY_DOWN: _recv_down(); break;
-        case QSH_KEY_RIGHT: _recv_right(); break;
-        case QSH_KEY_LEFT: _recv_left(); break;
-        default: break;
+    static QshFunckeyStage key_state = QSH_FUNCKEY_NONE;
+    /* functional key receive FSM */
+    switch(key_state) {
+    case QSH_FUNCKEY_NONE:
+        if(c == '\x1b') {
+            key_state = QSH_FUNCKEY_START;
+        } else {
+            _recv_characters(c);
+            key_state = QSH_FUNCKEY_NONE;
         }
-    } else if(c == QSH_KEY_ENTER) {
-        _recv_enter();
-    } else if(c == QSH_KEY_BACKSPACE) {
-        if(recv_index > 0){
-            recv_index --;
-            cursor_index --;
-            _args[recv_index] = 0;
-            QPRINTF("\b \b");
+        break;
+    case QSH_FUNCKEY_START:
+        if(c == '\x5b') {
+            key_state = QSH_FUNCKEY_RECV;
+        } else {
+            key_state = QSH_FUNCKEY_NONE;
         }
-    } else {
-        if(cursor_index == recv_index){
-            _args[recv_index] = c;
-            recv_index ++;
-            cursor_index ++;
-            QPRINTF("%c", c);
-        }else{
-            //TODO: still have bug
-            for(int i = recv_index; i > cursor_index; i--){
-                _args[i+1] = _args[i];
-                recv_index ++;
-            }
-            _args[cursor_index] = c;
-            QPRINTF("\r%s%s", _perfix, _args);
-            // QPRINTF("%s", _args + cursor_index - 1);
-            cursor_index ++;
-            recv_index ++;
+        break;
+    case QSH_FUNCKEY_RECV:
+        if(c == QSH_KEY_UP) {
+            _recv_up();
+        } else if(c == QSH_KEY_DOWN) {
+            _recv_down();
+        } else if(c == QSH_KEY_RIGHT) {
+            _recv_right();
+        } else if(c == QSH_KEY_LEFT) {
+            _recv_left();
+        } else {
+            ;
         }
+        key_state = QSH_FUNCKEY_NONE;
+        break;
+    default:
+        key_state = QSH_FUNCKEY_NONE;
+        break;
     }
+}
+
+static inline void _reset()
+{
+    _memset(_args, 0, _args_c);
+    hs_recall = 0;
+    _args_c = 0;
 }
 
 void qsh_exec()
 {
-    if(recv_state == RECV_FINISH) {
+    if(recv_state == QSH_RECV_FINISH) {
         QPRINTF("\r\n");
         switch(cmd_exec(_args)) {
         case CMD_EOK:
@@ -352,11 +317,8 @@ void qsh_exec()
         default:
             break;
         }
-        recall_cnt = 0;
-        recv_index = 0;
-        cursor_index = 0;
-        recv_state = RECV_UNFINISH;
-        _memset(_args, 0, _strlen(_args));
+        _reset();
+        recv_state = QSH_RECV_UNFINISH;
         QSH_SHOW_PERFIX;
     }
 }
@@ -385,15 +347,8 @@ void qcmd_del(CmdObj *qcmd)
 
 int _hs_hdl(int argc, char **argv)
 {
-    char hs_pos;
-    if((hs_index - hs_cnt) >= 0) {
-        hs_pos = hs_index - hs_cnt;
-    } else {
-        hs_pos = hs_index;
-    }
-
-    for(int i = 0; i < hs_cnt; i++) {
-        QPRINTF(" %2d: %s\r\n", hs_cnt - i, hs_buf[(hs_pos + i) % QSH_HISTORY_MAX]);
+    for(int i = hs_cnt; i > 0; i--) {
+        QPRINTF(" %2d: %s\r\n", i, _hs_buf[(hs_index - i + QSH_HISTORY_MAX) % QSH_HISTORY_MAX]);
     }
     return 0;
 }
