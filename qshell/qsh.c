@@ -23,10 +23,9 @@ typedef enum {
     QCMD_EXEC_ERR       = -2,
     QCMD_PARAM_ERR      = -1,
     QCMD_EOK            = 0,
-    QCMD_LENGTH_OUT     = 1,
-    QCMD_MISSING        = 2,
-    QCMD_PARAM_OVERFLOW = 3,
-    QCMD_PARAM_LESS     = 4,
+    QCMD_MISSING        = 1,
+    QCMD_PARAM_OVERFLOW = 2,
+    QCMD_PARAM_LESS     = 3,
 } QCmdInfo;
 
 #define QSH_CLEAR_LINE      QPRINTF("\r\x1b[K")
@@ -162,10 +161,6 @@ static QCmdInfo _cmd_exec(char *args)
             }
         }
         i++;
-        if(i > QSH_CMD_LEN_MAX - 1) {
-            return QCMD_LENGTH_OUT;
-        }
-
         if(argn > QSH_CMD_ARGS_MAX - 1) {
             return QCMD_PARAM_OVERFLOW;
         }
@@ -308,10 +303,12 @@ static inline void _recv_characters(char c)
             _args[_args_c] = 0;
             QPRINTF("\b \b");
         }
-    } else {
+    } else if(_args_c < QSH_CMD_LEN_MAX) {
         _args[_args_c] = c;
         _args_c++;
         QPRINTF("%c", c);
+    } else {
+        return;
     }
 }
 
@@ -413,9 +410,6 @@ int qsh_exec()
         }
         switch(result) {
         case QCMD_EOK:
-            break;
-        case QCMD_LENGTH_OUT:
-            QPRINTF("\r\n #! length exceed !\r\n");
             break;
         case QCMD_MISSING:
             QPRINTF("\r\n #! cmd missing !\r\n");
