@@ -111,7 +111,7 @@ static char *_strcpy(char *dest, const char *src)
     return addr;
 }
 
-int _strcmp(const char *s1, const char *s2)
+static int _strcmp(const char *s1, const char *s2)
 {
     uint32_t i = 0;
 
