@@ -262,7 +262,7 @@ static inline void _recv_enter()
 static inline void _prev_history()
 {
     uint32_t index = ((hs_index + QSH_HISTORY_MAX - 1) - hs_recall) % QSH_HISTORY_MAX;
-    _args_c = _strlen(_hs_buf[index]) + 1;
+    _args_c = _strlen(_hs_buf[index]) ;
     _cur_index = _args_c;
     _memcpy(_args, _hs_buf[index], _args_c);
     QPRINTF("%s", _args);
@@ -271,7 +271,7 @@ static inline void _prev_history()
 static inline void _next_history()
 {
     uint32_t index = ((hs_index + QSH_HISTORY_MAX - 1) - hs_recall) % QSH_HISTORY_MAX;
-    _args_c = _strlen(_hs_buf[index]) + 1;
+    _args_c = _strlen(_hs_buf[index]);
     _cur_index = _args_c;
     _memcpy(_args, _hs_buf[index], _args_c);
     QPRINTF("%s", _args);
