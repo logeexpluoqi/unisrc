@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2023-10-18 19:35
  * @ Modified by: luoqi
- * @ Modified time: 2023-10-18 19:43
+ * @ Modified time: 2023-12-11 19:52
  * @ Description:
  */
 
@@ -72,4 +72,20 @@ int qstrcmp(const char *s1, const char *s2)
         }
     }
     return 0;
+}
+
+char *qstrinsert(char *s, uint32_t offset, char *c, uint32_t size)
+{
+    uint32_t len = qstrlen(s);
+    qmemcpy(s + offset + size, s + offset, len - offset + 1);
+    qmemcpy(s + offset, c, size);
+    return s;
+}
+
+char *qstrdelete(char *s, uint32_t offset, uint32_t size)
+{
+    uint32_t len = qstrlen(s);
+    qmemcpy(s + offset, s + offset + size, len - offset - size);
+    qmemset(s + len - size, 0, size);
+    return s;
 }
