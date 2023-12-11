@@ -331,9 +331,9 @@ static inline void _recv_characters(char c)
             _args[_args_c] = 0;
             QPRINTF("\b \b");
         }else if(_cur_index > 0){
-            _strdelete(_args, _cur_index - 1, 1);
-            _args_c --;
             _cur_index --;
+            _strdelete(_args, _cur_index, 1);
+            _args_c --;
             QPRINTF(QTERM_CUB(1));
             QPRINTF(QTERM_DCH(1));
         }else{
@@ -385,7 +385,12 @@ int qsh_init()
     qcmd_add(&_clear);
     QSH_CLEAR_DISP;
     QPRINTF(QTERM_CBL_ON);
-    QPRINTF("|========== QSH BY LUOQI ==========|\r\n");
+    QPRINTF("  ___  ____  _   _   ______   __  _    _   _  ___   ___  ___\r\n");
+    QPRINTF(" / _ \\/ ___|| | | | | __ ) \\ / / | |  | | | |/ _ \\ / _ \\|_ _|\r\n");
+    QPRINTF("| | | \\___ \\| |_| | |  _ \\\\ V /  | |  | | | | | | | | || | |\r\n");
+    QPRINTF("| |_| |___) |  _  | | |_) || |   | |__| |_| | |_| | |_|| | |\r\n");
+    QPRINTF(" \\__\\_\\____/|_| |_| |____/ |_|   |_____\\___/ \\___/ \\__\\_\\___|\r\n");
+                                                             
     QSH_SHOW_PERFIX;
 }
 
