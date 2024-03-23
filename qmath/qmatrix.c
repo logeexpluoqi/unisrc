@@ -87,6 +87,36 @@ mats qmat_eyes(QMat *mat)
     return QMAT_ERR_NONE;
 }
 
+mats qmat_raw_trans(QMat *mat, matu raw1, matu raw2)
+{
+    if(raw1 >= mat->row || raw2 >= mat->row){
+        return QMAT_ERR_DIM;
+    }
+    matf tmp = 0;
+    matu j;
+    for(j = 0; j < mat->col; j ++ ){
+        tmp = QMAT_ELEM(mat, raw1, j);
+        QMAT_ELEM(mat, raw1, j) = QMAT_ELEM(mat, raw2, j);
+        QMAT_ELEM(mat, raw2, j) = tmp;
+    }
+    return QMAT_ERR_NONE;
+}
+
+mats qmat_col_trans(QMat *mat, matu col1, matu col2)
+{
+    if(col1 >= mat->col || col2 >= mat->col){
+        return QMAT_ERR_DIM;
+    }
+    matf tmp = 0;
+    matu i;
+    for(i = 0; i < mat->row; i ++ ){
+        tmp = QMAT_ELEM(mat, i, col1);
+        QMAT_ELEM(mat, i, col1) = QMAT_ELEM(mat, i, col2);
+        QMAT_ELEM(mat, i, col2) = tmp;
+    }
+    return QMAT_ERR_NONE;
+}
+
 mats qmat_isequal(QMat *A, QMat *B)
 {
     matu i, j;
@@ -277,7 +307,7 @@ mats qmat_subn(QMat *A, matf b, QMat *result)
     }
 }
 
-mats qmat_lu(QMat *A, QMat *L, QMat *U)
+mats qmat_lup(QMat *A, QMat *L, QMat *U)
 {
     matu i, j;
     if(A->row != L->row || A->col != L->col){
@@ -285,10 +315,18 @@ mats qmat_lu(QMat *A, QMat *L, QMat *U)
     }else if(A->row != U->row || A->col != U->col){
         return QMAT_ERR_DIM;
     }else{
-        qmat_zeros(L);
-        qmat_zeros(U);
+        qmat_eyes(L);
+        qmat_copy(A, U);
     }
-    qmat_copy(A, U);
+    for(i = 0; i < U->row; i++){
+        for(j = 0; j < U->col; j++){
+            if(i == j){
+                QMAT_ELEM(L, i, j) = 1;
+            }else{
+                QMAT_ELEM(L, i, j) = 0;
+            }
+        }
+    }
 
     return QMAT_ERR_NONE;
 }

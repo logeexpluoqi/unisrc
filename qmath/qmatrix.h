@@ -62,6 +62,12 @@ mats qmat_ones(QMat *mat);
 
 mats qmat_eyes(QMat *mat);
 
+/* swap mat raw1 and raw2 */
+mats qmat_raw_trans(QMat *mat, matu raw1, matu raw2);
+
+/* swap mat col1 and col2 */
+mats qmat_col_trans(QMat *mat, matu col1, matu col2);
+
 mats qmat_isequal(QMat *A, QMat *B);
 
 mats qmat_copy(QMat *src, QMat *dst);
@@ -100,7 +106,8 @@ mats qmat_sub(QMat *A, QMat *B, QMat *result);
 /* A - b */
 mats qmat_subn(QMat *A, matf b, QMat *result);
 
-mats qmat_lu(QMat *A, QMat *L, QMat *U);
+/* LUP decompose */
+mats qmat_lup(QMat *A, QMat *L, QMat *U);
 
 /* 1 / A */
 mats qmat_inv(QMat *A, QMat *inv);
