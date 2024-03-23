@@ -1,13 +1,3 @@
-
-include_directories(../qshell)
-include_directories(../frame)
-include_directories(../qmath)
-include_directories(../filter)
-include_directories(../utils)
-include_directories(../sort)
-include_directories(../solver)
-include_directories(../linuxbase)
-
 add_library(qdemo
         qdemo.c
         demo_qsh.c

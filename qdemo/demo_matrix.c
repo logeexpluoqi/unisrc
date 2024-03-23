@@ -8,32 +8,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "qdemo.h"
-#include "../qmath/qmatrix.h"
 #include "../qshell/qsh.h"
+#include "../qmath/qmatrix.h"
 
 static int cmd_mat_hdl(int argc, char **argv);
 
-static mat_f m5x3[5*3] = {
+static matf m5x3[5*3] = {
     1, 2, 3,
     2, 5, 1,
     3, 1, 7,
     6, 3, 2,
     1, 2, 5
 };
-static mat_f m3x5[3*5] = {
+static matf m3x5[3*5] = {
     17, 24, 1, 8, 15,
     23, 5, 7, 14, 16,
     4, 6, 13, 20, 22,
 };
 
-static mat_f m5x5_a[5*5] = {
+static matf m5x5_a[5*5] = {
     1, 2, 3, 4, 5,
     2, 5, 1, 3, 7,
     3, 1, 7, 4, 2,
     6, 3, 2, 2, 0,
     1, 2, 5, 4, 3
 };
-static mat_f m5x5_b[5*5] = {
+static matf m5x5_b[5*5] = {
     17, 24, 1, 8, 15,
     23, 5, 7, 14, 16,
     4, 6, 13, 20, 22,
@@ -41,8 +41,8 @@ static mat_f m5x5_b[5*5] = {
     11, 18, 25, 2, 9
 };
 
-static mat_f m5x5_c[5*5] = {0};
-static mat_f m3x3[3*3] = {0};
+static matf m5x5_c[5*5] = {0};
+static matf m3x3[3*3] = {0};
 
 static QMat M5x3, M3x5, M5x5_A, M5x5_B, M5x5_C, M3x3;
 
@@ -60,8 +60,8 @@ int demo_matrix_init()
 
 static void mat_show(QMat *mat)
 {
-    for(mat_u i = 0; i < mat->row; i++){
-        for(mat_u j = 0; j < mat->col; j++){
+    for(matu i = 0; i < mat->row; i++){
+        for(matu j = 0; j < mat->col; j++){
             printf(" %f", qmat_elem(mat, i, j));
         }
         printf("\r\n");
