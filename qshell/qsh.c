@@ -253,6 +253,7 @@ static inline void _recv_enter()
             }
         }
         isenter = 1;
+        QPRINTF("\r\n");
     } else {
         QPRINTF("\r\n");
         QSH_SHOW_PERFIX;
