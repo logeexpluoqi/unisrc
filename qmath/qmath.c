@@ -109,9 +109,9 @@ float qpow(float a, float b) {
     if((a == 0) && (b > 0)) {
         return 0;
     } else if((a == 0) && (b <= 0)) {
-        return 0xffffffff;
+        return QMATH_IINF;
     } else if((a < 0) && (!(b - (int)b < 0.0001) || (b - (int)b > 0.999))) {
-        return 0xffffffff;
+        return QMATH_INF;
     }
 
     if((a >= 0) && (a <= 2)) {

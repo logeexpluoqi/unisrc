@@ -12,6 +12,10 @@
 extern "C" {
 #endif
 
+#define QMATH_INF  (1.0f/0.0)
+#define QMATH_IINF (-1.0f/0.0)
+#define QMATH_NAN  (0.0f/0.0)
+
 float qabs(float x);
 
 float qsign(float x);

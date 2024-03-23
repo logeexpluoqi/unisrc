@@ -12,6 +12,10 @@
 extern "C" {
 #endif
 
+#define QCMPLX_INF  (1.0f/0.0f)
+#define QCMPLX_IINF (-1.0f/0.0f)
+#define QCMPLX_NAN  (0.0f/0.0f)
+
 typedef struct _qcomplex {
     float re;
     float im;

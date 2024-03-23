@@ -37,9 +37,14 @@ QCmplx qcmplx_mul(QCmplx a, QCmplx b)
 QCmplx qcmplx_div(QCmplx a, QCmplx b)
 {
     QCmplx c;
+    float denom = b.re * b.re + b.im * b.im;
+    if(denom == 0.f){
+        c.re = QCMPLX_INF;
+        c.im = QCMPLX_INF;
+        return c;
+    }
     c.re = (a.re * b.re + a.im * b.im) / (b.re * b.re + b.im * b.im);
     c.im = (b.re * a.im - a.re * b.im) / (b.re * b.re + b.im * b.im);
-
     return c;
 }
 
