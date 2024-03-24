@@ -52,7 +52,8 @@ matu qmat_delete(QMat *mat);
 
 #endif
 
-#define QMAT_MEM(mem, row, col)     matf mem[row * col] 
+#define QMAT_MEM(mem, row, col)     matf mem[row * col]
+#define QMAT_ABS(x)                 ((x) < 0.f ? (-(x)) : (x))
 
 mats qmat_init(QMat *mat, matf *elem, matu row, matu col);
 
@@ -63,10 +64,10 @@ mats qmat_ones(QMat *mat);
 mats qmat_eyes(QMat *mat);
 
 /* swap mat raw1 and raw2 */
-mats qmat_raw_trans(QMat *mat, matu raw1, matu raw2);
+mats qmat_raw_swap(QMat *mat, matu raw1, matu raw2);
 
 /* swap mat col1 and col2 */
-mats qmat_col_trans(QMat *mat, matu col1, matu col2);
+mats qmat_col_swap(QMat *mat, matu col1, matu col2);
 
 mats qmat_isequal(QMat *A, QMat *B);
 
@@ -75,6 +76,9 @@ mats qmat_copy(QMat *src, QMat *dst);
 mats qmat_set(QMat *mat, matu row, matu col, matf num);
 
 matf qmat_elem(QMat *mat, matu row, matu col);
+
+/* calulate matrix rank */
+mats qmat_rank(QMat *A);
 
 /* A + B */
 mats qmat_mul(QMat *A, QMat *B, QMat *result);
