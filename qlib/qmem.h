@@ -12,23 +12,21 @@
  extern "C" {
 #endif
 
-typedef unsigned int    size_m;
+typedef unsigned int    qsize_t;
 
-#define QMEM_MAX_NEW_64K
-
-#define QMEM_1KB        1024
-
-#define QMEM_HEAP_SIZE  (1024 * QMEM_1KB)  // byte
+#ifndef QMEM_HEAP_SIZE
+#define QMEM_HEAP_SIZE  (1024ul * 64ul)
+#endif
 
 #define QMEM_NULL       (void*)0
 
 int qmem_init(void);
 
-void *qmalloc(size_m size);
+void *qmalloc(qsize_t size);
 
-void *qcalloc(size_m size);
+void *qcalloc(qsize_t size);
 
-void *qrealloc(void *ptr, size_m size);
+void *qrealloc(void *ptr, qsize_t size);
 
 void qfree(void *ptr);
 
