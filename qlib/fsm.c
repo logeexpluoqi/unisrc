@@ -22,7 +22,7 @@ int fsm_exec(FsmObj* fsm)
     FsmStateObj* state;
 
     fsm->curr_state = fsm->next_state;
-    QLIST_ITERATER(node, &fsm->fsm_list_head) {
+    QLIST_ITERATOR(node, &fsm->fsm_list_head) {
         state = QLIST_OBJ(node, FsmStateObj, fsm_state_list);
         if (state->link_state == fsm->curr_state) {
             return state->fsm_state_task_hdl();

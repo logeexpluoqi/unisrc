@@ -43,6 +43,19 @@ int qlist_isempty(const QList *list)
     return list->next == list;
 }
 
+int qlist_isexist(const QList* list, const QList* node)
+{
+    QList *_node;
+    QLIST_ITERATOR(_node, list) {
+        if(_node == node) {
+            return 1;
+        } else {
+            continue;
+        }
+    }
+    return 0;
+}
+
 unsigned int qlist_len(const QList *list)
 {
     unsigned int len = 0;

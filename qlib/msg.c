@@ -49,7 +49,7 @@ void* msg_get(MsgContainer* container, const char* name)
     QList* node;
     MsgObj* msg;
 
-    QLIST_ITERATER(node, &container->msg_list) {
+    QLIST_ITERATOR(node, &container->msg_list) {
         msg = QLIST_OBJ(node, MsgObj, msg_list_node);
         if (msg_strcmp(name, msg->name) == 0 && msg->msg_state == MSG_UNLOCK)
         {
@@ -66,7 +66,7 @@ unsigned char msg_set(MsgContainer* container, const char* name, void* msg_data,
     QList* node;
     MsgObj* msg;
 
-    QLIST_ITERATER(node, &container->msg_list) {
+    QLIST_ITERATOR(node, &container->msg_list) {
         msg = QLIST_OBJ(node, MsgObj, msg_list_node);
         msg->msg_state = MSG_LOCKED;
         if (msg_strcmp(name, msg->name) == 0) {
@@ -115,7 +115,7 @@ unsigned char msg_is_update(MsgContainer* container, const char* name)
 {
     QList* node;
     MsgObj* msg;
-    QLIST_ITERATER(node, &container->msg_list) {
+    QLIST_ITERATOR(node, &container->msg_list) {
         msg = QLIST_OBJ(node, MsgObj, msg_list_node);
         if(msg_strcmp(msg->name, name) == 0)
            return msg->is_update; 
@@ -128,7 +128,7 @@ unsigned char msg_mem_location_set(MsgContainer* container, const char* name, vo
     QList* node;
     MsgObj* msg;
 
-    QLIST_ITERATER(node, &container->msg_list) {
+    QLIST_ITERATOR(node, &container->msg_list) {
         msg = QLIST_OBJ(node, MsgObj, msg_list_node);
         msg->msg_state = MSG_LOCKED;
         if (msg_strcmp(name, msg->name) == 0) {

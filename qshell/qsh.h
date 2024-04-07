@@ -1,8 +1,8 @@
 /*
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:33 
- * @Last Modified by: luoqi
- * @Last Modified time: 2022-08-13 23:18:44
+ * @ Modified by: luoqi
+ * @ Modified time: 2024-04-07 23:22
  */
 
 #ifndef _QSH_H
@@ -48,7 +48,7 @@ int qcmd_del(QCmdObj *qcmd);
 int qsh_call(const char *args);
 
 #ifdef QSH_USING_LIBC
-int qcmd_export(const char *name, int (*handle)(int, char **), const char *usage);
+int qcmd_create(const char *name, int (*handle)(int, char **), const char *usage);
 #endif
 
 #ifdef __cplusplus

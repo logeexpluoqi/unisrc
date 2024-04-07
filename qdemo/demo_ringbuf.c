@@ -21,7 +21,7 @@ static int cmd_ringbuf_hdl(int argc, char **argv);
 int demo_ringbuf_init()
 {
     ringbuf_init(&ring, buf, BUF_SIZE);
-    qcmd_export("rbuf", cmd_ringbuf_hdl, "wr<len>, rd<len>");
+    qcmd_create("rbuf", cmd_ringbuf_hdl, "wr<len>, rd<len>");
     return 0;
 }
 

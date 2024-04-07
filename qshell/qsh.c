@@ -501,7 +501,7 @@ int qcmd_init(QCmdObj *qcmd, const char *name, int (*handle)(int, char **), cons
 }
 
 #ifdef QSH_USING_LIBC
-int qcmd_export(const char *name, int (*handle)(int, char **), const char *usage)
+int qcmd_create(const char *name, int (*handle)(int, char **), const char *usage)
 {
     QCmdObj *qcmd = (QCmdObj *)malloc(sizeof(QCmdObj));
     qcmd_init((QCmdObj *)qcmd, name, handle, usage);

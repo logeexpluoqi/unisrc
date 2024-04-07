@@ -12,8 +12,8 @@
 #include "mthread.h"
 #include "../qshell/qsh.h"
 
-static QLIST_CREAT(mthread_list);
-static QLIST_CREAT(mthread_del_list);
+static QLIST_CREATE(mthread_list);
+static QLIST_CREATE(mthread_del_list);
 static uint32_t thread_mid = 0;
 
 enum{
@@ -83,9 +83,9 @@ int mthread_init(MThread *mthread, const char *name, uint8_t priority, uint32_t 
     mthread->time.tv_nsec   = 0;
     mthread->usage          = usage;
     if(thread_mid == 0){
-        qcmd_export("mls", cmd_mls_hdl, "/-d (list all mthread info)");
-        qcmd_export("mk", cmd_mk_hdl, "mid (kill mthread)");
-        qcmd_export("mr", cmd_mr_hdl, "mid (restart mthread)");
+        qcmd_create("mls", cmd_mls_hdl, "/-d (list all mthread info)");
+        qcmd_create("mk", cmd_mk_hdl, "mid (kill mthread)");
+        qcmd_create("mr", cmd_mr_hdl, "mid (restart mthread)");
     }
     mthread->mid            = thread_mid++;
     return 0;

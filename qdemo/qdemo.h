@@ -40,4 +40,6 @@ int demo_udp_server_init(void);
 
 int demo_ringbuf_init(void);
 
+int demo_qlist_init(void);
+
 #endif

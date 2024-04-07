@@ -7,8 +7,8 @@
 
 #include "qtask.h"
 
-static QLIST_CREAT(qtask_list);
-static QLIST_CREAT(qdtask_list);
+static QLIST_CREATE(qtask_list);
+static QLIST_CREATE(qdtask_list);
 static uint32_t qtask_id = 0;
 
 void qtask_exec()
@@ -30,7 +30,7 @@ void qtask_tick()
     QList* node;
     QTaskObj *task;
 
-    QLIST_ITERATER(node, &qtask_list) {
+    QLIST_ITERATOR(node, &qtask_list) {
         task = QLIST_OBJ(node, QTaskObj, qtask_node);
         if(task->timer != 0) {
             task->timer --;

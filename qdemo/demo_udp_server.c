@@ -25,7 +25,7 @@ int demo_udp_server_init(void)
 {
     mthread_init(&udpserver, "udpserver", 10, 1000, udpserver_hdl, "udp server recv");
     mthread_start(&udpserver);
-    qcmd_export("udps", cmd_udps_hdl, "port<port>, del<fd>, send<data>, recv");
+    qcmd_create("udps", cmd_udps_hdl, "port<port>, del<fd>, send<data>, recv");
     return 0;
 }
 

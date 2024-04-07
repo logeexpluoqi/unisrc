@@ -15,6 +15,7 @@ add_library(qdemo
         demo_qtrigf.c
         demo_matrix.c
         demo_ringbuf.c
+        demo_qlist.c
 )
 target_link_libraries(qdemo
         qsh

@@ -23,5 +23,6 @@ int qdemo_init()
     demo_qtrigf_init();
     demo_matrix_init();
     demo_ringbuf_init();
+    demo_qlist_init();
     return 0;
 }

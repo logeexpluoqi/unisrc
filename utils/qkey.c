@@ -7,7 +7,7 @@
 
 #include "qkey.h"
 
-static QLIST_CREAT(key_list);
+static QLIST_CREATE(key_list);
 static unsigned int key_id_base = 0;
 
 int qkey_init(QKeyObj *key,
