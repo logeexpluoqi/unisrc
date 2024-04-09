@@ -1,6 +1,6 @@
 
 add_library(utils
-        qkey.c
+        qbutton.c
 )
 target_link_libraries(utils 
         qlib

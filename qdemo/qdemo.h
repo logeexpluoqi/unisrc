@@ -20,7 +20,7 @@ int demo_msg_init(void);
 
 int demo_mthread_init(void);
 
-int demo_qkey_init(void);
+int demo_qbutton_init(void);
 
 void demo_qmath_init(void);
 

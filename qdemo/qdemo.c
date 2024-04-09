@@ -14,7 +14,7 @@ int qdemo_init()
     demo_msg_init();
     demo_qsh_init();
     demo_qmath_init();
-    demo_qkey_init();
+    demo_qbutton_init();
     demo_filter_init();
     demo_sort_init();
     demo_solver_init();

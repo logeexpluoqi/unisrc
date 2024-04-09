@@ -6,12 +6,12 @@
  */
 
 #include "qdemo.h"
-#include "../utils/qkey.h"
+#include "../utils/qbutton.h"
 
-static QKeyObj key1;
-static QKeyObj key2;
+static QButton btn1;
+static QButton btn2;
 
-int demo_qkey_init()
+int demo_qbutton_init()
 {
     
     return 0;
