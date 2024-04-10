@@ -155,7 +155,7 @@ int mthread_isexist(MThread *mthread)
 {
     QList *node, *_node;
     QLIST_ITERATER_SAFE(node, _node, &mthread_list){
-        MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
+        MThread *_mthread = QLIST_ENTRY(node, MThread, mnode);
         if(mthread->mid == _mthread->mid){
             return 1;
         }else{
@@ -169,7 +169,7 @@ int mthread_del_isexist(MThread *mthread)
 {
     QList *node, *_node;
     QLIST_ITERATER_SAFE(node, _node, &mthread_del_list){
-        MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
+        MThread *_mthread = QLIST_ENTRY(node, MThread, mnode);
         if(mthread->mid == _mthread->mid){
             return 1;
         }else{
@@ -188,7 +188,7 @@ int cmd_mls_hdl(int argc, char **argv)
         printf(" [name]            [mid]    [period/us]    [runtime/us]     [calltime/us]     [priority]    [usage]\r\n");
         printf("--------          -------  -------------  --------------   ---------------   ------------  ---------\r\n");
         QLIST_ITERATER_SAFE(node, _node, &mthread_list){
-            MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
+            MThread *_mthread = QLIST_ENTRY(node, MThread, mnode);
             if(_mthread != NULL){
                 printf(" %-15s    %-5u    %-9u      %010.3f       %011.3f       %-3u           %-s\r\n",
                 _mthread->name, _mthread->mid, _mthread->period_us, (float)(_mthread->runtime) / 1000,
@@ -206,7 +206,7 @@ int cmd_mls_hdl(int argc, char **argv)
             printf(" [name]            [mid]    [period/us]    [runtime/us]     [calltime/us]     [priority]    [usage]\r\n");
             printf("--------          -------  -------------  --------------   ---------------   ------------  ---------\r\n");
             QLIST_ITERATER_SAFE(node, _node, &mthread_del_list){
-                MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
+                MThread *_mthread = QLIST_ENTRY(node, MThread, mnode);
                 if(_mthread != NULL){
                     printf(" %-15s    %-5u    %-9u      %010.3f       %011.3f       %-3u           %-s\r\n",
                     _mthread->name, _mthread->mid, _mthread->period_us, (float)(_mthread->runtime) / 1000,
@@ -232,7 +232,7 @@ int cmd_mk_hdl(int argc, char **argv)
     }else{
         QList *node, *_node;
         QLIST_ITERATER_SAFE(node, _node, &mthread_list){
-            MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
+            MThread *_mthread = QLIST_ENTRY(node, MThread, mnode);
             if(_mthread->mid == atol(argv[1])){
                 mthread_stop(_mthread);
                 return 0;
@@ -251,7 +251,7 @@ int cmd_mr_hdl(int argc, char **argv)
     }else{
         QList *node, *_node;
         QLIST_ITERATER_SAFE(node, _node, &mthread_del_list){
-            MThread *_mthread = QLIST_OBJ(node, MThread, mnode);
+            MThread *_mthread = QLIST_ENTRY(node, MThread, mnode);
             if(_mthread->mid == atol(argv[1])){
                 mthread_start(_mthread);
                 return 0;

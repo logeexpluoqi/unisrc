@@ -50,7 +50,7 @@ void* msg_get(MsgContainer* container, const char* name)
     MsgObj* msg;
 
     QLIST_ITERATOR(node, &container->msg_list) {
-        msg = QLIST_OBJ(node, MsgObj, msg_list_node);
+        msg = QLIST_ENTRY(node, MsgObj, msg_list_node);
         if (msg_strcmp(name, msg->name) == 0 && msg->msg_state == MSG_UNLOCK)
         {
             msg->is_update = 0;
@@ -67,7 +67,7 @@ unsigned char msg_set(MsgContainer* container, const char* name, void* msg_data,
     MsgObj* msg;
 
     QLIST_ITERATOR(node, &container->msg_list) {
-        msg = QLIST_OBJ(node, MsgObj, msg_list_node);
+        msg = QLIST_ENTRY(node, MsgObj, msg_list_node);
         msg->msg_state = MSG_LOCKED;
         if (msg_strcmp(name, msg->name) == 0) {
             switch (msg->type) {
@@ -116,7 +116,7 @@ unsigned char msg_is_update(MsgContainer* container, const char* name)
     QList* node;
     MsgObj* msg;
     QLIST_ITERATOR(node, &container->msg_list) {
-        msg = QLIST_OBJ(node, MsgObj, msg_list_node);
+        msg = QLIST_ENTRY(node, MsgObj, msg_list_node);
         if(msg_strcmp(msg->name, name) == 0)
            return msg->is_update; 
     }
@@ -129,7 +129,7 @@ unsigned char msg_mem_location_set(MsgContainer* container, const char* name, vo
     MsgObj* msg;
 
     QLIST_ITERATOR(node, &container->msg_list) {
-        msg = QLIST_OBJ(node, MsgObj, msg_list_node);
+        msg = QLIST_ENTRY(node, MsgObj, msg_list_node);
         msg->msg_state = MSG_LOCKED;
         if (msg_strcmp(name, msg->name) == 0) {
             msg->mem = new_mem;
@@ -156,7 +156,7 @@ MsgObj* msg_obj_get(MsgContainer* container, unsigned int serial)
     for (unsigned int i = serial; i > 0; i--) {
         node = node->next;
     }
-    return QLIST_OBJ(node, MsgObj, msg_list_node);
+    return QLIST_ENTRY(node, MsgObj, msg_list_node);
 }
 
 static unsigned char msg_strcmp(const char* s1, const char* s2)

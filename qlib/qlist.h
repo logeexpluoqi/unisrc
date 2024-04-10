@@ -12,7 +12,7 @@
  extern "C" {
 #endif
 
-#define QLIST_OBJ(node, type, member)            ((type *)((char *)(node) - ((unsigned long) &((type*)0)->member)))
+#define QLIST_ENTRY(node, type, member)            ((type *)((char *)(node) - ((unsigned long) &((type*)0)->member)))
 
 #define QLIST_ITERATOR(node, list)               for(node = (list)->next; node != (list); node = node->next)            
 

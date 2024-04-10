@@ -17,7 +17,7 @@ void qtask_exec()
     QTaskObj *task;
 
     QLIST_ITERATER_SAFE(node, _node, &qtask_list) {
-        task = QLIST_OBJ(node, QTaskObj, qtask_node);
+        task = QLIST_ENTRY(node, QTaskObj, qtask_node);
         if(task->is_run == TASK_RUN) {
             task->handle();
             task->is_run = TASK_STOP;
@@ -31,7 +31,7 @@ void qtask_tick()
     QTaskObj *task;
 
     QLIST_ITERATOR(node, &qtask_list) {
-        task = QLIST_OBJ(node, QTaskObj, qtask_node);
+        task = QLIST_ENTRY(node, QTaskObj, qtask_node);
         if(task->timer != 0) {
             task->timer --;
             if(task->timer == 0) {
@@ -102,7 +102,7 @@ int qtask_isexist(QTaskObj* task)
     QTaskObj *_task;
 
     QLIST_ITERATER_SAFE(node, _node, &qtask_list) {
-        _task = QLIST_OBJ(node, QTaskObj, qtask_node);
+        _task = QLIST_ENTRY(node, QTaskObj, qtask_node);
         if(task->id == _task->id) {
             return 1;
         } else {
@@ -118,7 +118,7 @@ int qdtask_isexsit(QTaskObj* task)
     QTaskObj *_task;
 
     QLIST_ITERATER_SAFE(node, _node, &qdtask_list) {
-        _task = QLIST_OBJ(node, QTaskObj, qtask_node);
+        _task = QLIST_ENTRY(node, QTaskObj, qtask_node);
         if(task->id == _task->id) {
             return 1;
         } else {
@@ -146,7 +146,7 @@ QTaskObj* qtask_get(uint32_t task_id)
         node = node->next;
     }
 
-    return QLIST_OBJ(node, QTaskObj, qtask_node);
+    return QLIST_ENTRY(node, QTaskObj, qtask_node);
 }
 
 uint32_t qdtask_num()
@@ -162,5 +162,5 @@ QTaskObj* qdtask_get(uint32_t task_id)
         node = node->next;
     }
 
-    return QLIST_OBJ(node, QTaskObj, qtask_node);
+    return QLIST_ENTRY(node, QTaskObj, qtask_node);
 }
