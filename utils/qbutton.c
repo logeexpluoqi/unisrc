@@ -2,18 +2,23 @@
  * @ Author: luoqi
  * @ Create Time: 2024-03-29 17:20
  * @ Modified by: luoqi
- * @ Modified time: 2024-04-09 18:54
+ * @ Modified time: 2024-04-14 23:15
  * @ Description:
  */
 
-#include <string.h>
 #include "qbutton.h"
 
 #define QBUTTON_EVENTS_CALLBACK(action)     if(button->callback[action] != 0) { err = button->callback[action](keyval);}
 
 int qbutton_init(QButton *button, QButtonPressDownKeyVal keyval, uint8_t debounce_tick, uint16_t long_tick, uint8_t short_tick, int (*button_read)(void))
 {
-    memset(button, 0, sizeof(QButton));
+    for(int i = 0; i < 7; i++) {
+        button->callback[i] = 0;
+    }
+    button->isactive = 0;
+    button->debounce = 0;
+    button->ticks = 0;
+    button->repeat = 0;
     button->press_keyval = keyval;
     button->button_read = button_read;
     button->debounce_tick = debounce_tick;
