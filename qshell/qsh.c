@@ -386,11 +386,7 @@ int qsh_init()
     qcmd_add(&_clear);
     QSH_CLEAR_DISP;
     QPRINTF(QTERM_CBL_ON);
-    QPRINTF("  ___  ____  _   _   ______   __  _    _   _  ___   ___  ___\r\n");
-    QPRINTF(" / _ \\/ ___|| | | | | __ ) \\ / / | |  | | | |/ _ \\ / _ \\|_ _|\r\n");
-    QPRINTF("| | | \\___ \\| |_| | |  _ \\\\ V /  | |  | | | | | | | | | || |\r\n");
-    QPRINTF("| |_| |___) |  _  | | |_) || |   | |__| |_| | |_| | |_| || |\r\n");
-    QPRINTF(" \\__\\_\\____/|_| |_| |____/ |_|   |_____\\___/ \\___/ \\__\\_\\___|\r\n");
+    QPRINTF("  -------------------QSH BY LUOQI-------------------\r\n");
                                                              
     QSH_SHOW_PERFIX;
 }
@@ -448,7 +444,7 @@ int qsh_recv(char c)
     return c;
 }
 
-int qcmd_isarg(const char *s, const char *arg)
+int isarg(const char *s, const char *arg)
 {
     return _strcmp(s, arg);
 }
@@ -466,19 +462,19 @@ int qsh_exec()
         case QCMD_EOK:
             break;
         case QCMD_MISSING:
-            QPRINTF("\r\n #! cmd missing !\r\n");
+            QPRINTF(" #! cmd missing !\r\n");
             break;
         case QCMD_PARAM_OVERFLOW:
-            QPRINTF("\r\n #! param overflow !\r\n");
+            QPRINTF(" #! param overflow !\r\n");
             break;
         case QCMD_PARAM_LESS:
-            QPRINTF("\r\n #! param short !\r\n");
+            QPRINTF(" #! param short !\r\n");
             break;
         case QCMD_EXEC_ERR:
-            QPRINTF("\r\n #! exec error !\r\n");
+            QPRINTF(" #! exec error !\r\n");
             break;
         case QCMD_PARAM_ERR:
-            QPRINTF("\r\n #! param error !\r\n");
+            QPRINTF(" #! param error !\r\n");
             break;
         default:
             break;

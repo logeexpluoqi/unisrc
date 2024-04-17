@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:33 
  * @ Modified by: luoqi
- * @ Modified time: 2024-04-07 23:22
+ * @ Modified time: 2024-04-17 22:00
  */
 
 #ifndef _QSH_H
@@ -14,7 +14,7 @@ extern "C" {
 
 #include "qsh_def.h"
 
-#define ISARG(str1, str2)       (qcmd_isarg(str1, str2) == 0)
+#define ISARG(str1, str2)       (isarg(str1, str2) == 0)
 
 typedef struct _clist {
     struct _clist *prev;
@@ -31,7 +31,7 @@ typedef struct
     QCList          node;
 } QCmdObj;
 
-int qcmd_isarg(const char *s, const char *arg);
+int isarg(const char *s, const char *arg);
 
 int qsh_recv(char c);
 
