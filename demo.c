@@ -37,7 +37,6 @@ int main()
 
     for (;;) {
         if (close_all == 0) {
-            qsh_exec();
             qtask_exec();
             usleep(10);
         } else {
@@ -58,7 +57,7 @@ void *task_qsh_hdl(void *param)
         ch = getchar();
         ch = (ch == 127) ? 8 : ch;
         if (ch != 3) {
-            qsh_recv(ch);
+            qsh_exec(ch);
         } else {
             if(system("stty -raw echo") < 0){
                 printf(" #! system call error !\r\n");

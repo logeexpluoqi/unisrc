@@ -397,7 +397,7 @@ int qsh_call(const char *args)
     _args_c = _strlen(args);
     _memcpy(_args, args, _args_c);
     isenter = 1;
-    return qsh_exec();
+    return qsh_exec(0);
 }
 
 int qsh_recv(char c)
@@ -449,9 +449,11 @@ int isarg(const char *s, const char *arg)
     return _strcmp(s, arg);
 }
 
-int qsh_exec()
+int qsh_exec(char c)
 {
     int result = 0;
+    c = (c == 127) ? 8 : c;
+    qsh_recv(c);
     if(isenter) {
         result = _cmd_exec(_args);
         if(iscall){
@@ -547,7 +549,6 @@ int _help_hdl(int argc, char **argv)
     int i, j, k = 0;
     int len;
     uint32_t num = _cmd_num();
-    QPRINTF("  Number:          %d\r\n", num);
     QPRINTF("  Commands       Usage \r\n");
     QPRINTF(" ----------     -------\r\n");
     for(i = 1; i <= num; i++) {

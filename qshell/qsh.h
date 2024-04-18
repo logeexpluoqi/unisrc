@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-05-26 16:10:33 
  * @ Modified by: luoqi
- * @ Modified time: 2024-04-17 22:00
+ * @ Modified time: 2024-04-18 23:41
  */
 
 #ifndef _QSH_H
@@ -37,7 +37,7 @@ int qsh_recv(char c);
 
 int qsh_init(void);
 
-int qsh_exec(void);
+int qsh_exec(char c);
 
 int qcmd_init(QCmdObj *qcmd, const char *name, int (*handle)(int, char **), const char *usage);
 
