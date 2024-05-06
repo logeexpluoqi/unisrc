@@ -32,7 +32,7 @@ typedef enum {
 #define QSH_SHOW_PERFIX     QPRINTF("\r%s", QSH_PERFIX)
 #define QSH_CLEAR_DISP      QPRINTF("\033[H\033[2J")
 
-#define QCLIST_OBJ(ptr, type, member)     ((type *)((char *)(ptr) - ((unsigned long) &((type*)0)->member)))
+#define QCLIST_ENTRY(ptr, type, member)     ((type *)((char *)(ptr) - ((unsigned long) &((type*)0)->member)))
 #define QCLIST_ITERATOR(node, clist)      for (node = (clist)->next; node != (clist); node = node->next)
 
 static QCList clist = { &clist, &clist };
@@ -187,7 +187,7 @@ static QCmdInfo _cmd_exec(char *args)
     /* add 1 because there is no space key value front of the first argv */
     argc = argn + 1;
     QCLIST_ITERATOR(_node, &clist) {
-        cmd = QCLIST_OBJ(_node, QCmdObj, node);
+        cmd = QCLIST_ENTRY(_node, QCmdObj, node);
         if(_strcmp(cmd->name, argv[0]) == 0) {
             return cmd->callback(argc, argv);
         }
@@ -201,7 +201,7 @@ static int _cmd_isexist(QCmdObj *cmd)
     QCmdObj *_cmd;
 
     QCLIST_ITERATOR(_node, &clist) {
-        _cmd = QCLIST_OBJ(_node, QCmdObj, node);
+        _cmd = QCLIST_ENTRY(_node, QCmdObj, node);
         if(cmd->id == _cmd->id) {
             return 1;
         } else {
@@ -231,7 +231,7 @@ static QCmdObj *_cmd_obj(uint32_t id)
         _node = _node->next;
     }
 
-    return QCLIST_OBJ(_node, QCmdObj, node);
+    return QCLIST_ENTRY(_node, QCmdObj, node);
 }
 
 static inline void _recv_enter()

@@ -147,7 +147,7 @@ unsigned int msg_container_num_get()
 
 unsigned int msg_num_get(MsgContainer* container)
 {
-    return qlist_len(&container->msg_list);
+    return qlist_length(&container->msg_list);
 }
 
 MsgObj* msg_obj_get(MsgContainer* container, unsigned int serial)

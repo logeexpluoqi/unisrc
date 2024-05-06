@@ -208,11 +208,11 @@ int fuzz_mf_add(FuzzObj* fuzz_obj, FuzzMfVar var, FuzzMemFuncObj* mf)
 int fuzz_mf_num(FuzzObj* fuzz_obj, FuzzMfVar var)
 {
     if(var == FUZZ_E)
-        return qlist_len(&fuzz_obj->_mf_list_e);
+        return qlist_length(&fuzz_obj->_mf_list_e);
     else if(FUZZ_EC)
-        return qlist_len(&fuzz_obj->_mf_list_ec);
+        return qlist_length(&fuzz_obj->_mf_list_ec);
     else if(FUZZ_U)
-        return qlist_len(&fuzz_obj->_mf_list_u);
+        return qlist_length(&fuzz_obj->_mf_list_u);
     else
         return -1;
 }

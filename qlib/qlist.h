@@ -38,7 +38,7 @@ int qlist_isempty(const QList* list);
 
 int qlist_isexist(const QList* list, const QList* node);
 
-unsigned int qlist_len(const QList* list);
+unsigned int qlist_length(const QList* list);
 
 #ifdef __cplusplus
  }

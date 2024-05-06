@@ -183,7 +183,7 @@ int cmd_mls_hdl(int argc, char **argv)
 {
     if(argc == 1){
         QList *node, *_node;
-        uint32_t len = qlist_len(&mthread_list);
+        uint32_t len = qlist_length(&mthread_list);
         printf(" Threads <%u>\r\n", len);
         printf(" [name]            [mid]    [period/us]    [runtime/us]     [calltime/us]     [priority]    [usage]\r\n");
         printf("--------          -------  -------------  --------------   ---------------   ------------  ---------\r\n");
@@ -201,7 +201,7 @@ int cmd_mls_hdl(int argc, char **argv)
     }else{
         if(ISARG(argv[1], "-d")){
             QList *node, *_node;
-            uint32_t len = qlist_len(&mthread_list);
+            uint32_t len = qlist_length(&mthread_list);
             printf(" Threads <%u>\r\n", len);
             printf(" [name]            [mid]    [period/us]    [runtime/us]     [calltime/us]     [priority]    [usage]\r\n");
             printf("--------          -------  -------------  --------------   ---------------   ------------  ---------\r\n");

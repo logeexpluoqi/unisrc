@@ -14,7 +14,7 @@ extern "C" {
 
 #include <stdint.h>
 
-#define CLIST_OBJ(ptr, type, member)     ((type *)((char *)(ptr) - ((unsigned long) &((type*)0)->member)))
+#define CLIST_ENTRY(ptr, type, member)     ((type *)((char *)(ptr) - ((unsigned long) &((type*)0)->member)))
 
 #define CLIST_ITERATOR(node, clist)      for (node = (clist)->next; node != (clist); node = node->next)
 

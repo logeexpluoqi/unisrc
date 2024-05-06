@@ -44,7 +44,7 @@ void qtask_tick()
 
 uint32_t qtask_num()
 {
-    return qlist_len(&qtask_list);
+    return qlist_length(&qtask_list);
 }
 
 void qtask_init(QTaskObj* task, 
@@ -151,7 +151,7 @@ QTaskObj* qtask_get(uint32_t task_id)
 
 uint32_t qdtask_num()
 {
-    return qlist_len(&qdtask_list);
+    return qlist_length(&qdtask_list);
 }
 
 QTaskObj* qdtask_get(uint32_t task_id)

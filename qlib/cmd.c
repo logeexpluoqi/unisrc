@@ -78,7 +78,7 @@ CmdInfo cmd_exec(char *args)
     /* add 1 because there is no space key value front of the first argv */
     argc = argn + 1;
     CLIST_ITERATOR(_node, &clist) {
-        cmd = CLIST_OBJ(_node, CmdObj, node);
+        cmd = CLIST_ENTRY(_node, CmdObj, node);
         if(_strcmp(cmd->name, argv[0]) == 0) {
             return cmd->callback(argc, argv);
         }
@@ -122,7 +122,7 @@ int cmd_isexist(CmdObj *cmd)
     CmdObj *_cmd;
 
     CLIST_ITERATOR(_node, &clist) {
-        _cmd = CLIST_OBJ(_node, CmdObj, node);
+        _cmd = CLIST_ENTRY(_node, CmdObj, node);
         if(cmd->id == _cmd->id) {
             return 1;
         } else {
@@ -152,5 +152,5 @@ CmdObj *cmd_obj(uint32_t id)
         _node = _node->next;
     }
 
-    return CLIST_OBJ(_node, CmdObj, node);
+    return CLIST_ENTRY(_node, CmdObj, node);
 }
