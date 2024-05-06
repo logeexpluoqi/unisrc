@@ -12,41 +12,33 @@
  extern "C" {
 #endif
 
+#include <stdint.h>
 #include "qlist.h"
 
 typedef struct fsm_object {
     const char* name;
-    unsigned int fsm_state_id_base;
+    uint32_t id_base;
     int curr_state;
     int next_state;
-    QList fsm_list_head;
+    QList state_list;
 } FsmObj;
 
 typedef struct fsm_state_object {
-    unsigned int id;
-    const char* belong_to;
+    uint32_t id;
     int link_state;
-    int (*fsm_state_task_hdl)(void);
-    QList fsm_state_list;
+    int (*callback)(void);
+    QList state_node;
 } FsmStateObj;
 
 void fsm_init(FsmObj* fsm, const char* name, int init_state);
 
-void fsm_change_state(FsmObj* fsm, int next_state);
-
-int fsm_state_get(FsmObj* fsm);
+void fsm_state_update(FsmObj* fsm, int next_state);
 
 int fsm_exec(FsmObj* fsm);
 
-void fsm_state_init(FsmStateObj* state, int link_state, int (*fsm_state_task_hdl)(void));
+void fsm_state_attach(FsmObj* fsm, FsmStateObj* state, int link_state, int (*callback)(void));
 
-void fsm_state_add(FsmObj* fsm, FsmStateObj* state);
-
-void fsm_state_del(FsmStateObj* state);
-
-int fsm_state_link(FsmStateObj* state);
-
-const char* fsm_state_belong_to(FsmStateObj* state);
+void fsm_state_detach(FsmStateObj* state);
 
 #ifdef __cplusplus
  }

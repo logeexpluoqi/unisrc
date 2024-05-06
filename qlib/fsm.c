@@ -1,76 +1,54 @@
 /*
- * @Author: luoqi 
- * @Date: 2021-05-13 09:59:48 
+ * @Author: luoqi
+ * @Date: 2021-05-13 09:59:48
  * @Last Modified by: luoqi
  * @Last Modified time: 2022-04-23 19:24:22
  */
 
 #include "fsm.h"
 
-void fsm_init(FsmObj* fsm, const char* name, int init_state)
+void fsm_init(FsmObj *fsm, const char *name, int init_state)
 {
     fsm->name = name;
     fsm->curr_state = init_state;
     fsm->next_state = init_state;
-    fsm->fsm_state_id_base = 0;
-    qlist_init(&fsm->fsm_list_head);
+    fsm->id_base = 0;
+    qlist_init(&fsm->state_list);
 }
 
-int fsm_exec(FsmObj* fsm)
+int fsm_exec(FsmObj *fsm)
 {
-    QList* node;
-    FsmStateObj* state;
+    QList *node;
+    FsmStateObj *state;
 
     fsm->curr_state = fsm->next_state;
-    QLIST_ITERATOR(node, &fsm->fsm_list_head) {
-        state = QLIST_ENTRY(node, FsmStateObj, fsm_state_list);
-        if (state->link_state == fsm->curr_state) {
-            return state->fsm_state_task_hdl();
+    QLIST_ITERATOR(node, &fsm->state_list)
+    {
+        state = QLIST_ENTRY(node, FsmStateObj, state_node);
+        if(state->link_state == fsm->curr_state) {
+            return state->callback();
+        } else {
+            continue;
         }
     }
     return -1;
 }
 
-void fsm_change_state(FsmObj* fsm, int next_state)
+void fsm_state_update(FsmObj *fsm, int next_state)
 {
     fsm->next_state = next_state;
 }
 
-void fsm_state_init(FsmStateObj* state, int link_state, int (*fsm_state_task_hdl)(void))
+void fsm_state_attach(FsmObj *fsm, FsmStateObj *state, int link_state, int (*callback)(void))
 {
-    state->id = 0;
+    fsm->id_base++;
+    state->id = fsm->id_base;
     state->link_state = link_state;
-    state->fsm_state_task_hdl = fsm_state_task_hdl;
+    state->callback = callback;
+    qlist_insert_after(&fsm->state_list, &state->state_node);
 }
 
-void fsm_state_add(FsmObj* fsm, FsmStateObj* state)
+void fsm_state_detach(FsmStateObj *state)
 {
-    if (state->id == 0) {
-        fsm->fsm_state_id_base++;
-        state->id = fsm->fsm_state_id_base;
-    }
-    state->belong_to = fsm->name;
-    qlist_insert_before(&fsm->fsm_list_head, &state->fsm_state_list);
+    qlist_remove(&state->state_node);
 }
-
-void fsm_state_del(FsmStateObj* state)
-{
-    qlist_remove(&state->fsm_state_list);
-}
-
-int fsm_state_get(FsmObj* state)
-{
-    return state->curr_state;
-}
-
-int fsm_state_link(FsmStateObj* state)
-{
-    return state->link_state;
-}
-
-const char* fsm_state_belong_to(FsmStateObj* state)
-{
-    return state->belong_to;
-}
-
-
