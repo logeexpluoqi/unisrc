@@ -7,15 +7,14 @@
 
 #include "qdemo.h"
 #include "../qmath/qtrigf.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 static QCmdObj cmd_qtrigf;
 static int cmd_qtrif_hdl(int argc, char **argv);
 
 int demo_qtrigf_init()
 {
-    qcmd_init(&cmd_qtrigf, "qtrigf", cmd_qtrif_hdl, "sin, cos, tan, asin, acos, atan");
-    qcmd_add(&cmd_qtrigf);
+    qterm_attatch(&cmd_qtrigf, "qtrigf", cmd_qtrif_hdl, "sin, cos, tan, asin, acos, atan");
     return 0;
 }
 

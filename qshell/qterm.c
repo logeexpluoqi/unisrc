@@ -5,7 +5,7 @@
  * @Last Modified time: 2022-11-25 00:40:28
  */
 
-#include "qsh.h"
+#include "qterm.h"
 
 #ifdef QSH_USING_LIBC
 #include <stdlib.h>
@@ -189,7 +189,7 @@ static QCmdInfo _cmd_exec(char *args)
     QCLIST_ITERATOR(_node, &clist) {
         cmd = QCLIST_ENTRY(_node, QCmdObj, node);
         if(_strcmp(cmd->name, argv[0]) == 0) {
-            return cmd->callback(argc, argv);
+            return cmd->handle(argc, argv);
         }
     }
     return QCMD_MISSING;
@@ -366,7 +366,7 @@ static inline void _reset()
     _cur_index = _args_c;
 }
 
-int qsh_init()
+int qterm_init()
 {
     _memset(_args, 0, sizeof(_args));
     _memset(_hs_buf, 0, sizeof(_hs_buf));
@@ -377,13 +377,9 @@ int qsh_init()
     iscall = 0;
     _args_c = 0;
     _cur_index = _args_c;
-    qcmd_init(&_history, "hs", _hs_hdl, "show history");
-    qcmd_init(&_help, "?", _help_hdl, "do help");
-    qcmd_init(&_clear, "clear", _clear_hdl, "clear window");
-
-    qcmd_add(&_help);
-    qcmd_add(&_history);
-    qcmd_add(&_clear);
+    qterm_attatch(&_history, "hs", _hs_hdl, "show history");
+    qterm_attatch(&_help, "?", _help_hdl, "do help");
+    qterm_attatch(&_clear, "clear", _clear_hdl, "clear window");
     QSH_CLEAR_DISP;
     QPRINTF(QTERM_CBL_ON);
     QPRINTF("  -------------------QSH BY LUOQI-------------------\r\n");
@@ -391,16 +387,16 @@ int qsh_init()
     QSH_SHOW_PERFIX;
 }
 
-int qsh_call(const char *args)
+int qterm_call(const char *args)
 {
     iscall = 1;
     _args_c = _strlen(args);
     _memcpy(_args, args, _args_c);
     isenter = 1;
-    return qsh_exec(0);
+    return qterm_exec(0);
 }
 
-int qsh_recv(char c)
+static inline int qsh_recv(char c)
 {
     static QshFunckeyStage key_state = QSH_FUNCKEY_NONE;
     if(iscall){
@@ -449,7 +445,7 @@ int isarg(const char *s, const char *arg)
     return _strcmp(s, arg);
 }
 
-int qsh_exec(char c)
+int qterm_exec(char c)
 {
     int result = 0;
     c = (c == 127) ? 8 : c;
@@ -488,28 +484,14 @@ int qsh_exec(char c)
     return result;
 }
 
-int qcmd_init(QCmdObj *qcmd, const char *name, int (*handle)(int, char **), const char *usage)
+int qterm_attatch(QCmdObj *qcmd, const char *name, CmdHandle handle, const char *usage)
 {
     qcmd->name = name;
     qcmd->id = id;
-    qcmd->callback = handle;
+    qcmd->handle = handle;
     qcmd->usage = usage;
     id++;
-    return 0;
-}
 
-#ifdef QSH_USING_LIBC
-int qcmd_create(const char *name, int (*handle)(int, char **), const char *usage)
-{
-    QCmdObj *qcmd = (QCmdObj *)malloc(sizeof(QCmdObj));
-    qcmd_init((QCmdObj *)qcmd, name, handle, usage);
-    qcmd_add(qcmd);
-    return 0;
-}
-#endif
-
-int qcmd_add(QCmdObj *qcmd)
-{
     if(_cmd_isexist(qcmd) == 0) {
         _clist_insert(&clist, &qcmd->node);
         return 0;
@@ -518,7 +500,16 @@ int qcmd_add(QCmdObj *qcmd)
     }
 }
 
-int qcmd_del(QCmdObj *qcmd)
+#ifdef QSH_USING_LIBC
+int qcmd_create(const char *name, CmdHandle handle, const char *usage)
+{
+    QCmdObj *qcmd = (QCmdObj *)malloc(sizeof(QCmdObj));
+    qterm_attatch((QCmdObj *)qcmd, name, handle, usage);
+    return 0;
+}
+#endif
+
+int qterm_detach(QCmdObj *qcmd)
 {
     if(_cmd_isexist(qcmd)) {
         _cqlist_remove(&qcmd->node);

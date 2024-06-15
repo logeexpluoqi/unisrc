@@ -9,7 +9,7 @@
 #include "qdemo.h"
 #include "../solver/ode_euler.h"
 #include "../solver/ode_rk.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 static QCmdObj cmd_ode;
 static int cmd_ode_hdl(int argc, char **argv);
@@ -19,8 +19,7 @@ static float tspan[TSPAN_SIZE];
 
 int demo_solver_init()
 {
-    qcmd_init(&cmd_ode, "ode", cmd_ode_hdl, "euler, rk, rkf45");
-    qcmd_add(&cmd_ode);
+    qterm_attatch(&cmd_ode, "ode", cmd_ode_hdl, "euler, rk, rkf45");
 }
 
 static float dy(float x, float y)

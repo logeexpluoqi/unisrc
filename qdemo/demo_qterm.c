@@ -7,7 +7,7 @@
 
 #include <string.h>
 #include "qdemo.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 #include "../qlib/qtask.h"
 
 static QCmdObj   cmd_ls;
@@ -15,8 +15,7 @@ static int cmd_ls_hdl(int, char **);
 
 int demo_qsh_init()
 {
-    qcmd_init(&cmd_ls, "ls", cmd_ls_hdl, "/-d");
-    qcmd_add(&cmd_ls);
+    qterm_attatch(&cmd_ls, "ls", cmd_ls_hdl, "/-d");
     return 0;
 }
 

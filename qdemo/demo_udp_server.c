@@ -10,7 +10,7 @@
 #include "qdemo.h"
 #include "../linuxbase/mthread.h"
 #include "../linuxbase/udp_server.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 static MThread udpserver;
 static void *udpserver_hdl(void *);

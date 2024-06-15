@@ -10,7 +10,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include "mthread.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 static QLIST_CREATE(mthread_list);
 static QLIST_CREATE(mthread_del_list);

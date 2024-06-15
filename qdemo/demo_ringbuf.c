@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "qdemo.h"
 #include "../qlib/ringbuf.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 #define BUF_SIZE 10
 

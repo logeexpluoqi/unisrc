@@ -11,11 +11,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include "linuxbase/mthread.h"
-#include "qshell/qsh.h"
+#include "qshell/qterm.h"
 #include "qlib/qtask.h"
 #include "qdemo/qdemo.h"
 
-static MThread task_qsh;
+static MThread task_qterm;
 
 static void *task_qsh_hdl(void *);
 
@@ -27,12 +27,12 @@ static int close_all = 0;
 
 int main()
 {
-    mthread_init(&task_qsh, "task_qsh", 50, 1000, task_qsh_hdl, "qsh task");
-    mthread_start(&task_qsh);
+    mthread_init(&task_qterm, "task_qterm", 50, 1000, task_qsh_hdl, "qterm task");
+    mthread_start(&task_qterm);
     mthread_init(&qtasks_tick, "qtasks_tick", 10, 1000, qtasks_tick_hdl, "qtasks_tick");
     mthread_start(&qtasks_tick);
 
-    qsh_init();
+    qterm_init();
     qdemo_init();
 
     for (;;) {
@@ -50,14 +50,14 @@ void *task_qsh_hdl(void *param)
 {
     char ch;
     for (;;) {
-        mthread_task_begin(&task_qsh);
+        mthread_task_begin(&task_qterm);
         if(system("stty raw -echo") < 0){
             printf(" #! system call error !\r\n");
         }
         ch = getchar();
         ch = (ch == 127) ? 8 : ch;
         if (ch != 3) {
-            qsh_exec(ch);
+            qterm_exec(ch);
         } else {
             if(system("stty -raw echo") < 0){
                 printf(" #! system call error !\r\n");
@@ -66,9 +66,9 @@ void *task_qsh_hdl(void *param)
             printf("\033[H\033[J");
             printf(" \r\n#! qsh input thread closed !\r\n\r\n");
             close_all = 1;
-            mthread_stop(&task_qsh);
+            mthread_stop(&task_qterm);
         }
-        mthread_task_end(&task_qsh);
+        mthread_task_end(&task_qterm);
     }
 }
 

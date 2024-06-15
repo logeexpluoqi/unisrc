@@ -1,3 +1,3 @@
 
-add_library(qsh 
-        qsh.c)
+add_library(qterm 
+        qterm.c)

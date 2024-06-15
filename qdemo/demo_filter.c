@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "qdemo.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 #include "../filter/lpf_sa.h"
 #include "../filter/lpf_1st.h"
 #include "../filter/hpf_1st.h"
@@ -46,8 +46,7 @@ void demo_filter_init()
     hpf_1st_init(&hpf_1st, 1, 0.01);
     kf_1dim_init(&kf_1dim, 0, 1, 0, 1, 0, 0.002, 0.5);
 
-    qcmd_init(&cmd_filter, "filter", cmd_filter_hdl, "nsig, sa, lpf1st, hpf1st, kf1dim");
-    qcmd_add(&cmd_filter);
+    qterm_attatch(&cmd_filter, "filter", cmd_filter_hdl, "nsig, sa, lpf1st, hpf1st, kf1dim");
 }
 
 int cmd_filter_hdl(int argc, char **argv)

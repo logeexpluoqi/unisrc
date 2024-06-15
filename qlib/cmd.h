@@ -37,19 +37,19 @@ extern "C" {
         struct _clist *next;
     } CList;
 
-    typedef int (*CmdCallback)(int, char **);
+    typedef int (*CmdHandle)(int, char **);
     typedef struct
     {
         const char *name;
         uint32_t    id;
-        CmdCallback callback;
+        CmdHandle callback;
         const char *usage;
         CList       node;
     } CmdObj;
 
     CmdInfo cmd_exec(char *cmd_msg);
 
-    int cmd_init(CmdObj *cmd, const char *name, CmdCallback callback, const char *usage);
+    int cmd_init(CmdObj *cmd, const char *name, CmdHandle callback, const char *usage);
 
     int cmd_add(CmdObj *cmd);
 

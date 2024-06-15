@@ -1,8 +1,8 @@
 /*
  * @Author: luoqi 
  * @Date: 2022-01-26 17:08:38 
- * @Last Modified by: luoqi
- * @Last Modified time: 2023-05-12 09:42:29
+ * @ Modified by: luoqi
+ * @ Modified time: 2024-06-15 22:23
  */
 
 #include <stdio.h>
@@ -11,7 +11,7 @@
 #include "qdemo.h"
 #include "../qmath/qmath.h"
 #include "../qmath/qcomplex.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 static QCmdObj cmd_qmat;
 static int cmd_qmat_hdl(int, char **);
@@ -24,11 +24,9 @@ static int cmd_m_hdl(int, char **);
 
 void demo_qmath_init()
 {
-    qcmd_init(&cmd_cmplx, "cmplx", cmd_cmplx_hdl, "add<a bi c di>, sub<a bi c di>, mul<a bi c di>, div<a bi c di>, abs<a bi>");
-    qcmd_add(&cmd_cmplx);
+    qterm_attatch(&cmd_cmplx, "cmplx", cmd_cmplx_hdl, "add<a bi c di>, sub<a bi c di>, mul<a bi c di>, div<a bi c di>, abs<a bi>");
 
-    qcmd_init(&cmd_m, "m", cmd_m_hdl, "pow<a b>");
-    qcmd_add(&cmd_m);
+    qterm_attatch(&cmd_m, "m", cmd_m_hdl, "pow<a b>");
 }
 
 int cmd_cmplx_hdl(int argc, char **argv)

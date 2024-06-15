@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "qdemo.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 #include "../qmath/qmatrix.h"
 
 static int cmd_mat_hdl(int argc, char **argv);

@@ -1,6 +1,6 @@
 add_library(qdemo
         qdemo.c
-        demo_qsh.c
+        demo_qterm.c
         demo_fsm.c
         demo_qtask.c
         demo_msg.c
@@ -18,7 +18,7 @@ add_library(qdemo
         demo_qlist.c
 )
 target_link_libraries(qdemo
-        qsh
+        qterm
         qmath
         utils
         filter

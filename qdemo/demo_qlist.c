@@ -8,7 +8,7 @@
 
 #include "qdemo.h"
 #include "../qlib/qlist.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 static QLIST_CREATE(list);
 

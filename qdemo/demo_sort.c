@@ -9,7 +9,7 @@
 #include "qdemo.h"
 #include "../sort/quick_sort.h"
 #include "../sort/bubble_sort.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 #define DEMO_SORT_DATA_SIZE     50
 
@@ -26,8 +26,7 @@ int demo_sort_init()
         quicksortdata[i] = (float)rand() / RAND_MAX;
     }
 
-    qcmd_init(&cmd_sort, "sort", cmd_sort_hdl, "quick, bub");
-    qcmd_add(&cmd_sort);
+    qterm_attatch(&cmd_sort, "sort", cmd_sort_hdl, "quick, bub");
 
     return 0;
 }

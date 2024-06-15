@@ -86,7 +86,7 @@ CmdInfo cmd_exec(char *args)
     return CMD_MISSING;
 }
 
-int cmd_init(CmdObj *cmd, const char *name, CmdCallback callback, const char *usage)
+int cmd_init(CmdObj *cmd, const char *name, CmdHandle callback, const char *usage)
 {
     cmd->name = name;
     cmd->id = id;

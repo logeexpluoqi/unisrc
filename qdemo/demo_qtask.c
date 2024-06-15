@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include "qdemo.h"
 #include "../qlib/qtask.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 static QTaskObj task1;
 static QTaskObj task2;
@@ -34,8 +34,7 @@ int demo_qtask_init()
     qtask_init(&task3, "task3", task3_hdl, 200, "timeslice task 3");
     qtask_del(&task3);
 
-    qcmd_init(&cmd_task, "task", cmd_task_hdl, "run/stop<1/2/3/3>");
-    qcmd_add(&cmd_task);
+    qterm_attatch(&cmd_task, "task", cmd_task_hdl, "run/stop<1/2/3/3>");
 
     return 0;
 }

@@ -2,13 +2,13 @@
  * @Author: luoqi 
  * @Date: 2021-08-31 15:49:21 
  * @ Modified by: luoqi
- * @ Modified time: 2023-12-07 21:36
+ * @ Modified time: 2024-06-15 22:20
  */
 
 #include <string.h>
 #include "qdemo.h"
 #include "../qlib/fsm.h"
-#include "../qshell/qsh.h"
+#include "../qshell/qterm.h"
 
 static FsmObj fsm_1;
 static FsmStateObj state_1, state_2, state_3, state_4;
@@ -32,8 +32,7 @@ static int cmd_fsm_hdl(int argc, char **argv);
 
 int demo_fsm_init()
 {
-    qcmd_init(&cmd_fsm, "fsm", cmd_fsm_hdl, "fsm<run/stop>");
-    qcmd_add(&cmd_fsm);
+    qterm_attatch(&cmd_fsm, "fsm", cmd_fsm_hdl, "fsm<run/stop>");
     fsm_init(&fsm_1, "fsm 1", 0);
     fsm_init(&fsm_2, "fsm 2", 0);
 
