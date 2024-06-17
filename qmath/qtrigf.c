@@ -84,7 +84,44 @@ float qfacosd(float x)
     return 0;
 }
 
-float qfatand(float x)
-{
+#ifdef QTRIGF_MAX
+#undef QTRIGF_MAX
+#endif
+#define QTRIGF_MAX(a, b) ((a) > (b)) ? (a) : (b)
 
+#ifdef QTRIGF_MIN
+#undef QTRIGF_MIN
+#endif
+#define QTRIGF_MIN(a, b) ((a) < (b)) ? (a) : (b)
+
+#ifdef QTRIGF_ABS
+#undef QTRIGF_ABS
+#endif
+#define QTRIGF_ABS(a) ((a) < 0.0f) ? (-a) : (a)
+
+float qfatan2(float y, float x)
+{
+    // a := min (|x|, |y|) / max (|x|, |y|)
+    float abs_y = QTRIGF_ABS(y);
+    float abs_x = QTRIGF_ABS(x);
+    // inject FLT_MIN in denominator to avoid division by zero
+    float a = QTRIGF_MIN(abs_x, abs_y) / (QTRIGF_MAX(abs_x, abs_y) + 1.17549e-38);
+    // s := a * a
+    float s = a * a;
+    // r := ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a
+    float r = ((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a;
+    // if |y| > |x| then r := 1.57079637 - r
+    if(abs_y > abs_x) {
+        r = 1.57079637f - r;
+    }
+    // if x < 0 then r := 3.14159274 - r
+    if(x < 0.0f) {
+        r = 3.14159274f - r;
+    }
+    // if y < 0 then r := -r
+    if(y < 0.0f) {
+        r = -r;
+    }
+
+    return r;
 }

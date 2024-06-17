@@ -23,7 +23,7 @@ float qfasind(float x);
 
 float qfacosd(float x);
 
-float qfatand(float x);
+float qfatan2(float y, float x);
 
 #ifdef __cplusplus
  }
