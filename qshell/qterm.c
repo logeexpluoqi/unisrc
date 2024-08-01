@@ -544,7 +544,7 @@ int _help_hdl(int argc, char **argv)
     QPRINTF(" ----------     -------\r\n");
     for(i = 1; i <= num; i++) {
         _cmd = _cmd_obj(i);
-        QPRINTF(" - %-9s     > ", _cmd->name);
+        QPRINTF(" .%-9s     - ", _cmd->name);
         len = _strlen(_cmd->usage);
         if(len < QSH_USAGE_DISP_MAX) {
             QPRINTF("%s\r\n", _cmd->usage);

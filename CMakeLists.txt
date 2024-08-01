@@ -14,10 +14,18 @@ add_subdirectory(sort)
 add_subdirectory(cv)
 add_subdirectory(linuxbase)
 
-add_executable(demo 
-        demo.c
+add_executable(qcli
+        demo_qcli.c
 )
-target_link_libraries(demo 
-        qdemo
-        -lpthread
+target_link_libraries(qcli
+        qterm
 )
+
+# add_executable(demo 
+#         demo.c
+# ) 
+
+# target_link_libraries(demo 
+#         qdemo
+#         -lpthread
+# )
