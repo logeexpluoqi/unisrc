@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2024-08-01 22:16
  * @ Modified by: luoqi
- * @ Modified time: 2024-08-02 04:22
+ * @ Modified time: 2024-08-02 11:34
  * @ Description:
  */
 
@@ -24,7 +24,7 @@ typedef struct _list{
 #define QCLI_CMD_STR_MAX    60
 #define QCLI_CMD_ARGC_MAX   10
 
-#define QCLI_PRINT(cli, ...)    (cli->print(__VA__ARGS__))
+#define QCLI_PRINT(cli, ...)    (cli->print(__VA_ARGS__))
 
 typedef enum {
     QCLI_ERR_PARAM_TYPE = -4,
@@ -44,6 +44,8 @@ typedef struct {
     uint8_t args_index;
     uint8_t history_num;
     uint8_t history_index;
+    uint8_t history_recall_index;
+    uint8_t history_recall_times;
     int argc;
     QCliPrint print;
     QCliList cmds;
@@ -65,7 +67,7 @@ int qcli_add(QCliInterface *interface, QCliCmd *cmd, const char *name, QCliCallb
 
 int qcli_remove(QCliInterface *interface, QCliCmd *cmd);
 
-int qcli_exec(QCliInterface *interface, const char c);
+int qcli_exec(QCliInterface *interface, char c);
 
 #ifdef __cplusplus
 }

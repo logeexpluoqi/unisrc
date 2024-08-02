@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2024-08-01 22:16
  * @ Modified by: luoqi
- * @ Modified time: 2024-08-02 04:34
+ * @ Modified time: 2024-08-02 11:46
  * @ Description:
  */
 
@@ -23,7 +23,6 @@ static const char *_CLEAR_DISP = "\033[H\033[2J";
 #define _KEY_DOWN            '\x42'
 #define _KEY_RIGHT           '\x43'
 #define _KEY_LEFT            '\x44'
-#define _KEY_DOT             '\x2c'
 
 #define _QCLI_SU(n)             "\033["#n"S"   // scroll up
 #define _QCLI_SD(n)             "\033["#n"T"   // scroll down
@@ -70,7 +69,7 @@ static void *_memcpy(void *dest, const void *src, uint32_t len)
 
 static void *_memset(void *dest, int c, uint32_t n)
 {
-    if(dest == _QCLI_NULL) {
+    if((dest == _QCLI_NULL) || (n == 0)) {
         return _QCLI_NULL;
     } else {
         char *pdest = (char *)dest;
@@ -167,7 +166,6 @@ static int _cmd_isexist(QCliInterface *cli, QCliCmd *cmd)
 static QCliCmd _history;
 static int _history_cb(int argc, char **argv)
 {
-    _history.cli->print("\r\n");
     for(uint8_t i = _history.cli->history_num; i > 0; i--) {
         _history.cli->print("%2d: %s\r\n", i, _history.cli->history[(_history.cli->history_index - i + QCLI_HISTORY_MAX) % QCLI_HISTORY_MAX]);
     }
@@ -275,15 +273,19 @@ int qcli_init(QCliInterface *cli, QCliPrint print)
 {
     cli->cmds.next = cli->cmds.prev = &cli->cmds;
     cli->print = print;
-    cli->history_num = 0;
     cli->argc = 0;
     cli->args_size = 0;
+    cli->args_index = 0;
+    cli->history_num = 0;
+    cli->history_index = 0;
+    cli->history_recall_index = 0;
+    cli->history_recall_times = 0;
     _memset(cli->history, 0, QCLI_HISTORY_MAX * QCLI_CMD_STR_MAX * sizeof(char));
     _memset(cli->args, 0, QCLI_CMD_STR_MAX * sizeof(char));
     _memset(&cli->argv, 0, QCLI_CMD_ARGC_MAX * sizeof(char));
-    qcli_add(cli, &_history, "hs", _history_cb, "show history");
     qcli_add(cli, &_help, "?", _help_cb, "help");
     qcli_add(cli, &_clear, "clear", _clear_cb, "clear screen");
+    qcli_add(cli, &_history, "hs", _history_cb, "show history");
     cli->print(_CLEAR_DISP);
     cli->print("-------------------QCLI BY LUOQI-------------------\r\n");
     cli->print(_PERFIX);
@@ -314,7 +316,7 @@ int qcli_remove(QCliInterface *cli, QCliCmd *cmd)
     }
 }
 
-int qcli_exec(QCliInterface *cli, const char c)
+int qcli_exec(QCliInterface *cli, char c)
 {
     if(c == '\x1b') {
         return 0;
@@ -324,7 +326,20 @@ int qcli_exec(QCliInterface *cli, const char c)
     }
 
     if(c == _KEY_BACKSPACE) {
-
+        if((cli->args_size > 0) && (cli->args_size == cli->args_index)) {
+            cli->args_size--;
+            cli->args[cli->args_size] = '\0';
+            cli->print("\b \b");
+        } else if((cli->args_size > 0) && (cli->args_size != cli->args_index) && (cli->args_index > 0)) {
+            cli->args_size--;
+            cli->args_index--;
+            _strdelete(cli->args, cli->args_index, 1);
+            cli->print(_QCLI_CUB(1));
+            cli->print(_QCLI_DCH(1));
+            return 0;
+        } else {
+            return 0;
+        }
     } else if(c == _KEY_ENTER) {
         if(cli->args_size == 0) {
             cli->print("\r\n%s", _PERFIX);
@@ -337,28 +352,36 @@ int qcli_exec(QCliInterface *cli, const char c)
             _memset(&cli->argv, 0, cli->argc);
             cli->args_size = 0;
             cli->argc = 0;
-            cli->print(" #! Parse error !\r\n");
+            cli->print(" #! parse error !\r\n");
             return 0;
         }
-        if((_strcmp(cli->history[cli->history_num], cli->argv[0]) != 0) && _strcmp(cli->argv[0], "hs") != 0) {
-            _memcpy(cli->history[cli->history_num], cli->args, cli->args_size);
-            cli->history_num = (cli->history_num + 1) % QCLI_HISTORY_MAX;
-            cli->history_index = cli->history_num;
+        if((_strcmp(cli->history[(cli->history_index - 1) % QCLI_HISTORY_MAX], cli->argv[0]) != 0) && _strcmp(cli->argv[0], "hs") != 0) {
+            _memcpy(cli->history[cli->history_index], cli->args, cli->args_size);
+            cli->history_index = (cli->history_index + 1) % QCLI_HISTORY_MAX;
+            if(cli->history_num < QCLI_HISTORY_MAX) {
+                cli->history_num++;
+            }
         }
         _cmd_callback(cli);
         _memset(cli->args, 0, cli->args_size);
         _memset(&cli->argv, 0, cli->argc);
         cli->args_size = 0;
+        cli->args_index = 0;
         cli->argc = 0;
+        cli->history_recall_times = 0;
+        cli->history_recall_index = cli->history_index;
         cli->print("\r\n%s", _PERFIX);
     } else if(c == _KEY_UP) {
         if(cli->history_num == 0) {
             return 0;
         }
-        cli->history_index = (cli->history_index - 1) % QCLI_HISTORY_MAX;
-        if(cli->history_index != cli->history_num) {
-            cli->args_size = _strlen(cli->history[cli->history_index]);
-            _memcpy(cli->args, cli->history[cli->history_index], cli->args_size);
+        if(cli->history_recall_times < cli->history_num) {
+            cli->history_recall_index = (cli->history_recall_index - 1) % QCLI_HISTORY_MAX;
+            _memset(cli->args, 0, cli->args_size);
+            cli->args_size = _strlen(cli->history[cli->history_recall_index]);
+            cli->args_index = cli->args_size;
+            _memcpy(cli->args, cli->history[cli->history_recall_index], cli->args_size);
+            cli->history_recall_times++;
             cli->print("%s%s%s", _CLEAR_LINE, _PERFIX, cli->args);
         } else {
             return 0;
@@ -367,18 +390,31 @@ int qcli_exec(QCliInterface *cli, const char c)
         if(cli->history_num == 0) {
             return 0;
         }
-        cli->history_index = (cli->history_index + 1) % QCLI_HISTORY_MAX;
-        if(cli->history_index != cli->history_num) {
-            cli->args_size = _strlen(cli->history[cli->history_index]);
-            _memcpy(cli->args, cli->history[cli->history_index], cli->args_size);
+        if(cli->history_recall_times > 0) {
+            cli->history_recall_index = (cli->history_recall_index + 1) % QCLI_HISTORY_MAX;
+            _memset(cli->args, 0, cli->args_size);
+            cli->args_size = _strlen(cli->history[cli->history_recall_index]);
+            cli->args_index = cli->args_size;
+            _memcpy(cli->args, cli->history[cli->history_recall_index], cli->args_size);
+            cli->history_recall_times--;
             cli->print("%s%s%s", _CLEAR_LINE, _PERFIX, cli->args);
         } else {
             return 0;
         }
     } else if(c == _KEY_LEFT) {
-
+        if(cli->args_index > 0) {
+            cli->print(_QCLI_CUB(1));
+            cli->args_index--;
+        } else {
+            return 0;
+        }
     } else if(c == _KEY_RIGHT) {
-
+        if(cli->args_index < cli->args_size) {
+            cli->print(_QCLI_CUF(1));
+            cli->args_index++;
+        } else {
+            return 0;
+        }
     } else if(c == _KEY_ESC) {
 
     } else if(c == _KEY_TAB) {
@@ -387,8 +423,16 @@ int qcli_exec(QCliInterface *cli, const char c)
         if(cli->args_size > QCLI_CMD_STR_MAX) {
             return 0;
         }
-        cli->args[cli->args_size] = c;
-        cli->args_size++;
+        if(cli->args_size == cli->args_index) {
+            cli->args[cli->args_size] = c;
+            cli->args_size++;
+            cli->args_index = cli->args_size;
+        } else {
+            _strinsert(cli->args, cli->args_index, &c, 1);
+            cli->args_size++;
+            cli->args_index++;
+            cli->print(_QCLI_ICH(1));
+        }
         cli->print("%c", c);
     }
 }
