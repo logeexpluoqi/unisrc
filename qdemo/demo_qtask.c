@@ -20,7 +20,7 @@ void task1_hdl(void);
 void task2_hdl(void);
 void task3_hdl(void);
 
-static QCmdObj cmd_task;
+static QCliCmd cmd_task;
 static int cmd_task_hdl(int , char**);
 
 int demo_qtask_init()
@@ -34,7 +34,7 @@ int demo_qtask_init()
     qtask_init(&task3, "task3", task3_hdl, 200, "timeslice task 3");
     qtask_del(&task3);
 
-    qterm_attatch(&cmd_task, "task", cmd_task_hdl, "run/stop<1/2/3/3>");
+    qterm_attach(&cmd_task, "task", cmd_task_hdl, "run/stop<1/2/3/3>");
 
     return 0;
 }

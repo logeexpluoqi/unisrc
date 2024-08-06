@@ -1,3 +1,4 @@
 
 add_library(qterm 
-        qterm.c)
+        qterm.c
+        qcli.c)

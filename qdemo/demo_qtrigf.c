@@ -9,12 +9,12 @@
 #include "../qmath/qtrigf.h"
 #include "../qshell/qterm.h"
 
-static QCmdObj cmd_qtrigf;
+static QCliCmd cmd_qtrigf;
 static int cmd_qtrif_hdl(int argc, char **argv);
 
 int demo_qtrigf_init()
 {
-    qterm_attatch(&cmd_qtrigf, "qtrigf", cmd_qtrif_hdl, "sin, cos, tan, asin, acos, atan");
+    qterm_attach(&cmd_qtrigf, "qtrigf", cmd_qtrif_hdl, "sin, cos, tan, asin, acos, atan");
     return 0;
 }
 

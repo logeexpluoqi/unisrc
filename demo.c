@@ -27,12 +27,12 @@ static int close_all = 0;
 
 int main()
 {
+    qterm_init();
     mthread_init(&task_qterm, "task_qterm", 50, 1000, task_qsh_hdl, "qterm task");
     mthread_start(&task_qterm);
     mthread_init(&qtasks_tick, "qtasks_tick", 10, 1000, qtasks_tick_hdl, "qtasks_tick");
     mthread_start(&qtasks_tick);
 
-    qterm_init();
     qdemo_init();
 
     for (;;) {

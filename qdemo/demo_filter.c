@@ -26,7 +26,7 @@ static void demo_lpf_1st(void);
 Hpf1stObj hpf_1st;
 static void demo_hpf_1st(void);
 
-static QCmdObj cmd_filter;
+static QCliCmd cmd_filter;
 static int cmd_filter_hdl(int argc, char **argv);
 
 static KF1DimObj kf_1dim;
@@ -46,7 +46,7 @@ void demo_filter_init()
     hpf_1st_init(&hpf_1st, 1, 0.01);
     kf_1dim_init(&kf_1dim, 0, 1, 0, 1, 0, 0.002, 0.5);
 
-    qterm_attatch(&cmd_filter, "filter", cmd_filter_hdl, "nsig, sa, lpf1st, hpf1st, kf1dim");
+    qterm_attach(&cmd_filter, "filter", cmd_filter_hdl, "nsig, sa, lpf1st, hpf1st, kf1dim");
 }
 
 int cmd_filter_hdl(int argc, char **argv)

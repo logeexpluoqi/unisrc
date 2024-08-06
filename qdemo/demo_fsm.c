@@ -27,12 +27,12 @@ static int state_8_hdl(void);
 FsmStateObj state_idle;
 static int state_idle_hdl(void);
 
-static QCmdObj cmd_fsm;
+static QCliCmd cmd_fsm;
 static int cmd_fsm_hdl(int argc, char **argv);
 
 int demo_fsm_init()
 {
-    qterm_attatch(&cmd_fsm, "fsm", cmd_fsm_hdl, "fsm<run/stop>");
+    qterm_attach(&cmd_fsm, "fsm", cmd_fsm_hdl, "fsm<run/stop>");
     fsm_init(&fsm_1, "fsm 1", 0);
     fsm_init(&fsm_2, "fsm 2", 0);
 

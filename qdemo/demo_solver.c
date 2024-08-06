@@ -1,8 +1,8 @@
 /*
  * @Author: luoqi 
  * @Date: 2022-08-13 22:37:49 
- * @Last Modified by: luoqi
- * @Last Modified time: 2022-11-27 21:44:32
+ * @ Modified by: luoqi
+ * @ Modified time: 2024-08-06 21:13
  */
 #include <stdio.h>
 #include <math.h>
@@ -11,7 +11,7 @@
 #include "../solver/ode_rk.h"
 #include "../qshell/qterm.h"
 
-static QCmdObj cmd_ode;
+static QCliCmd cmd_ode;
 static int cmd_ode_hdl(int argc, char **argv);
 
 #define TSPAN_SIZE      31
@@ -19,7 +19,7 @@ static float tspan[TSPAN_SIZE];
 
 int demo_solver_init()
 {
-    qterm_attatch(&cmd_ode, "ode", cmd_ode_hdl, "euler, rk, rkf45");
+    qterm_attach(&cmd_ode, "ode", cmd_ode_hdl, "euler, rk, rkf45");
 }
 
 static float dy(float x, float y)

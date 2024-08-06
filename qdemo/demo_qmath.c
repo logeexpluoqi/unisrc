@@ -14,20 +14,20 @@
 #include "../qmath/qtrigf.h"
 #include "../qshell/qterm.h"
 
-static QCmdObj cmd_qmat;
+static QCliCmd cmd_qmat;
 static int cmd_qmat_hdl(int, char **);
 
-static QCmdObj cmd_cmplx;
+static QCliCmd cmd_cmplx;
 static int cmd_cmplx_hdl(int, char **);
 
-static QCmdObj cmd_m;
+static QCliCmd cmd_m;
 static int cmd_m_hdl(int, char **);
 
 void demo_qmath_init()
 {
-    qterm_attatch(&cmd_cmplx, "cmplx", cmd_cmplx_hdl, "add<a bi c di>, sub<a bi c di>, mul<a bi c di>, div<a bi c di>, abs<a bi>");
+    qterm_attach(&cmd_cmplx, "cmplx", cmd_cmplx_hdl, "add<a bi c di>, sub<a bi c di>, mul<a bi c di>, div<a bi c di>, abs<a bi>");
 
-    qterm_attatch(&cmd_m, "m", cmd_m_hdl, "pow<a b>, sind<x>, cosd<x>, atan2<y x>");
+    qterm_attach(&cmd_m, "m", cmd_m_hdl, "pow<a b>, sind<x>, cosd<x>, atan2<y x>");
 }
 
 int cmd_cmplx_hdl(int argc, char **argv)

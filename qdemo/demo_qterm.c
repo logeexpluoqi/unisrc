@@ -1,8 +1,8 @@
 /*
  * @Author: luoqi 
  * @Date: 2021-08-31 14:45:26 
- * @Last Modified by: luoqi
- * @Last Modified time: 2022-11-24 23:45:25
+ * @ Modified by: luoqiuoqi
+ * @ Modified time: 2024-08-06 21:093:45:25
  */
 
 #include <string.h>
@@ -10,12 +10,12 @@
 #include "../qshell/qterm.h"
 #include "../qlib/qtask.h"
 
-static QCmdObj   cmd_ls;
+static QCliCmd   cmd_ls;
 static int cmd_ls_hdl(int, char **);
 
 int demo_qsh_init()
 {
-    qterm_attatch(&cmd_ls, "ls", cmd_ls_hdl, "/-d");
+    qterm_attach(&cmd_ls, "ls", cmd_ls_hdl, "/-d");
     return 0;
 }
 
