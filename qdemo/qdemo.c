@@ -6,9 +6,13 @@
  */
 
 #include "qdemo.h"
+#include "../qlib/qtask.h"
+
+QTaskScheduler qtask_scheduler;
 
 int qdemo_init()
 {
+    qtask_scheduler_init(&qtask_scheduler);
     demo_fsm_init();
     demo_qtask_init();
     demo_msg_init();

@@ -25,6 +25,7 @@ static void *qtasks_tick_hdl(void *);
 
 static int close_all = 0;
 
+extern QTaskScheduler qtask_scheduler;
 int main()
 {
     qterm_init();
@@ -32,12 +33,11 @@ int main()
     mthread_start(&task_qterm);
     mthread_init(&qtasks_tick, "qtasks_tick", 10, 1000, qtasks_tick_hdl, "qtasks_tick");
     mthread_start(&qtasks_tick);
-
     qdemo_init();
 
     for (;;) {
         if (close_all == 0) {
-            qtask_exec();
+            qtask_exec(&qtask_scheduler);
             usleep(10);
         } else {
             return 0;
@@ -77,7 +77,7 @@ void *qtasks_tick_hdl(void *param)
     for (;;) {
         mthread_task_begin(&qtasks_tick);
 
-        qtask_tick();
+        qtask_tick_increase(&qtask_scheduler);
 
         mthread_task_end(&qtasks_tick);
     }
