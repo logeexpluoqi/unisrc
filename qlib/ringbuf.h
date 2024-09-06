@@ -17,18 +17,24 @@ extern "C"{
 
 typedef struct 
 {
-    uint32_t head;    // ring buffer head index
-    uint32_t tail;    // ring buffer tail index
-    uint32_t msgsz;
-    uint32_t bufsz;
+    uint32_t wr_index;    // ring buffer write index
+    uint32_t rd_index;    // ring buffer read index
+    uint32_t used;        // ring buffer used size
+    uint32_t sz;          // ring buffer size
     uint8_t  *buf;
-} RingBufObj;
+} RingBuffer;
 
-int ringbuf_init(RingBufObj *ring, uint8_t *buf, uint32_t size);
+int rb_init(RingBuffer *rb, uint8_t *buf, uint32_t size);
 
-int ringbuf_write(RingBufObj *ring, uint8_t *data, uint32_t len);
+uint32_t rb_write(RingBuffer *rb, uint8_t *data, uint32_t len);
 
-int ringbuf_read(RingBufObj *ring, uint8_t *rdata, uint32_t len);
+uint32_t rb_write_force(RingBuffer *rb, uint8_t *data, uint32_t len);
+
+uint32_t rb_read(RingBuffer *rb, uint8_t *rdata, uint32_t len);
+
+uint32_t rb_used(RingBuffer *rb);
+
+void rb_clear(RingBuffer *rb);
 
 #ifdef __cplusplus
 }

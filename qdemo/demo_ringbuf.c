@@ -13,14 +13,14 @@
 
 #define BUF_SIZE 10
 
-static RingBufObj ring;
+static RingBuffer rb;
 static uint8_t buf[BUF_SIZE] = {0};
 
 static int cmd_ringbuf_hdl(int argc, char **argv);
 
 int demo_ringbuf_init()
 {
-    ringbuf_init(&ring, buf, BUF_SIZE);
+    rb_init(&rb, buf, BUF_SIZE);
     qcmd_create("rbuf", cmd_ringbuf_hdl, "wr<len>, rd<len>");
     return 0;
 }
@@ -35,29 +35,29 @@ static int write(int len)
     if(w++ > 0xff){
         w = 1;
     };
-    int head = ringbuf_write(&ring, wbuf, len);
-    QSH(" bufsz: %d, head: %d, tail: %d, msgsz: %d\r\n", ring.bufsz, ring.head, ring.tail, ring.msgsz);
+    int wr_index = rb_write(&rb, wbuf, len);
+    QSH(" sz: %d, wr_index: %d, rd_index: %d, used: %d\r\n", rb.sz, rb.wr_index, rb.rd_index, rb.used);
     free(wbuf);
-    return head;
+    return wr_index;
 }
 
 static int read(int len)
 {
     uint8_t *rbuf = (uint8_t *)malloc(len);
-    int tail = ringbuf_read(&ring, rbuf, len);
-    QSH(" bufsz: %d, head: %d, tail: %d, msgsz: %d\r\n", ring.bufsz, ring.head, ring.tail, ring.msgsz);
+    int rd_index = rb_read(&rb, rbuf, len);
+    QSH(" sz: %d, wr_index: %d, rd_index: %d, used: %d\r\n", rb.sz, rb.wr_index, rb.rd_index, rb.used);
     for(int i = 0; i < len; i++){
         QSH(" %02X", *(rbuf + i));
     }
     QSH("\r\n");
     free(rbuf);
-    return tail;
+    return rd_index;
 }
 
 int cmd_ringbuf_hdl(int argc, char **argv)
 {
     if(argc == 1){
-        QSH(" bufsz: %d, head: %d, tail: %d, msgsz: %d\r\n", ring.bufsz, ring.head, ring.tail, ring.msgsz);
+        QSH(" sz: %d, wr_index: %d, rd_index: %d, used: %d\r\n", rb.sz, rb.wr_index, rb.rd_index, rb.used);
         for(int i = 0; i < BUF_SIZE; i++){
             QSH(" %02X", buf[i]);
         }
@@ -69,11 +69,11 @@ int cmd_ringbuf_hdl(int argc, char **argv)
     }
     int len = atoi(argv[2]);
     if(ISARG(argv[1], "wr")){
-        int head = write(len);
-        QSH(" head: %d\r\n", head);
+        int wr_index = write(len);
+        QSH(" wr_index: %d\r\n", wr_index);
     }else if(ISARG(argv[1], "rd")){
-        int tail = read(len);
-        QSH(" tail: %d\r\n", tail);
+        int rd_index = read(len);
+        QSH(" rd_index: %d\r\n", rd_index);
     }else {
         return -1;
     }
