@@ -8,7 +8,7 @@
 
 #include "ringbuf.h"
 
-static inline void *_memcpy(void *dst, void *src, uint32_t len)
+static inline void *_memcpy(void *dst, const void *src, uint32_t len)
 {
     char *d;
     const char *s;
@@ -38,7 +38,7 @@ int rb_init(RingBuffer *rb, uint8_t *buf, uint32_t size)
     return 0;
 }
 
-uint32_t rb_write_force(RingBuffer *rb, uint8_t *data, uint32_t len)
+uint32_t rb_write_force(RingBuffer *rb, const uint8_t *data, uint32_t len)
 {
     len = len > rb->sz ? rb->sz : len;
 
@@ -53,7 +53,7 @@ uint32_t rb_write_force(RingBuffer *rb, uint8_t *data, uint32_t len)
     return len;
 }
 
-uint32_t rb_write(RingBuffer *rb, uint8_t *data, uint32_t len)
+uint32_t rb_write(RingBuffer *rb, const uint8_t *data, uint32_t len)
 {
     len = len > (rb->sz - rb->used) ? (rb->sz - rb->used) : len;
     return rb_write_force(rb, data, len);
