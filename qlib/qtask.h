@@ -2,7 +2,7 @@
  * @Author: luoqi 
  * @Date: 2021-04-29 19:27:49 
  * @ Modified by: luoqi
- * @ Modified time: 2024-10-12 11:13
+ * @ Modified time: 2024-10-12 11:39
  */
 
 #ifndef _QTASK_H
@@ -54,6 +54,11 @@ int qtask_detach(QTaskScheduler *sched, QTaskObj* task);
 
 void qtask_exec(QTaskScheduler *sched);
 
+/** 
+ * If task name is NULL, the args will be set to all tasks, 
+ * and the args will be executed by all tasks periodially, till parameter is set to a task.
+ * If task name is not NULL, the args will be set to a specific task, and only executed once.
+ */
 void qtask_param_set(QTaskScheduler *sched, const char *taskname, void *args);
 
 QTaskObj *qtask_get(QTaskScheduler *sched, const char *taskname);

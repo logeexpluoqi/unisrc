@@ -2,7 +2,7 @@
  * @Author: luoqi
  * @Date: 2021-04-29 19:27:09
  * @ Modified by: luoqi
- * @ Modified time: 2024-10-12 11:13
+ * @ Modified time: 2024-10-12 11:36
  */
 
 #include "qtask.h"
@@ -62,6 +62,9 @@ static int _qdtask_isexsit(QTaskScheduler *sched, QTaskObj *task)
 static uint16_t _id_calc(const char *name)
 {
     uint16_t id = 0;
+    if(name == QTASK_NONE) {
+        return 0;
+    }
     for(int i = 0; name[i] != '\0'; i++) {
         id += (name[i] + i);
     }
@@ -138,7 +141,7 @@ void qtask_exec(QTaskScheduler *sched)
     QTASK_LIST_ITERATOR(node, &sched->sched_list) {
         task = QTASK_LIST_ENTRY(node, QTaskObj, task_node);
         sched->run_task = task;
-        if(sched->targetid == task->id) {
+        if((sched->targetid == task->id) || (sched->targetid == 0)) {
             args = sched->args;
         } else {
             args = QTASK_NONE;
@@ -148,6 +151,9 @@ void qtask_exec(QTaskScheduler *sched)
             task->isready = 0;
             task->rtime = task->rtick;
             task->rtick = 0;
+            if(sched->targetid != 0) {
+                sched->args = QTASK_NONE;
+            }
         }
     }
 }
