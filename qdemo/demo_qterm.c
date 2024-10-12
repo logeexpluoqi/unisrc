@@ -25,7 +25,7 @@ int demo_qsh_init()
 int cmd_ls_hdl(int argc, char **argv)
 {
     if(argc <= 1) {
-        QList *node;
+        QTaskList *node;
         QTaskObj *task;
         uint32_t i;
         uint32_t num = qlist_length(&qtask_scheduler.sched_list);
@@ -42,7 +42,7 @@ int cmd_ls_hdl(int argc, char **argv)
         return 0;
     } else {
         if(ISARG(argv[1], "-d")) {
-            QList *node;
+            QTaskList *node;
             QTaskObj *task;
             uint32_t i;
             uint32_t num = qlist_length(&qtask_scheduler.sched_list);

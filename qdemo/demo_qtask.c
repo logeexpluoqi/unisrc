@@ -16,9 +16,9 @@ static QTaskObj task1;
 static QTaskObj task2;
 static QTaskObj task3;
 
-void task1_hdl(void);
-void task2_hdl(void);
-void task3_hdl(void);
+void task1_hdl(void *args);
+void task2_hdl(void *args);
+void task3_hdl(void* args);
 
 static QCliCmd cmd_task;
 static int cmd_task_hdl(int , char**);
@@ -36,22 +36,22 @@ int demo_qtask_init()
     qtask_attach(&qtask_scheduler, &task3, "task3", task3_hdl, 200, "task 3");
     qtask_detach(&qtask_scheduler, &task3);
 
-    qterm_attach(&cmd_task, "task", cmd_task_hdl, "run/stop<1/2/3/3>");
+    qterm_attach(&cmd_task, "task", cmd_task_hdl, "run/stop<1/2/3/all>");
 
     return 0;
 }
 
-void task1_hdl()
+void task1_hdl(void *args)
 {
     QSH("\r\n$ task 1 running \r\n");
 }
 
-void task2_hdl()
+void task2_hdl(void *args)
 {
     QSH("\r\n$ task 2 running \r\n");
 }
 
-void task3_hdl()
+void task3_hdl(void *args)
 {
     qtask_detach(&qtask_scheduler, &task3);
     QSH("\r>> task 3 executed\r\n");
@@ -71,8 +71,7 @@ int cmd_task_hdl(int argc, char **argv)
         }else if(ISARG(argv[2], "all")){
             qtask_attach(&qtask_scheduler, &task1, "task1", task1_hdl, 1000, "task 1");
             qtask_attach(&qtask_scheduler, &task2, "task2", task2_hdl, 5000, "task 2");
-        }
-        else if(ISARG(argv[2], "3")){
+        }else if(ISARG(argv[2], "3")){
             qtask_attach(&qtask_scheduler, &task3, "task3", task3_hdl, 200, "task 3");
         }else{
             return -1;
