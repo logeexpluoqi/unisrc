@@ -2,28 +2,27 @@
  * @ Author: luoqi
  * @ Create Time: 2024-03-29 17:20
  * @ Modified by: luoqi
- * @ Modified time: 2024-04-14 23:15
+ * @ Modified time: 2024-11-05 17:10
  * @ Description:
  */
 
+#include <string.h>
 #include "qbutton.h"
 
 #define QBUTTON_EVENTS_CALLBACK(action)     if(button->callback[action] != 0) { err = button->callback[action](keyval);}
 
 int qbutton_init(QButton *button, QButtonPressDownKeyVal keyval, uint8_t debounce_tick, uint16_t long_tick, uint8_t short_tick, int (*button_read)(void))
 {
-    for(int i = 0; i < 7; i++) {
-        button->callback[i] = 0;
-    }
-    button->isactive = 0;
-    button->debounce = 0;
-    button->ticks = 0;
-    button->repeat = 0;
+    memset(button, 0, sizeof(QButton));
     button->press_keyval = keyval;
     button->button_read = button_read;
     button->debounce_tick = debounce_tick;
     button->long_tick = long_tick;
     button->short_tick = short_tick;
+    if(button->short_tick > button->long_tick) {
+        button->short_tick = button->long_tick;
+    }
+
     button->state = QBUTTON_ACTION_NONE;
     return 0;
 }
@@ -78,12 +77,21 @@ int qbutton_exec(QButton *button)
         }
         break;
     case QBUTTON_ACTION_PRESS_UP:
-        if(button->ticks++ > button->short_tick) {
+        if(button->ticks++ > button->long_tick) {
             QBUTTON_EVENTS_CALLBACK(QBUTTON_ACTION_PRESS_UP);
             button->state = QBUTTON_ACTION_NONE;
             button->ticks = 0;
         } else {
-            button->state = QBUTTON_ACTION_PRESS_REPEAT;
+            if(button->callback[QBUTTON_ACTION_PRESS_REPEAT] == 0
+                && button->callback[QBUTTON_ACTION_SIGLE_CLICK] == 0
+                && button->callback[QBUTTON_ACTION_DOUBLE_CLICK] == 0
+                && button->callback[QBUTTON_ACTION_THRIBLE_CLICK] == 0) {
+                QBUTTON_EVENTS_CALLBACK(QBUTTON_ACTION_PRESS_UP);
+                button->state = QBUTTON_ACTION_NONE;
+                button->ticks = 0;
+            } else {
+                button->state = QBUTTON_ACTION_PRESS_REPEAT;
+            }
         }
         break;
     case QBUTTON_ACTION_PRESS_REPEAT:
@@ -95,15 +103,22 @@ int qbutton_exec(QButton *button)
             if(button->repeat == 1) {
                 button->state = QBUTTON_ACTION_SIGLE_CLICK;
             } else if(button->repeat == 2) {
-                button->state = QBUTTON_ACTION_DOUBLE_CLICK;
+                if(button->callback[QBUTTON_ACTION_DOUBLE_CLICK] == 0) {
+                    button->state = QBUTTON_ACTION_SIGLE_CLICK;
+                } else {
+                    button->state = QBUTTON_ACTION_DOUBLE_CLICK;
+                }
             } else if(button->repeat == 3) {
-                button->state = QBUTTON_ACTION_THRIBLE_CLICK;
+                if(button->callback[QBUTTON_ACTION_THRIBLE_CLICK] == 0
+                    && button->callback[QBUTTON_ACTION_DOUBLE_CLICK] == 0) {
+                    button->state = QBUTTON_ACTION_SIGLE_CLICK;
+                } else {
+                    button->state = QBUTTON_ACTION_THRIBLE_CLICK;
+                }
             } else {
                 QBUTTON_EVENTS_CALLBACK(QBUTTON_ACTION_PRESS_REPEAT);
-                if(button->callback[QBUTTON_ACTION_PRESS_REPEAT] != 0) {
-                    err = button->callback[QBUTTON_ACTION_PRESS_REPEAT](button->repeat);
-                }
                 button->state = QBUTTON_ACTION_NONE;
+                button->ticks = 0;
             }
         }
         button->isactive = 0;
