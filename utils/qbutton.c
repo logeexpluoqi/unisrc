@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2024-03-29 17:20
  * @ Modified by: luoqi
- * @ Modified time: 2024-11-05 17:10
+ * @ Modified time: 2024-11-05 18:01
  * @ Description:
  */
 
@@ -77,9 +77,10 @@ int qbutton_exec(QButton *button)
         }
         break;
     case QBUTTON_ACTION_PRESS_UP:
-        if(button->ticks++ > button->long_tick) {
+        if(button->islongpress) {
             QBUTTON_EVENTS_CALLBACK(QBUTTON_ACTION_PRESS_UP);
             button->state = QBUTTON_ACTION_NONE;
+            button->islongpress = 0;
             button->ticks = 0;
         } else {
             if(button->callback[QBUTTON_ACTION_PRESS_REPEAT] == 0
@@ -141,8 +142,8 @@ int qbutton_exec(QButton *button)
     case QBUTTON_ACTION_PRESS_LONG:
         QBUTTON_EVENTS_CALLBACK(QBUTTON_ACTION_PRESS_LONG);
         button->state = QBUTTON_ACTION_NONE;
-        button->isactive = 1;
-        button->ticks = button->short_tick;
+        button->islongpress = 1;
+        button->ticks = 0;
         break;
     default:
         return -1;

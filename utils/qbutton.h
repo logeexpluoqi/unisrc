@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2024-03-29 17:20
  * @ Modified by: luoqi
- * @ Modified time: 2024-04-09 18:54
+ * @ Modified time: 2024-11-05 18:01
  * @ Description:
  */
 
@@ -34,7 +34,8 @@ typedef struct {
     uint8_t   debounce;
     uint8_t   state;
     uint8_t   isactive : 1;
-    uint8_t   repeat : 7;
+    uint8_t   islongpress : 1;
+    uint8_t   repeat : 6;
     uint8_t   debounce_tick;
     uint16_t  long_tick;        // long press time threshold
     uint8_t   short_tick;       // repeat press time threshold
