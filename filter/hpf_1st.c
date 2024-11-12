@@ -11,7 +11,7 @@
 
 int hpf_1st_init(Hpf1stObj *filter, float fc, float ts)
 {
-    filter->alpha = 1 / (1 + 2 * HPF_PI * fc * ts + 1);
+    filter->alpha = 1 / (1 + 2 * HPF_PI * fc * ts);
     filter->ts = ts;
     filter->fc = fc;
     filter->u_k1 = 0;
