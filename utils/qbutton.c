@@ -2,7 +2,7 @@
  * @ Author: luoqi
  * @ Create Time: 2024-03-29 17:20
  * @ Modified by: luoqi
- * @ Modified time: 2024-11-05 18:01
+ * @ Modified time: 2025-02-05 14:26
  * @ Description:
  */
 
@@ -120,6 +120,7 @@ int qbutton_exec(QButton *button)
                 QBUTTON_EVENTS_CALLBACK(QBUTTON_ACTION_PRESS_REPEAT);
                 button->state = QBUTTON_ACTION_NONE;
                 button->ticks = 0;
+                button->repeat = 0;
             }
         }
         button->isactive = 0;
